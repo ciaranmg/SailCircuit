@@ -1,0 +1,1 @@
+<?=sc_date_format($content);?>
