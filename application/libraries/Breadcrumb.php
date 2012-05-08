@@ -11,6 +11,7 @@ class breadcrumb {
 							'url' => '#home/dashboard',
 							'current' => false
 					));
+	private $parent_id, $parent_name;
 	
 	function __construct(){
 		$this->CI =& get_instance();
@@ -86,6 +87,20 @@ class breadcrumb {
 										'current' => true
 									);
 
+			}elseif($segments[1] == 'create'){
+				$regatta = $this->CI->regatta_model->get($segments[2]);
+				$this->path[] = array(
+										'title' => $regatta->name,
+										'ci_url' => 'regatta/view/' . $regatta->id,
+										'url' => '#regatta/view/' . $regatta->id,
+										'current' => false
+									);
+				$this->path[] = array(
+										'title' => 'Create Class',
+										'ci_url' => 'class/create' . $segments[2],
+										'url' => '#class/create/' . $segments[2],
+										'current' => true
+										);
 			}
 		}elseif($segments[0] == 'race'){
 			$this->CI->load->model('regatta_model');

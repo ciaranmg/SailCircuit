@@ -119,11 +119,6 @@ $config = array(
 											'rules' => 'trim|required|integer|xss_clean'
 									),
 									array(
-											'field'=> 'class_team',
-											'label' => 'Team & Round Robin Racing',
-											'rules' => 'trim|xss_clean'
-									),
-									array(
 											'field'=> 'class_rating_system',
 											'label' => 'Rating System',
 											'rules' => 'trim|required|xss_clean'
@@ -141,8 +136,13 @@ $config = array(
 									array(
 											'field'=> 'class_boats[]',
 											'label' => 'Boats in Class',
+											'rules' => 'trim|integer|xss_clean'
+									),
+									array(
+											'field' => 'tiebreak_system',
+											'label' => 'Tiebreak System',
 											'rules' => 'trim|integer|required|xss_clean'
-									)
+											)
 								),
 				'owner' =>	array(
 									array(

@@ -69,13 +69,20 @@ class User extends CI_Controller {
 		$this->load->library('Form_validation');
 		
 		$data['action'] = 'user/login';
-		$data['redirect'] = 'user/profile'; // Set a default redirect for the login action
+		
+		if($this->session->flashdata('redirect')){
+			$data['redirect'] = $this->session->flashdata('redirect');
+		}else{
+			$data['redirect'] = '#home/dashboard'; // Set a default redirect for the login action
+		}
 		
 		
 		// Check if the login form has been submitted
 		if($this->input->post('action') == 'user/login'){
 			if($this->form_validation->run('login')===false){
-				$this->load->view('user/user_login');
+				$this->session->set_flashdata('err_message', 'Invalid Username or Password');
+				$this->session->set_flashdata('redirect', $data['redirect']);
+				redirect('user/login');
 			}else{
 				
 				$user = array(

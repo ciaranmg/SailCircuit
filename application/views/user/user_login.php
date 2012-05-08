@@ -56,6 +56,12 @@
 		<section class="login-box-top">
 			<header>
 				<h2 class="logo ac">vPad Login</h2>
+		
+				<? if($this->session->flashdata('err_message')){ ?>
+					<div class="leading message error">
+						<?=$this->session->flashdata('err_message');?>
+					</div>
+				<? } ?>
 			</header>
 			<section>
 				<?php echo form_open('user/login'); ?>
@@ -83,8 +89,10 @@
 
     
     <!-- MAIN JAVASCRIPTS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
-    <script>window.jQuery || document.write("<script src='js/jquery.min.js'>\x3C/script>")</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+    <script>
+    	window.jQuery || document.write("<script src='js/jquery.min.js'>\x3C/script>");
+    </script>
     <script type="text/javascript" src="<?=base_url()?>js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="<?=base_url()?>js/jquery.uniform.min.js"></script>
     <script type="text/javascript" src="<?=base_url()?>js/jquery.easing.js"></script>
@@ -94,7 +102,7 @@
     <script type="text/javascript" src="js/ie.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="js/global.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>js/global.js"></script>
     <!-- MAIN JAVASCRIPTS END -->
 </body>
 </html>

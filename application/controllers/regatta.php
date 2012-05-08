@@ -20,14 +20,13 @@ class Regatta extends CI_Controller {
 	function create(){
 		$this->userlib->force_login();
 		$this->userlib->force_permission('regatta_create');
-		$this->load->model('regatta_model');
-		$breadcrumb = $this->breadcrumb->get_path();
+		$this->load->model('regatta_model'); 
 		$data = array(
 						'regatta_parent' => $this->userlib->active_club(), 
 						'title' => "Create Regatta", 
 						'action' => 'regatta/create', 
 						'ajax' => false,
-						'breadcrumb'=> $breadcrumb);
+						'breadcrumb'=> $this->breadcrumb->get_path());
 		
 		if($this->input->post('submit') && $this->input->post('action') == 'regatta/create'){
 			if($this->form_validation->run('regatta') === false){
@@ -46,7 +45,7 @@ class Regatta extends CI_Controller {
 				$this->regattaData['status'] = "active";
 				$regatta_id = $this->regatta_model->insert($this->regattaData);
 			
-				$this->session->set_flashdata('message', 'Owner Successfully Created');
+				$this->session->set_flashdata('message', 'Regatta Successfully Created');
 			
 				redirect('regatta/show/'.$regatta_id);
 			}

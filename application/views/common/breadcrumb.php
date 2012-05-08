@@ -4,21 +4,18 @@
 	$items = sizeof($breadcrumb);
 	$currentItem = 1;
 ?>
-<div id="breadcrumb">
-	<ul>
-		<? foreach($breadcrumb as $b):?>
+<ul class="breadcrumb">
+	<? foreach($breadcrumb as $b):?>
+		<? if($b['current'] === true): ?>
+			<li class="active"><?$b['title'];?></li>
+		<? else:?>
 			<li>
-				<? if($b['current'] == true):?>
-					<span><?=$b['title']?></span>
-				<? else:?>
-					<a href="<?=$b['url']?>" title="<?=$b['title']?>">
-						<?=$b['title']?>
-					</a>
-				<? endif;?>
-				<? echo ($currentItem < $items) ? ' > ' : ''; ?>
-				<? $currentItem++; ?>
+				<a href="<?$b['url'];?>" title="<?=$b['title'];?>">
+					<?=$b['title'];?>
+				</a>
+				<span class="divider">/</span>
 			</li>
-		<? endforeach;?>
-	</ul>
-</div>
+		<? endif;?>
+	<? endforeach;?>
+</ul>
 <? endif;?>
