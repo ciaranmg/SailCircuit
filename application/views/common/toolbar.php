@@ -3,30 +3,26 @@ if(!isset($options)){
 	$options = array('class'=>'');
 }
 ?>
-<div class="ac">
-	<ul class="toolbar clearfix <?=$options['class'];?>" style="display: inline-block;">
+<div class="btn-group pull-right">
 		<? foreach($buttons as $button): 
 		?>
-			<? if($this->userlib->check_permission($button['action'])): ?>
-				<li>
+			<? if($this->userlib->check_permission(str_replace('#', '', $button['action']))): ?>
 					<? if(!isset($button['type']) OR $button['type'] == 'link'): ?>
-						<a href="#<?=$button['action'] .'/' .$button['parameters']?>" class="button <?=$button['classes']?>" title="<?=($button['title'] !='') ? $button['title'] : $button['tooltip'];?>">
-							<? if(isset($button['icon'])) echo '<img src="'. base_url() .'images/navicons-small/'.$button['icon'].'.png" alt=""/>'; ?>
+						<a href="<?=base_url($button['action']) .'/' .$button['parameters']?>" class="btn <?=$button['classes']?>" title="<?=$button['title'];?>" <? if(isset($button['attributes'])) echo $button['attributes'];?> >
+							<? if(isset($button['icon'])) echo '<i class="icon-'. $button['icon'] .'"></i> '; ?>
 							<?=$button['title']?>
 						</a>
 					<? elseif($button['type'] == 'event'): ?>
-						<a class="button <?=$button['classes']?>" title="<?=($button['title'] !='') ? $button['title'] : $button['tooltip'];?>">
-							<? if(isset($button['icon'])) echo '<img src="'. base_url() .'images/navicons-small/'.$button['icon'].'.png" alt=""/>'; ?>
+						<a class="btn <?=$button['classes']?>" title="<?=$button['title'];?>" <? if(isset($button['attributes'])) echo $button['attributes'];?>>
+							<? if(isset($button['icon'])) echo '<i class="icon-'. $button['icon'] .'"></i> '; ?>
 							<?=$button['title']?>
 						</a>
 					<? elseif($button['type'] == 'submit'): ?>
-						<button type="submit" class="button <?=$button['classes']?>" title="<?=($button['title'] !='') ? $button['title'] : $button['tooltip'];?>">
-							<? if(isset($button['icon'])) echo '<img src="'. base_url() .'images/navicons-small/'.$button['icon'].'.png" alt=""/>'; ?>
+						<button type="submit" class="btn <?=$button['classes']?>" title="<?=$button['title'];?>" <? if(isset($button['attributes'])) echo $button['attributes'];?>>
+							<? if(isset($button['icon'])) echo '<i class="icon-'. $button['icon'] .'"></i> '; ?>
 							<?=$button['title']?>
 						</button>
 					<? endif; ?>
-				</li>
 			<? endif; ?>
 		<? endforeach; ?>
-	</ul>
 </div>

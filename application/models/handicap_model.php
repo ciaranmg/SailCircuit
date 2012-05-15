@@ -10,5 +10,28 @@ class Handicap_model extends CI_Model {
 			return $query->result();
 		}
 	}
+
+	function get($id){
+		$query = $this->db->select()->from('sc_handicap_systems')->where('id', $id)->get();
+		if($query->num_rows() > 0){
+			return $query->row();
+		}else{
+			return false;
+		}
+	}
+
+	function get_boat_handicap($boat_id, $name){
+		$this->load->model('boats_model');
+		if($name == 'Level Rating'){
+			return 1;
+		}else{
+			$handicap = $this->boats_model->get_boat_meta($boat_id, $name);
+			if($handicap === false){
+				return 0.00;
+			}else{
+				return $handicap;
+			}
+		}
+	}
 }
 ?>

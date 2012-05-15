@@ -9,15 +9,29 @@ class Race_model extends CI_Model{
 		$this->db->order_by('name', 'asc');
 		$query = $this->db->get();
 		if($query->num_rows() > 0) {
-			$this->firephp->log($query->result());
+			// $this->firephp->log($query->result());
 			return $query->result();
 		}else{
-			$this->firephp->log('or here');
+			// $this->firephp->log('or here');
 			return false;
 		}
 	}
 	
-	
+
+	/**
+	 *	Method to delete races given a race_id
+	 *  Also deletes meta data associated with Race
+	 */
+	function delete($race_id){
+		$this->db->where('id', $race_id);
+		$x = $this->db->delete('sc_races');
+
+		$this->db->where('race_id', $race_id);
+		$this->db->delete('sc_race_meta');
+		return $x;
+	}
+
+
 	/*----------------------------------------------------------------------------
 	Description: Create a race, or races
 	

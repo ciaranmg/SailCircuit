@@ -1,22 +1,29 @@
-<div class="container_12 clearfix leading">
-	<div class="grid_12">
+<? $this->load->view('common/header');?>	
+<div class="row">
+	<header class="span6">
+		<h1><?=$title;?></h1>
+		<p class="lead"><?=$intro;?></p>
+	</header>
+	<div class="span6">
 		<div id="demo" class="clearfix">
 			<? 
-				$main_toolbar = array(
+				$buttons = array(
 							array(
 								'title' => 'Add New Boat',
-								'action' => 'boat/create',
-								'classes' => 'icon-with-text',
+								'action' => 'boats/create',
+								'classes' => '',
 								'parameters' => '',
-								'icon' => '10'
+								'icon' => 'plus'
 							)
 				);
-				$this->load->view('common/toolbar', array('buttons'=>$main_toolbar));
-				$this->load->view('boats/tbl_list_boats');
+				$this->load->view('common/toolbar', array('buttons'=>$buttons));
 			?>
-			<div class="leading">
-				<? $this->load->view('common/toolbar', array('buttons'=>$main_toolbar)); ?>
-			</div>
 		</div>
 	</div>
 </div>
+<div class="row">
+	<div class="span12">
+		<?=$this->load->view('boats/tbl_list_boats');?>
+	</div>
+</div>
+<? $this->load->view('common/footer');?>

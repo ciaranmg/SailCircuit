@@ -10,7 +10,7 @@
 					'type'			=> $type
 					);
 	$attributes = array(
-						'class' 	=> 'ajaxForm, form, has-validation',
+						'class' 	=> 'ajaxForm form has-validation',
 						'id' 		=> $field . '_form'
 						);
 	$button_options = array(
@@ -22,18 +22,18 @@
 						'title' => '',
 						'action' => $controller.'/edit',
 						'tooltip' => 'Save',
-						'classes' => 'icon-only save',
+						'classes' => 'btn-primary',
 						'type' => 'submit',
 						'parameters' => $id,
-						'icon' => '93'),
+						'icon' => 'ok icon-white'),
 					array(
 						'title' => '',
 						'action' => $controller.'/edit',
 						'tooltip'=> 'Cancel Edit',
 						'type' => 'event',
-						'classes' => 'icon-only cancel',
+						'classes' => 'cancel',
 						'parameters' => $id,
-						'icon' => '134'
+						'icon' => 'remove'
 						)
 					);
 ?>
@@ -43,6 +43,12 @@
 		<? $this->load->view('common/toolbar', array('options' => $button_options, 'buttons'=> $buttons));?>
 	<?=form_close();?>
 	<div class="clear"></div>
+	<? if(isset($ajax_error)): ?>
+		<div class="alert alert-error">
+			<button class="close" data-dismiss="alert">×</button>
+			<?=$ajax_error;?>
+		</div>
+	<? endif; ?>
 </div>
 <script>
 		$(function(){

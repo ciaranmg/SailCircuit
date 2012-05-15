@@ -6315,7 +6315,7 @@ DEBUG - 2012-05-03 11:47:42 --> Form Validation Class Initialized
 DEBUG - 2012-05-03 11:47:42 --> Model Class Initialized
 DEBUG - 2012-05-03 11:47:42 --> Controller Class Initialized
 DEBUG - 2012-05-03 11:47:42 --> Model Class Initialized
-ERROR - 2012-05-03 11:47:42 --> Severity: Notice  --> Undefined property: Classes::$class_model /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/controllers/classes.php 51
+ERROR - 2012-05-03 11:47:42 --> Severity: Notice  --> Undefined property: Classes::$classes_model /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/controllers/classes.php 51
 DEBUG - 2012-05-03 11:48:26 --> Config Class Initialized
 DEBUG - 2012-05-03 11:48:26 --> Hooks Class Initialized
 DEBUG - 2012-05-03 11:48:26 --> Utf8 Class Initialized
@@ -8410,8 +8410,8 @@ DEBUG - 2012-05-03 14:41:32 --> Model Class Initialized
 DEBUG - 2012-05-03 14:41:32 --> Controller Class Initialized
 DEBUG - 2012-05-03 14:41:32 --> Model Class Initialized
 DEBUG - 2012-05-03 14:41:32 --> Model Class Initialized
-ERROR - 2012-05-03 14:41:32 --> Severity: Notice  --> Use of undefined constant APPATH - assumed 'APPATH' /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/models/class_model.php 41
-ERROR - 2012-05-03 14:41:33 --> Severity: Warning  --> require_once(APPATHlibraries/data_objects.php) [<a href='function.require-once'>function.require-once</a>]: failed to open stream: No such file or directory /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/models/class_model.php 41
+ERROR - 2012-05-03 14:41:32 --> Severity: Notice  --> Use of undefined constant APPATH - assumed 'APPATH' /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/models/classes_model.php 41
+ERROR - 2012-05-03 14:41:33 --> Severity: Warning  --> require_once(APPATHlibraries/data_objects.php) [<a href='function.require-once'>function.require-once</a>]: failed to open stream: No such file or directory /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/models/classes_model.php 41
 DEBUG - 2012-05-03 14:45:11 --> Config Class Initialized
 DEBUG - 2012-05-03 14:45:11 --> Hooks Class Initialized
 DEBUG - 2012-05-03 14:45:11 --> Utf8 Class Initialized
@@ -8536,7 +8536,7 @@ DEBUG - 2012-05-03 14:45:14 --> Model Class Initialized
 DEBUG - 2012-05-03 14:45:14 --> Controller Class Initialized
 DEBUG - 2012-05-03 14:45:14 --> Model Class Initialized
 DEBUG - 2012-05-03 14:45:14 --> Model Class Initialized
-ERROR - 2012-05-03 14:45:14 --> Severity: Warning  --> require_once(application/libraries/data_objects.php) [<a href='function.require-once'>function.require-once</a>]: failed to open stream: No such file or directory /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/models/class_model.php 41
+ERROR - 2012-05-03 14:45:14 --> Severity: Warning  --> require_once(application/libraries/data_objects.php) [<a href='function.require-once'>function.require-once</a>]: failed to open stream: No such file or directory /Users/cmcgrath/Dropbox/Projects/Sail Circuit/Results/application/models/classes_model.php 41
 DEBUG - 2012-05-03 14:45:29 --> Config Class Initialized
 DEBUG - 2012-05-03 14:45:29 --> Hooks Class Initialized
 DEBUG - 2012-05-03 14:45:29 --> Utf8 Class Initialized

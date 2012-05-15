@@ -1,13 +1,22 @@
-<script>
-	var currentVals = new Array();
+<script>	
 	$(function() {
 		$('.editable').click(function(){
-										singleFieldEditForm($(this));
-										});
+			singleFieldEditForm($(this));
+		});
+		$('.scrollable').tinyscrollbar();  
+		$( ".datepicker" ).datepicker();
+		$('.btn-mini, .sc-icon-only').tooltip();
+		$('.sc-delete').click(function(){
+			var button = $(this);
+			$(button.attr('href') + ' input[name=object_id]').val(button.attr('data-subject-id'));
+			$(button.attr('href') + ' .modal-body').html('<p>' + button.attr('data-subject-title') + '</p>');
+			$(button.attr("href")).modal();
+		})
 	});
-	
-	function singleFieldEditForm(container){
 
+
+	var currentVals = new Array();
+	function singleFieldEditForm(container){
 			var target = container.attr('target');			
 			var containerID = container.attr('id');
 			currentVals[containerID] = container.html().trim();
@@ -25,32 +34,6 @@
 					}
 			});
 	}
-
-
-
-/* function(){
-			var target = $(this).attr('target');
-			
-			var containerID = $(this).attr('id');
-			
-			currentVals[containerID] = $(this).html().trim();
-			
-			console.log(currentVals);
-
-			$(this).removeClass('editable').unbind('click').html('<img src="/images/ajax-loader-trans.gif" align="center">');
-
-			$.ajax({
-					url: target,
-					context: $(this),
-					success: function(data){
-						$(this).html(data).addClass('editMode');
-						$('input', this).val(currentVals[containerID]).focus().select();
-					},
-					error: function(){
-						$(this).html(currentVals[containerID]);
-					}
-			});
-		} */
 </script>
 
 

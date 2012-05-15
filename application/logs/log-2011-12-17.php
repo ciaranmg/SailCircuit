@@ -2577,7 +2577,7 @@ DEBUG - 2011-12-17 11:02:43 --> Form Validation Class Initialized
 DEBUG - 2011-12-17 11:02:43 --> Controller Class Initialized
 DEBUG - 2011-12-17 11:02:43 --> Model Class Initialized
 DEBUG - 2011-12-17 11:02:43 --> Model Class Initialized
-ERROR - 2011-12-17 11:02:43 --> Severity: Notice  --> Undefined property: CI_DB_mysql_result::$result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boat_model.php 33
+ERROR - 2011-12-17 11:02:43 --> Severity: Notice  --> Undefined property: CI_DB_mysql_result::$result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boats_model.php 33
 ERROR - 2011-12-17 11:02:43 --> Severity: Warning  --> Invalid argument supplied for foreach() /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/owner_model.php 21
 DEBUG - 2011-12-17 11:04:25 --> Config Class Initialized
 DEBUG - 2011-12-17 11:04:25 --> Hooks Class Initialized
@@ -2610,7 +2610,7 @@ DEBUG - 2011-12-17 11:04:26 --> Form Validation Class Initialized
 DEBUG - 2011-12-17 11:04:26 --> Controller Class Initialized
 DEBUG - 2011-12-17 11:04:26 --> Model Class Initialized
 DEBUG - 2011-12-17 11:04:26 --> Model Class Initialized
-ERROR - 2011-12-17 11:04:26 --> Severity: Notice  --> Undefined property: CI_DB_mysql_result::$result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boat_model.php 33
+ERROR - 2011-12-17 11:04:26 --> Severity: Notice  --> Undefined property: CI_DB_mysql_result::$result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boats_model.php 33
 DEBUG - 2011-12-17 11:06:08 --> Config Class Initialized
 DEBUG - 2011-12-17 11:06:08 --> Hooks Class Initialized
 DEBUG - 2011-12-17 11:06:09 --> Utf8 Class Initialized

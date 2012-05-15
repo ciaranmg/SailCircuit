@@ -1,21 +1,9 @@
-<section class="portlet leading" id="boatOwners">
-	<header>
-		<h2>Owners</h2>
-	</header>
-	<section>
-		<dl>
-			<? foreach($owners as $owner):?>
-				<dt class="expander">
-					<?=$owner->name?>
-						<dd>Phone: <?=$owner->phone?></dd>
-						<dd>Email: <a href="mailto:<?=$owner->email?>"><?=$owner->email?></a></dd>
-				</dt>
-			<? endforeach;?>
-		</dl>
-	</section>
-	<section>
-		<? if($this->userlib->check_permission('owner/create')): ?>
-			<a href="owner/create/<?=$boat->id?>" class="button" title="Add Owner">Add Owner</a>
-		<? endif;?>
-	</section>
-</section>
+<dl>
+	<? foreach($owners as $owner):?>
+		<dt class="editable" id="hc_edit_owner_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/name/text') . '/' . $owner->id;?>">
+			<?=$owner->name?>
+		</dt>
+		<dd>Phone: <span class="editable" id="hc_edit_phone_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/phone/text') . '/' . $owner->id;?>"><?=$owner->phone?></span></dd>
+		<dd>Email: <span class="editable" id="hc_edit_email_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/email/text') . '/' . $owner->id;?>"><?=$owner->email?></span></a></dd>	
+	<? endforeach;?>
+</dl>

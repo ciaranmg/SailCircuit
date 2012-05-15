@@ -96,15 +96,14 @@ class userlib {
 	
 	
 	function force_permission($action, $args=null){
-		
+		$this->CI->load->model('club_model');
 		// Function to check if a user has permission to perform a particular action
 		// Parameters:
-		//				$userID
+		//				$userID : comes from the current session
 		//				$action: Text, takes the form controller/method e.g. boat/view
 		//				$args: array, specific to the action being performed
 		// Returns:
-		//				TRUE if permission is granted
-		//				FALSE if permission is not granted
+		//				Nothing: Redirects to the forbidden page if the action is not allowed
 				
 		// 1. determine action
 		// 2. determine if action has required subject
@@ -113,7 +112,8 @@ class userlib {
 		$subject = $this->CI->user_model->get_permission_subject($action, $args);
 		
 		//if There's no proper subject for the action then there's no permission
-		if(!$subject) return false;
+		if($subject =='' OR !$subject) redirect('user/forbidden');
+		
 		// If there's no arguments, then default to the users currently selected club_id
 		if($args) {
 			extract($args);
@@ -121,8 +121,6 @@ class userlib {
 			$club_id = $this->club_id;
 		}
 		
-		
-		$this->CI->load->model('club_model');
 		
 		if(isset($club_id)){
 			// do nothing
@@ -132,9 +130,12 @@ class userlib {
 			$club_id = $this->CI->club_model->get_parent_club('class', $class_id);
 		}elseif(isset($regatta_id)){
 			$club_id = $this->CI->club_model->get_parent_club('regatta', $regatta_id);
+		}elseif(isset($boat_id)){
+			$club_id = $this->CI->club_model->get_parent_club('boat', $boat_id);
 		}
 		
 		$result = $this->CI->user_model->query_permissions($this->userid, $action, $club_id);
+
 		if($result === false){
 			redirect('user/forbidden');
 		}	
@@ -177,6 +178,8 @@ class userlib {
 			$club_id = $this->CI->club_model->get_parent_club('class', $class_id);
 		}elseif(isset($regatta_id)){
 			$club_id = $this->CI->club_model->get_parent_club('regatta', $regatta_id);
+		}elseif(isset($boat_id)){
+			$club_id = $this->CI->club_model->get_parent_club('boat', $boat_id);
 		}
 		$result = $this->CI->user_model->query_permissions($this->userid, $action, $club_id);
 		return $result;	

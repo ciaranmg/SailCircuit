@@ -37,8 +37,8 @@ class Owner extends CI_Controller{
 				$x = $this->owner_model->insert($this->ownerData);
 				
 				if($this->input->post('boat_id')){
-					$this->load->model('boat_model');
-					$this->boat_model->set_boat_owner($this->input->post('boat_id'), $x);
+					$this->load->model('boats_model');
+					$this->boats_model->set_boat_owner($this->input->post('boat_id'), $x);
 				}
 				
 				$this->session->set_flashdata('message', 'Owner Successfully Created');

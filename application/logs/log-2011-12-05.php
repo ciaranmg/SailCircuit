@@ -1927,7 +1927,7 @@ DEBUG - 2011-12-05 13:56:10 --> Model Class Initialized
 DEBUG - 2011-12-05 13:56:10 --> Model Class Initialized
 DEBUG - 2011-12-05 13:56:10 --> Controller Class Initialized
 DEBUG - 2011-12-05 13:56:10 --> Model Class Initialized
-ERROR - 2011-12-05 13:56:10 --> Severity: Notice  --> Undefined variable: result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boat_model.php 88
+ERROR - 2011-12-05 13:56:10 --> Severity: Notice  --> Undefined variable: result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boats_model.php 88
 DEBUG - 2011-12-05 13:57:12 --> Config Class Initialized
 DEBUG - 2011-12-05 13:57:12 --> Hooks Class Initialized
 DEBUG - 2011-12-05 13:57:12 --> Utf8 Class Initialized
@@ -1978,7 +1978,7 @@ DEBUG - 2011-12-05 13:57:40 --> Model Class Initialized
 DEBUG - 2011-12-05 13:57:40 --> Model Class Initialized
 DEBUG - 2011-12-05 13:57:40 --> Controller Class Initialized
 DEBUG - 2011-12-05 13:57:40 --> Model Class Initialized
-ERROR - 2011-12-05 13:57:40 --> Severity: Notice  --> Undefined variable: result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boat_model.php 88
+ERROR - 2011-12-05 13:57:40 --> Severity: Notice  --> Undefined variable: result /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boats_model.php 88
 DEBUG - 2011-12-05 13:58:51 --> Config Class Initialized
 DEBUG - 2011-12-05 13:58:51 --> Hooks Class Initialized
 DEBUG - 2011-12-05 13:58:51 --> Utf8 Class Initialized
@@ -2315,7 +2315,7 @@ DEBUG - 2011-12-05 14:41:23 --> Model Class Initialized
 DEBUG - 2011-12-05 14:41:23 --> Controller Class Initialized
 DEBUG - 2011-12-05 14:41:23 --> Model Class Initialized
 DEBUG - 2011-12-05 14:41:23 --> Model Class Initialized
-ERROR - 2011-12-05 14:41:23 --> Severity: Notice  --> Trying to get property of non-object /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boat_model.php 32
+ERROR - 2011-12-05 14:41:23 --> Severity: Notice  --> Trying to get property of non-object /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/boats_model.php 32
 DEBUG - 2011-12-05 14:42:01 --> Config Class Initialized
 DEBUG - 2011-12-05 14:42:01 --> Hooks Class Initialized
 DEBUG - 2011-12-05 14:42:01 --> Utf8 Class Initialized
@@ -5851,8 +5851,8 @@ DEBUG - 2011-12-05 20:53:15 --> Model Class Initialized
 DEBUG - 2011-12-05 20:53:15 --> Controller Class Initialized
 DEBUG - 2011-12-05 20:53:15 --> Model Class Initialized
 DEBUG - 2011-12-05 20:53:15 --> Model Class Initialized
-ERROR - 2011-12-05 20:53:15 --> Severity: Notice  --> Undefined variable: ths /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/class_model.php 13
-ERROR - 2011-12-05 20:53:15 --> Severity: Notice  --> Trying to get property of non-object /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/class_model.php 13
+ERROR - 2011-12-05 20:53:15 --> Severity: Notice  --> Undefined variable: ths /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/classes_model.php 13
+ERROR - 2011-12-05 20:53:15 --> Severity: Notice  --> Trying to get property of non-object /Users/cmcgrath/Dropbox/projects/Sail Circuit/Results/application/models/classes_model.php 13
 DEBUG - 2011-12-05 20:55:33 --> Config Class Initialized
 DEBUG - 2011-12-05 20:55:33 --> Hooks Class Initialized
 DEBUG - 2011-12-05 20:55:33 --> Utf8 Class Initialized

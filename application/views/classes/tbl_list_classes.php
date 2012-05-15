@@ -1,5 +1,5 @@
 <? if(is_array($classes)): ?>
-<table class="display full">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -9,9 +9,9 @@
 	</thead>
 	<tbody>
 		<? foreach($classes as $class): ?>
-			<tr class="<?=alternator('odd', 'even');?>">
+			<tr>
 				<td>
-					<a href="#classes/view/<?=$class->id?>" title="<?=$class->name?>">
+					<a href="<?=base_url();?>classes/view/<?=$class->id?>" title="<?=$class->name?>">
 						<?=$class->name?>
 					</a>
 				</td>

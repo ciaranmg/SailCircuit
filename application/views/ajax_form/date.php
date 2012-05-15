@@ -9,5 +9,5 @@
 ?>
 <?=form_input($data); ?>
 <script>
-	$('#<?=$field;?>').dateinput();
+	$('#<?=$field;?>').datepicker();
 </script>

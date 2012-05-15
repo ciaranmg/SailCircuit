@@ -108,7 +108,7 @@ class User_model extends CI_Model{
 		$this->db->select('subject');
 		$this->db->limit(1);
 		$query = $this->db->get_where('sc_permissions', array('permission_name' => $action_name));
-		
+		// $this->firephp->log($this->db->last_query());
 		if($query->num_rows() > 0){
 			$row = $query->row();
 			return $row->subject;

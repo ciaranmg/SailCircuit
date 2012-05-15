@@ -1,12 +1,4 @@
-			<script>
-			/* $(function() {
-				$('#raceTable').dataTable({
-						"sPaginationType": "full_numbers"
-				});
-			}); */
-			</script>
-			
-			<table class="display" id="raceTable">
+			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th>Race Name</th>
@@ -20,7 +12,7 @@
 					if($races) : foreach ($races as $race): ?>
 						<tr class="<?=alternator('odd', 'even');?>" action="race/show/<?=$race->id?>">
 							<td>
-								<a href="#race/show/<?=$race->id?>" title="<?=$race->name?>">
+								<a href="<?=base_url('race/show') .'/'.$race->id;?>" title="<?=$race->name?>">
 									<?=$race->name?>
 								</a>
 							</td>
@@ -37,12 +29,20 @@
 													'title' => '',
 													'tooltip'=>'Input Race Data',
 													'action' => 'race/input',
-													'classes' => 'icon-only',
+													'classes' => 'btn-mini',
 													'parameters' => $race->id,
-													'icon' => '78'
+													'icon' => 'plus'
 												),
+												1 => array(
+													'title' => '',
+													'tooltip' => 'Delete this race',
+													'action' => 'race/delete',
+													'classes' => 'btn-mini',
+													'parameters' => $race->id,
+													'icon' => 'trash'
+												)
 									);
-								
+		
 									$this->load->view('common/toolbar', array('buttons' => $buttons));
 								?>
 							</td>

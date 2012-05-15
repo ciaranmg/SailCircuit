@@ -73,7 +73,7 @@ class User extends CI_Controller {
 		if($this->session->flashdata('redirect')){
 			$data['redirect'] = $this->session->flashdata('redirect');
 		}else{
-			$data['redirect'] = '#home/dashboard'; // Set a default redirect for the login action
+			$data['redirect'] = '/'; // Set a default redirect for the login action
 		}
 		
 		
@@ -142,9 +142,11 @@ class User extends CI_Controller {
 	}
 	
 	function forbidden(){
-		$this->load->view('common/header');
+		$data['breadcrumb'] = $this->breadcrumb->get_path();
+		$this->load->view('common/header', $data);
 		$this->load->view('common/forbidden');
 		$this->load->view('common/footer');
+		
 	}
 	
 }

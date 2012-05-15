@@ -1,8 +1,10 @@
-<section class="portlet leading">
-	<header>
-		<h2>Handicaps</h2>
-	</header>
-	<section>
-	
-	</section>
-</section>
+<table class="table table-bordered">
+	<tbody>
+		<? foreach($handicaps as $h):?>
+			<tr>
+				<th width="30%"><?=$h->name;?></th>
+				<td><?=$h->value;?></td>
+			</tr>
+		<? endforeach; ?>
+	</tbody>
+</table>

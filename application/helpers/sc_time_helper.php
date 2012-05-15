@@ -105,13 +105,16 @@ function time2sec($time){
 	return $seconds;
 }
 
+// return the standard SailCircuit Datetime format given a timestamp
 function sc_date_format($date){
 	return date('d/m/Y', $date);
 }
 
+// Given a MySQL date format, return a date & time 
 function sc_db_datetime_format($mysqlDate){
 	return date("F j, Y g:i a ", strtotime($mysqlDate));
 }
+
 
 function sc_php2db_timestamp($timestamp){
 	return date('Y-m-d H:i:s', $timestamp);
