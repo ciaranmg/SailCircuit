@@ -132,7 +132,6 @@ class Boats extends CI_Controller {
 					
 			// Todo: 	Get list of races
 			// 			Get list of classes
-			
 			//			AJAX Form for adding owners
 
 
