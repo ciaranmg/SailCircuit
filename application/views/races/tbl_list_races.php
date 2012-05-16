@@ -3,7 +3,7 @@
 					<tr>
 						<th>Race Name</th>
 						<th>Start Date/Time</th>
-						<th>Discard</th>
+						<th class="aligncenter">Discard</th>
 						<th>&nbsp;</th>
 					</tr>
 				</thead>
@@ -19,8 +19,12 @@
 							<td>
 								<?=sc_db_datetime_format($race->start_date);?>
 							</td>
-							<td>
-								<?=$race->discard?>
+							<td class="aligncenter">
+								<?if($race->discard == 1):?>
+									<i class="icon-ok"></i>
+								<? else: ?>
+									<i class="icon-remove"></i>
+								<? endif;?>
 							</td>
 							<td>
 								<?

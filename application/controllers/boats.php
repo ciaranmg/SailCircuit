@@ -158,5 +158,58 @@ class Boats extends CI_Controller {
 		
 		
 	}
+
+	function add_handicaps($id){
+		if(!is_ajax()) show_404('boats/add_handicap/$id');
+		$this->load->model('handicap_model');
+		
+		if($this->userlib->check_permission('boats_edit', array('boat_id' => $id))){
+
+			$hcaps = $this->handicap_model->get_handicaps();
+
+			$options[''] = 'Choose One';
+			foreach($hcaps as $h){
+				// Find out if the boat already has a handicap for this system. If it does it will return 0.00
+				// Elements that are left will be available to select.
+				if($this->handicap_model->get_boat_handicap($id, $h->name) == 0.00){
+					$options[$h->name] = $h->name;
+				}
+			}
+			$data['options'] = $options;
+			$data['boat_id'] = $id;
+
+			if($this->input->post('submit')){
+				// Form has been submitted. Validate, and save.
+				if($this->form_validation->run('handicap') === false ){
+					$this->firephp->log(validation_errors());
+
+					$this->form_validation->set_error_delimiters('<p>', '</p>');
+					$this->load->view('boats/handicap_form', $data);
+				}else{
+					$this->firephp->log('true');
+					// Save the form data
+					$this->boats_model->save_boat_meta($id, $this->input->post('system_name'), $this->input->post('handicap_value'));
+					// Get handicap data to populate the table
+					$i = 0;
+					foreach ($hcaps as $h) {
+						if($value = $this->boats_model->get_boat_meta($id, $h->name)){
+							$handicaps[$i] = new stdClass;
+							$handicaps[$i]->name = $h->name;
+							$handicaps[$i]->value = $value;
+							$i++;
+						}
+					}
+					$data['handicaps'] = $handicaps;
+					$this->load->view('boats/tbl_handicaps', $data);
+				}
+			}else{
+				// Form has not been submitted. Initialise and Display the form
+				$this->load->view('boats/handicap_form', $data);
+			}
+		}else{
+			// user does not have permission to perform this action. Return the content with an error message.
+
+		}
+	}
 }			
 ?>

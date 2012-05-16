@@ -4,8 +4,8 @@
             <p>&copy; SailCircuit <?=date('Y');?></p>
         </footer>
     </div> <!-- /container -->
-
     <script src="<?=base_url()?>js/jqueryui/jquery-ui-1.8.16.custom.min.js"></script>
+    <script src="<?=base_url()?>js/jquery.validate.min.js"></script>
     <script src="<?=base_url()?>js/bootstrap-transition.js"></script>
     <script src="<?=base_url()?>js/bootstrap-alert.js"></script>
     <script src="<?=base_url()?>js/bootstrap-modal.js"></script>

@@ -45,19 +45,21 @@
 						<?
 							$add_handicap = array(
 								array(
+								'type' => 'button',
 								'title' => 'Add Handicap',
 								'action' => 'boats/add_handicap',
-								'classes' => '',
+								'classes' => 'btn-ajax-activate',
 								'parameters' => $boat->id,
-								'icon' => 'time'
+								'icon' => 'time',
+								'attributes' => 'data-target-id="ctr-ajax-handicaps" data-target="'. base_url('boats/add_handicaps') . '/' .$boat->id . '"'
 								)
 							);
 							$this->load->view('common/toolbar', array('buttons' => $add_handicap));
 						?>
 						<div class="clearfix"></div>
 					</header>
-					<section>
-						<? if(isset($handicaps)) $this->load->view('boats/handicaps');?>
+					<section id="ctr-ajax-handicaps">
+						<? if(isset($handicaps)) $this->load->view('boats/tbl_handicaps');?>
 					</section>
 				</section>
 				<section class="portlet leading">

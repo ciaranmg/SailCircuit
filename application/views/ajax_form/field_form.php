@@ -70,8 +70,8 @@
 				var target = $(this).attr('action');
 				var formData = $(this).serialize();
 				$(this).parent().append('<img src="/images/ajax-loader-trans.gif" align="center">');
-				console.log(target);
-				console.log(formData);
+				// console.log(target);
+				// console.log(formData);
 				$.ajax({
 					url: target,
 					data: formData,

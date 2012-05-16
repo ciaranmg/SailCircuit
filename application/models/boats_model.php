@@ -129,6 +129,15 @@ class boats_model extends CI_Model {
 		}
 	}
 
+	function save_boat_meta($boat_id, $name, $value){
+		$this->firephp->log('save_boat_meta');
+		$this->db->insert('sc_boat_meta', array('boat_id' => $boat_id, 'field' => $name, 'value' => $value));
+		$insert_id = $this->db->insert_id();
+		if($insert_id){
+			return true;
+		}
+	}
+
 	function get_field($field, $id){
 		$this->db->select($field);
 		$this->db->from('sc_boats')->where('id', $id);
@@ -163,10 +172,7 @@ class boats_model extends CI_Model {
 		$this->db->join('sc_owners', 'sc_boat_owners.owner_id = sc_owners.id', 'left');
 		$this->db->where('sc_class_boats.class_id', $class_id);
 		$this->db->order_by('handicap', 'desc');
-		$this->db->group_by('sc_boats.id');
-
-		
-		
+		$this->db->group_by('sc_boats.id');		
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result();

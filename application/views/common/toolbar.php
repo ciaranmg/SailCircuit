@@ -22,6 +22,11 @@ if(!isset($options)){
 							<? if(isset($button['icon'])) echo '<i class="icon-'. $button['icon'] .'"></i> '; ?>
 							<?=$button['title']?>
 						</button>
+					<? elseif($button['type'] == 'button'): ?>
+						<button class="btn <?=$button['classes']?>" title="<?=$button['title'];?>" <? if(isset($button['attributes'])) echo $button['attributes'];?>>
+							<? if(isset($button['icon'])) echo '<i class="icon-'. $button['icon'] .'"></i> '; ?>
+							<?=$button['title']?>
+						</button>
 					<? endif; ?>
 			<? endif; ?>
 		<? endforeach; ?>

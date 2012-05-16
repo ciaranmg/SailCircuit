@@ -1,9 +1,17 @@
 /* SailCircuit.css */ 
+
 .baseFooter{
     text-align: center;
 }
 .ajaxForm {
     margin: 0;
+}
+
+button.flat-button{
+    border: none;
+    background: none;
+    padding: 4px;
+    
 }
 
 .editable:hover {
@@ -88,8 +96,12 @@ padding: 20px;
     font-weight: bold;
 }
 
-.table td.alignright, .table thead td.alignright, .table thead th.alignright {
+.table td.alignright, .table thead td.alignright, .table, th.alignright {
     text-align: right;
+}
+
+.table td.aligncenter, .table thead td.aligncenter, .table th.aligncenter {
+    text-align: center;
 }
 
 /* Tiny Scrollbar Styles */

@@ -155,6 +155,18 @@ $config = array(
 											'label' => 'Phone Number',
 											'rules' => 'trim|required|xss_clean'
 									)
-								)
+								),
+				'handicap' => array(
+									array(
+											'field' => 'system_name',
+											'label' => 'Handicap System Name',
+											'rules' => 'trim|string|required|xss_clean'
+										),
+									array(
+											'field' => 'handicap_value',
+											'label' => 'Handicap Value',
+											'rules' => 'trim|required|numeric|xss_clean'
+										)
+					)
 				);
 ?>

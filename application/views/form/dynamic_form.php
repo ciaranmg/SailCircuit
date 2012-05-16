@@ -12,7 +12,7 @@
 	<? endif;?>
 	<?
 	$hidden_fields = array('action' => $form['action'], 'submit' => $form['submit'], 'parent' => $form['parent']);
-
+	
 	if(isset($form['upload'])){
 		echo form_open($form['action'], array('class'=>'form-horizontal'), $hidden_fields);
 	}else{
