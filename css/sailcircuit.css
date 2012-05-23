@@ -7,6 +7,15 @@
     margin: 0;
 }
 
+.ajax-spinner{
+    width: 100px;
+    margin: 0 auto;
+    height: 100px;
+    background-image: url('../images/ajax-loader-trans.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 button.flat-button{
     border: none;
     background: none;
@@ -14,8 +23,34 @@ button.flat-button{
     
 }
 
+#ctr-race-info, #ctr-race-data{
+    height: 400px;
+}
+
+
+#ctr-race-data textarea { 
+    width: 100%; 
+    padding: 10px; 
+    height: 90%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* IE 8+ */
+}
+
+#ctr-race-info legend{
+    border-color: #cccccc;
+    font-size: 14px;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
 .editable:hover {
     cursor: pointer;
+}
+
+.editable .hint{
+    position: relative;
+    width: 60px;
+    left: -60px;
 }
 
 .form-horizontal .form-actions{
@@ -32,8 +67,16 @@ h2.editable, h2.editMode {
     float: none!important;
 }
 
+.input-tiny{
+    width: 45px;
+}
+
 .leading{
 	margin-top:15px;
+}
+
+.light {
+    color: #aaaaaa;
 }
 
 .oneaddon {
@@ -42,6 +85,11 @@ h2.editable, h2.editMode {
 
 .twoaddons {
     width: 216px;
+}
+
+.page-header{
+    margin-bottom: 0;
+    border-bottom: none;
 }
 
 .portlet{
@@ -83,6 +131,9 @@ padding: 20px;
     margin: 0;
     float: left;
 }
+.show-help{
+    cursor: pointer;
+}
 
 .span2.add-remove-buttons{
     padding-top: 50px;
@@ -102,6 +153,14 @@ padding: 20px;
 
 .table td.aligncenter, .table thead td.aligncenter, .table th.aligncenter {
     text-align: center;
+}
+
+.table tr.inactive {
+    color: #aaaaaa;
+}
+
+.table tr.inactive a:link, .table tr.inactive a:visited {
+    color: #99DDFF;
 }
 
 /* Tiny Scrollbar Styles */

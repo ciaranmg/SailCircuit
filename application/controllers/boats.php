@@ -3,10 +3,12 @@ class Boats extends CI_Controller {
 
 	private $boatData = array(
 			'name' => '',
+			'sail_number' => '',
 			'make' => '',
 			'model' => '',
 			'length' => 0.0,
-			'main_class' => ''
+			'main_class' => '',
+			'sub_class' => ''
 		);
 			
 	function index(){
@@ -27,9 +29,10 @@ class Boats extends CI_Controller {
 	function create() {	
 		$this->userlib->force_login();
 		$this->userlib->force_permission('boats_create', array('club_id' => $this->session->userdata('club_id')));
+		$this->load->model('boats_model');
 
 		$form = array(
-				'action' => 'boats/create/' . $this->session->userdata('club_id'),
+				'action' => 'boats/create',
 				'parent' => $this->session->userdata('club_id'),
 				'submit' => 'submit',
 				'button_label' => 'Create Boat',
@@ -38,6 +41,13 @@ class Boats extends CI_Controller {
 						'name' => 'name',
 						'type' => 'text',
 						'label' => 'Name',
+						'value' => '',
+						'required' => true
+						),
+					array(
+						'name' => 'sail_number',
+						'type' => 'text',
+						'label' => 'Sail Number',
 						'value' => '',
 						'required' => true
 						),
@@ -56,7 +66,7 @@ class Boats extends CI_Controller {
 					array(
 						'name' => 'length',
 						'type' => 'text',
-						'label' => 'Length (LOA)',
+						'label' => 'Length in Meters (LOA)',
 						'value' => '',
 						'required' => true
 						),
@@ -70,6 +80,12 @@ class Boats extends CI_Controller {
 										'Keelboat' => 'Keelboat',
 										'Dinghy' => 'Dinghy'
 									)
+						),
+					array(
+						'name' => 'sub_class',
+						'type' => 'text',
+						'label' => 'Class (e.g. Laser, J24 etc.)',
+						'value' => ''
 						)
 				)
 			);
@@ -77,9 +93,10 @@ class Boats extends CI_Controller {
 		$data['breadcrumb'] = $this->breadcrumb->get_path();
 		$data['title'] = 'Create Boat';
 
-		if($this->input->post('submit') && $this->input->post('action') == 'boats/create'){
-				
+		if($this->input->post('submit') AND $this->input->post('action') == 'boats/create'){
+			$this->firephp->log('Form Submitted');	
 			if($this->form_validation->run() === false ){
+				$this->firephp->log('Validation Failed');
 				$this->form_validation->set_error_delimiters('<p>', '</p>');
 				for($i = 0; $i < sizeof($form['fields']); $i++){
 					if($form['fields'][$i]['type'] == 'dropdown'){
@@ -89,20 +106,23 @@ class Boats extends CI_Controller {
 					}
 				}
 				$data['form'] = $form;
-				$this->load->view('boats/create', $data);
+				$this->load->view('boats/boat_form', $data);
 
 			}else{
+				$this->firephp->log('Validation Passed');
 				// Double check security
 				$this->userlib->force_permission('boats_create', array('club_id' => $this->input->post('parent')));
 				
 				foreach($form['fields'] as $field){
 					$this->boatData[$field['name']] = $this->input->post($field['name']);
 				}
-				$boat_id = $this->boats_model->insert($boatData, $this->input->post('parent'));
+				$boat_id = $this->boats_model->insert($this->boatData, $this->input->post('parent'));
 				$this->session->set_flashdata('message', 'Boat Successfully Created. <a href="'. base_url('boats/create') . '">Create another</a>');
+				$this->firephp->log('Boat Inserted, Redirecting');
 				redirect(base_url('boats/view') . '/' . $boat_id);
 			}
 		}else{
+			$this->firephp->log('Form Not Submitted');	
 			$this->load->view('boats/boat_form', $data);
 		}
 	}
@@ -122,11 +142,10 @@ class Boats extends CI_Controller {
 			// Then make sure the user can view the boat in question
 			$this->userlib->force_permission('boats_view', array('boat_id' => $id));
 
-			$owner_ids = $this->boats_model->get_boat_owners($id);
+			$owner_ids = $this->boats_model->get_owners($id);
 			// $this->firephp->log($owner_ids);
 			
-			if($owner_ids){
-				$owners = $this->owner_model->get_owners($owner_ids);
+			if($owners = $this->boats_model->get_owners($id)){
 				$data['owners'] = $owners;
 			}
 					
@@ -134,18 +153,9 @@ class Boats extends CI_Controller {
 			// 			Get list of classes
 			//			AJAX Form for adding owners
 
+			$handicaps = $this->handicap_model->get_boat_handicaps($id);
 
-			$all_handicaps = $this->handicap_model->get_handicaps();
-			$i = 0;
-			foreach ($all_handicaps as $h) {
-				if($value = $this->boats_model->get_boat_meta($id, $h->name)){
-					$handicaps[$i] = new stdClass;
-					$handicaps[$i]->name = $h->name;
-					$handicaps[$i]->value = $value;
-					$i++;
-				}
-			}
-			if(isset($handicaps)) $data['handicaps'] = $handicaps;
+			if($handicaps) $data['handicaps'] = $handicaps;
 			$data['breadcrumb'] = $this->breadcrumb->get_path();	
 			$data['title'] = $boat->name;
 			$data['boat'] = $boat;
@@ -158,8 +168,54 @@ class Boats extends CI_Controller {
 		
 	}
 
+	function ajax_list_boats($type = null){
+		if(!is_ajax()) show_404('boats/ajax_list_boats');
+		$this->load->model('boats_model');
+
+		if($type == 'Dinghy' OR $type == 'Keelboat'){
+			$boats = $this->boats_model->get_boats(array('club_id' => $this->session->userdata('club_id'), 'main_class' => $type), 'sail_number');
+			
+		}else{
+			$boats = $this->boats_model->get_boats(array('club_id' => $this->session->userdata('club_id')), 'sail_number');
+		}
+		echo json_encode($boats);
+	}
+
+	function ajax_delete_handicap($id){
+		$this->load->model('handicap_model');
+		$this->load->model('boats_model');
+
+		if(!is_ajax()) show_404("boats/ajax_delete_handicap/$id");
+
+		if($this->userlib->check_permission('boats_edit', array('boat_id'=>$id)) AND $this->input->post('submit')) {
+			$this->boats_model->delete_boat_meta(array('id' => $this->input->post('object_id')));
+			$data['handicaps'] = $this->handicap_model->get_boat_handicaps($id);
+			$this->load->view('boats/tbl_handicaps', $data);
+		}else{
+			echo '<div class="alert alert-error">You do not have permission to edit this resource</div>';
+			error_log('User' . $this->session->userdata('user_id') .'Tried to delete handicap from boat_id' .$id);
+		}
+	}
+
+	function ajax_delete_owner($id){
+		$this->load->model('owner_model');
+		$this->load->model('boats_model');
+		
+		if(!is_ajax()) show_404("boats/ajax_delete_owner/$id");
+
+		if($this->userlib->check_permission('boats_edit', array('boat_id'=> $id)) && $this->input->post('submit')){
+			$this->owner_model->delete_owner($this->input->post('object_id'));
+			$data['owners'] = $this->boats_model->get_owners($id);
+			$data['boat_id'] = $id;
+			$this->load->view('owners/list_owners', $data);
+		}else{
+			echo '<div class="alert alert-error">You do not have permission to edit this resource</div>';
+			error_log('User' . $this->session->userdata('user_id') .'Tried to delete owner from boat_id' .$id);
+		}
+	}
+
 	function add_handicaps($id){
-		if(!is_ajax()) show_404('boats/add_handicap/$id');
+		if(!is_ajax()) show_404("boats/add_handicap/$id");
 		$this->load->model('handicap_model');
 		
 		if($this->userlib->check_permission('boats_edit', array('boat_id' => $id))){
@@ -189,16 +245,8 @@ class Boats extends CI_Controller {
 					// Save the form data
 					$this->boats_model->save_boat_meta($id, $this->input->post('system_name'), $this->input->post('handicap_value'));
 					// Get handicap data to populate the table
-					$i = 0;
-					foreach ($hcaps as $h) {
-						if($value = $this->boats_model->get_boat_meta($id, $h->name)){
-							$handicaps[$i] = new stdClass;
-							$handicaps[$i]->name = $h->name;
-							$handicaps[$i]->value = $value;
-							$i++;
-						}
-					}
-					$data['handicaps'] = $handicaps;
+					
+					$data['handicaps'] = $this->handicap_model->get_boat_handicaps($id);
 					$this->load->view('boats/tbl_handicaps', $data);
 				}
 			}else{

@@ -107,15 +107,36 @@ function time2sec($time){
 
 // return the standard SailCircuit Datetime format given a timestamp
 function sc_date_format($date){
-	return date('d/m/Y', $date);
+	$CI =& get_instance();
+	if($CI->session->userdata('locale') =='uk'){
+		return date('d/m/Y', $date);
+	}else{
+		return date('m/d/Y', $date);
+	}
 }
 
-// Given a MySQL date format, return a date & time 
-function sc_db_datetime_format($mysqlDate){
-	return date("F j, Y g:i a ", strtotime($mysqlDate));
+// Function that returns the correct unix timestamp based on the users locale settings
+function sc_strtotime($date){
+	$CI =& get_instance();
+
+	if($CI->session->userdata('locale') == 'uk')
+		return strtotime(str_replace('/', '-', $date));
+
+	return strtotime(date);
+}
+
+// Accepts a unix timestamp and outputs the time in 24hour format
+function sc_time_format($datetime){
+	return date('G:i', $datetime);
+}
+
+// Return a US style date format
+function sc_us_date_format($date){
+	return date('m/d/Y', $date);
 }
 
 
+// Take a timestamp and return a MySQL friendly format
 function sc_php2db_timestamp($timestamp){
 	return date('Y-m-d H:i:s', $timestamp);
 }

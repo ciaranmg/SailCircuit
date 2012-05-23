@@ -18,8 +18,6 @@
     <script src="<?=base_url()?>js/bootstrap-collapse.js"></script>
     <script src="<?=base_url()?>js/bootstrap-carousel.js"></script>
     <script src="<?=base_url()?>js/bootstrap-typeahead.js"></script>
-    <script type="text/javascript" src="<?=base_url()?>js/bootstrap-tooltip.js"></script>
-    <script src="<?=base_url()?>js/tinyscrollbar.js"></script>
     <? $this->load->view('common/inline_js');?>
   </body>
 </html>

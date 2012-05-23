@@ -8,6 +8,8 @@ class userlib {
 	private $clubs = null;
 	private $club_id = null;
 	private $club_name = null;
+	private $language = 'en';
+	private $locale = 'uk';
 	private $CI = null;
 	
 	function __construct(){
@@ -33,6 +35,8 @@ class userlib {
 			$this->clubs =  $this->CI->user_model->get_user_clubs($this->userid);
 			$this->club_id = $this->clubs[0]->club_id;
 			$this->club_name = $this->clubs[0]->club_name;
+			$this->locale = $this->clubs[0]->locale;
+			$this->language = $this->clubs[0]->language;
 			$this->set_club($this->club_id, $this->club_name);	
 		}
 	//	$this->CI->firephp->log("Name: ". $this->name);	
@@ -84,6 +88,8 @@ class userlib {
 	// Function to set the club session variable
 		$this->CI->session->set_userdata('club_id', $id);
 		$this->CI->session->set_userdata('club_name', $name);
+		$this->CI->session->set_userdata('language', $this->language);
+		$this->CI->session->set_userdata('locale', $this->locale);
 	}
 	
 	function activeuser(){

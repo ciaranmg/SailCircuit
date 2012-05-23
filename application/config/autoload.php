@@ -80,7 +80,7 @@ $autoload['helper'] = array('url', 'form', 'string', 'sc_time', 'sc_buttons', 'd
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('metafields');
 
 
 /*

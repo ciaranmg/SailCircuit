@@ -40,17 +40,17 @@
 				<section>
 					<table class="table table-bordered">
 					<tr>
-						<td class="">Start Date</td>
+						<th class="">Start Date</th>
 						<td class="editable" id="fc_start_date" target="<?=base_url('ajax/edit/regatta/start_date/date') . '/' . $regatta->id;?>">
 							<?=sc_date_format($regatta->start_date);?>
 						</td>
 					</tr>
 					<tr>
-						<td class="">End Date</td>
+						<th class="">End Date</th>
 						<td class="editable" id="fc_end_date" target="<?=base_url('ajax/edit/regatta/end_date/date') . '/' . $regatta->id;?>"><?=sc_date_format($regatta->end_date);?></td>
 					</tr>
 					<tr>
-						<td class="">Description</td>
+						<th class="">Description</th>
 						<td class="editable" id="fc_description" target="<?=base_url('ajax/edit/regatta/description/textarea') . '/' . $regatta->id;?>"><?=$regatta->description;?></td>
 					</tr>
 				</table>

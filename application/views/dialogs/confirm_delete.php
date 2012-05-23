@@ -3,12 +3,13 @@
 
 	Parameters:
 		array(
-			'object_id' => 0,
-			'object_type' => '',
-			'action' => '',
-			'modal_id' =>'',
-			'modal_header' => '',
-			'modal_content' => '',
+			'object_id' => 0,      			The ID of the object Being Deleted
+			'object_type' => '',			The Type of object being deleted
+			'action' => '',					The url of the controller to send the form to
+			'modal_id' =>'',				The HTML ID of the modal
+			'modal_header' => '',			Title Text for the modal
+			'modal_content' => '',			Content for the modal
+			'referrer' => 					The Page to go to after the delete operaion. This isn't used for AJAX
 		)
 */?>
 <div class="modal fade" id="<?=$modal_id;?>">

@@ -26,7 +26,7 @@
 				<td class="hidden-phone"><?=$boat->model?></td>
 				<? if(isset($show_handicap)):?>
 				<td class="editable alignright" id="hc_edit_handicap_<?=$boat->id;?>" target="<?=base_url('ajax/edit/classes/handicap/text') . '/' . $boat->field_id;?>">
-					<?=$boat->handicap;?>
+					<?=number_format(floatval($boat->handicap), 3, '.', ',');?>
 				</td>
 				<? endif;?>
 				<td class="alignright"><?=number_format(floatval($boat->length), 2, '.', ',');?></td>

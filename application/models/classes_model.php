@@ -31,8 +31,6 @@ class classes_model extends CI_Model {
 		$this->db->from('sc_classes');
 		$this->db->where('regatta_id', $regatta_id);
 		$this->db->join('sc_handicap_systems', 'sc_handicap_systems.id = sc_classes.rating_system_id');
-		$this->db->where('sc_classes.status', 'active');
-		
 		$query = $this->db->get();
 		$this->firephp->log($this->db->last_query());
 		if($query->num_rows() > 0){
@@ -46,6 +44,7 @@ class classes_model extends CI_Model {
 				sc_classes.name, 
 				sc_classes.description, 
 				sc_classes.discards, 
+				sc_classes.status,
 				sc_scoring_systems.name as scoring_name, 
 				sc_scoring_systems.id as scoring_id, 
 				sc_series_ties.name as ties_name, 
@@ -99,7 +98,7 @@ class classes_model extends CI_Model {
 				return $query->first_row();
 	}
 
-	function update_field($field, $data, $id, $type){
+	function update_field($field, $data, $id, $type = null){
 		if($type == 'date' OR $type == 'datetime'){
 			$data = strtotime($data);
 		}
@@ -120,7 +119,86 @@ class classes_model extends CI_Model {
 			$b['class_id'] = $class_id;
 		}
 		$this->db->insert_batch('sc_class_boats', $boats);
-
 	}
 
+	function update_class_boats($class_id, $boats){
+		// 1. Get all the current class boats. We'll need the handicap data later.
+		// 2. Get the boat data for the boats_in form field
+		// 3. If a boat was already in the class, then update the boat data with the existing handicap value
+		// 3a. If not just double check that the user is allowed to use that boat.
+		// 4. Clear all boats from the class
+		// 5. Add the boats from #2 to the class
+
+		if(!is_integer($class_id) AND !is_array($boats)) return false;
+		$this->load->model('handicap_model');
+		// Get handicap name
+		$this->db->select('sc_handicap_systems.name');
+		$this->db->from('sc_handicap_systems');
+		$this->db->join('sc_classes', 'sc_classes.rating_system_id = sc_handicap_systems.id');
+		$this->db->where('sc_classes.id', $class_id);
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			$result = $query->first_row();
+			$handicap_name = $result->name;
+		}else{
+			$this->firephp->log('No handicap name found');
+		}
+
+		$query = $this->db->get_where('sc_class_boats', array('class_id'=>$class_id));
+		if($query->num_rows() > 0){
+			$class_boats = $query->result();
+		}else{
+			$class_boats = array();
+		}
+
+		$update_class_boats = array();
+		$i = 0;
+		foreach($boats as $ci){
+			$found = false;
+			$update_class_boats[$i]['id'] = null;
+			$update_class_boats[$i]['class_id'] = $class_id;
+			$update_class_boats[$i]['boat_id'] = $ci;
+			foreach($class_boats as $cb){
+				if($cb->id == $ci){
+					$update_class_boats[$i]['handicap'] = $cb->handicap;
+					$found = true;
+					break;
+				}
+			}
+			if($found == false){
+				$update_class_boats[$i]['handicap'] = $this->handicap_model->get_boat_handicap($ci, $handicap_name);
+			}
+			$i++;
+		}
+		$this->db->delete('sc_class_boats', array('class_id' => $class_id));
+		if(sizeof($update_class_boats) > 0){
+			$this->firephp->log($update_class_boats);
+			$this->db->insert_batch('sc_class_boats', $update_class_boats);
+		}
+	}
+
+	/**
+	 * function to change the status of a class.
+	 * If races, or class rules are changed then the status needs to be flagged so 
+	 * the user knows that a refresh is needed to cascade those changes down to the results.
+	 * 
+	 * Parameters: $change_object		array
+	 *										'race_id' =>
+	 * 								OR		'class_id' =>
+	 *				$status 			string
+	 *									'modified', or active, or other string to denote the status of the class
+	 */
+	function update_status($change_object, $status = 'modified'){
+		extract($change_object);
+		
+		if(isset($race_id)){
+			$query = $this->db->select('class_id')->where('sc_races.id', $race_id)->get('sc_races');
+			if($query->num_rows() >0){
+				$x = $query->first_row();
+				$class_id = $x->class_id;
+			}
+		}
+		$this->db->where('id', $class_id);
+		$this->db->update('sc_classes', array('status' => $status));
+	}
 }

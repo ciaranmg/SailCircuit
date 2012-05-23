@@ -34,7 +34,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   </head>
 
-  <body>
+  <body class="<?=$this->uri->segment(1);?>">
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -48,19 +48,39 @@
           <div class="nav-collapse">
             <ul class="nav">
                 <li <? if($this->uri->segment(1) =='') echo 'class="active"';?>><a href="<?=base_url()?>">Home</a></li>
-                <li <? if($this->uri->segment(1) =='regatta') echo 'class="active"';?>><a href="<?=base_url('regatta');?>">Regattas</a></li>
-                <li <? if($this->uri->segment(1) =='boats') echo 'class="active"';?>><a href="<?=base_url('boats');?>">Boats</a></li>
+                <li class="dropdown <? if($this->uri->segment(1) =='regatta') echo 'active';?>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regattas <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="<?=base_url('regatta/list_all');?>">View Regattas</a></a>
+                        </li>
+                        <li>
+                            <a href="<?=base_url('regatta/create');?>">Create Regatta</a></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown <? if($this->uri->segment(1) =='boats') echo 'active';?>">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Boats <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="<?=base_url('boats');?>">List Boats</a>
+                        </li>
+                        <li>
+                            <a href="<?=base_url('boats/create');?>">Add Boat</a>
+                        </li>
+                    </ul>
+                </li>
                 <li <? if($this->uri->segment(1) =='rules') echo 'class="active"';?>><a href="<?=base_url('rules');?>">Rules</a></li>
             </ul>
             <ul class="nav pull-right">
                 <li>
                     <div class="btn-group">
-                        <a class="btn btn-primary" href="/race/input/"><i class="icon-plus icon-white"></i> Input Race Results</a>
+                        <a class="btn btn-primary" href="<?=base_url('/race/input');?>"><i class="icon-plus icon-white"></i> Input Race Results</a>
                     </div>
                 </li>
                 <li>
                     <div class="btn-group">
-                        <a href="<?=base_url()?>user/profile" class="btn btn-inverse" title="<?=$this->session->userdata('name');?>"><i class="icon-user icon-white"></i> Welcome <?=$this->session->userdata('name');?></a>
+                        <a href="<?=base_url('user/profile')?>" class="btn btn-inverse" title="<?=$this->session->userdata('name');?>"><i class="icon-user icon-white"></i> Welcome <?=$this->session->userdata('name');?></a>
                         <a href="#" data-toggle="dropdown" class="btn btn-inverse dropdown-toggle"><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>

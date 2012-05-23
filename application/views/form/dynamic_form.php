@@ -4,11 +4,8 @@
 //
 ?>
 <div class="defaultForm leading">
-	<? if(validation_errors()): ?>
-		<div class="alert alert-error">
-			<button class="close" data-dismiss="alert">×</button>
-			<?=validation_errors();?>
-		</div>
+	<? if(validation_errors()): ?>	
+		<?=validation_errors();?>
 	<? endif;?>
 	<?
 	$hidden_fields = array('action' => $form['action'], 'submit' => $form['submit'], 'parent' => $form['parent']);

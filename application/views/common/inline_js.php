@@ -1,27 +1,77 @@
 <script>	
+	var datelocale = '<?=($this->session->userdata('locale') =='uk') ? 'dd/mm/yy' : 'mm/dd/yy'; ?>';
+	var currentVals = new Array();
+	var modalTrigger;
+
 	$(function() {
+		$('.editable').tooltip({
+			title: '<i class="icon-pencil icon-white"></i> Click to Edit',
+			trigger: 'hover',
+			placement: 'left', 
+		});
 		$('.editable').click(function(){
 			singleFieldEditForm($(this));
 		});
 		$('.btn-ajax-activate').click(function(){
 			ajaxEditForm($(this));
 		});
-		$('.scrollable').tinyscrollbar();  
-		$( ".datepicker" ).datepicker();
+
+		/*			Set up date pickers		*/
+		$( ".datepicker" ).datepicker({dateFormat: datelocale});
+
+		/*			Tooltips on mini buttons		*/
 		$('.btn-mini, .sc-icon-only').tooltip();
-		$('.sc-delete').click(function(){
-			var button = $(this);
-			$(button.attr('href') + ' input[name=object_id]').val(button.attr('data-subject-id'));
-			$(button.attr('href') + ' .modal-body').html('<p>' + button.attr('data-subject-title') + '</p>');
-			$(button.attr("href")).modal();
-		})
+		
+
+		/* 			Set up ajax delete buttons		*/
+		$(document).on('click', '.sc-delete', function(){
+			console.log('ping');
+			modalTrigger = $(this);
+			
+			var modal = $(modalTrigger.attr('href'));
+
+			$('input[name=object_id]', modal).val(modalTrigger.attr('data-subject-id'));
+			$(modalTrigger.attr('href') + ' .modal-body').html('<p>' + modalTrigger.attr('data-subject-title') + '</p>');
+			$(modalTrigger.attr("href")).modal();
+			
+			if(modalTrigger.attr('data-ajax') == 'true'){
+				$('form', modal).attr('action', modalTrigger.attr('data-action'));
+				$('form', modal).bind('submit', function(){ ajaxDeleteForm($(this)); return false;});
+			}
+		});
 	});
 
 
-	var currentVals = new Array();
+
+	function ajaxDeleteForm(frmDelete){
+		// Close the Modal, Find the container and put the ajax spinner up.
+		// Gather the form data and submit it to the controller
+		// Then fill the container with the response
+
+		frmDelete.parents('.modal').modal('hide');
+		var formData = frmDelete.serialize();
+		var container = modalTrigger.parents('.ajax-container');
+		currentVals[container.attr('id')] = container.html();
+		container.html('<div class="ajax-spinner"></div>');
+
+		$.ajax({
+			url: frmDelete.attr('action'),
+			data: formData,
+			type: 'POST',
+			context: frmDelete,
+			success: function(data){
+				container.html(data);
+			},
+			error: function(){
+				container.html(currentVals[container.attr('id')]);
+			}
+		});
+	}
 
 	function ajaxSaveForm(frmSave){
-		// Hide the form, gather it's data and show with the ajax spinner
+		// Validate the form, then if it's ok...
+		// Hide the form, gather it's data and show the ajax spinner until a response comes back.
+		// Then fill the container with the response.
 		
 		var formTest = $(frmSave).validate({
 			highlight: function(element, errClass) {
@@ -63,13 +113,19 @@
 	} 
 
 	function ajaxEditFormCancel(btnCancel){
+		// Hide the form and replace the container content as it was before from the currentVals array
 		var itemContainer = btnCancel.parents('.editMode').attr('id');
 		$('#' + itemContainer).html(currentVals[itemContainer]).removeClass('editMode');
+		$(':input').tooltip('hide');
 		var btnAjax = $('[data-target-id="' + itemContainer +'"]');
 		btnAjax.removeClass('disabled').bind('click', function(){ ajaxEditForm($(this)); });
 	}
 
 	function ajaxEditForm(btnAjax){
+		// Click event handler for the add 'x' buttons.
+		// Store the content in currentvals, then use ajax to get the form and put it in the container.
+		// If ajax fails, just replace the content in the container.
+
 		var target = btnAjax.attr('data-target');
 		var containerID = btnAjax.attr('data-target-id');
 

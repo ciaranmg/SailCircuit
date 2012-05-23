@@ -1,26 +1,45 @@
-<? if($ajax !== true) $this->load->view('common/header'); ?>
-<div id="ownerForm" class="defaultForm">
-	<?=validation_errors(); ?>
-	<?=form_open($action); ?>
+<?if(isset($message)):?>
+	<div class="alert fade in">
+		<button class="close" data-dismiss="alert">×</button>
+		<?=$message;?>
+	</div>
+<? endif; ?>
 
-		<? if(isset($id)): ?> 
-			<input type="hidden" name="id" id="id" value="<?=$id?>">
-		<? endif;
-			if(isset($boat_id)):?>
-			<input type="hidden" name="boat_id" id="boat_id" value="<?=$boat_id?>">
-		<? endif; ?>
-		
-		<input type="hidden" name="action" id="action" value="<?=$action?>">
-		<label for="name">Name <?=form_error('name'); ?></label>
-		<input type="text" name="name" id="name" value="<?=set_value('name'); ?>">
-		
-		<label for="name">Email <?=form_error('email'); ?></label>
-		<input type="text" name="email" id="email" value="<?=set_value('email'); ?>">
-		
-		<label for="name">Phone <?=form_error('phone'); ?></label>
-		<input type="text" name="phone" id="phone" value="<?=set_value('phone'); ?>">
-		
-		<?=form_submit('submit', 'Save');?>
-	</form>
-</div>
-<? if($ajax !== true) $this->load->view('common/footer'); ?>
+<?if(isset($err_message)):?>
+	<div class="alert alert-error fade in">
+		<button class="close" data-dismiss="alert">×</button>
+		<?=$err_message;?>
+	</div>
+<? endif; ?>
+
+<?
+	$hidden = array(
+		'action' => base_url("owner/create/$boat_id"),
+		'submit' => 'submit'
+		);
+	echo form_open($hidden['action'], array('class' => 'well form-inline frm-ajax-save'), $hidden); 
+?>
+	<button class="close btn-ajax-cancel">×</button>
+	<fieldset class="control-group">
+		<div class="control-group warning">
+			<label class="control-label" for="name">Name *</label>
+			<div class="controls">	
+				<input data-original-title="Name is required" placeholder="Name is required" class="input-large required" type="text" name="name" id="name" value="<?=set_value('name'); ?>">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="email">Email </label>
+			<div class="controls">
+				<input data-original-title="Must be a valid email address" placeholder="Email address" class="input-large email" type="text" name="email" id="email" value="<?=set_value('email'); ?>">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="phone">Phone </label>
+			<div class="controls">
+				<input placeholder="Phone number" class="input-large" type="text" name="phone" id="phone" value="<?=set_value('phone'); ?>">
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary btn-ajax-save">Save</button>
+	</fieldset>
+
+<?=form_close();?>

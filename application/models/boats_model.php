@@ -2,15 +2,12 @@
 class boats_model extends CI_Model {
 
 	function insert($boatData, $club_id) {
-			$this->db->insert('sc_boats', $boatData);
-			// $this->firephp->log($this->db->last_query()); 
+			$this->db->insert('sc_boats', $boatData); 
 			$x = $this->db->insert_id();
-
 			$this->boats_model->set_club_boat($club_id, $x);
 			
 			return $x;
-	}
-	
+	}	
 	
 	function get($id){
 		$result = $this->db->get_where('sc_boats', array('id' => $id));
@@ -24,15 +21,6 @@ class boats_model extends CI_Model {
 	function set_boat_owner($boat_id, $owner_id){
 		$this->db->insert('sc_boat_owners', array('owner_id'=>$owner_id, 'boat_id' => $boat_id));
 		if($this->db->insert_id()) return true;
-	}
-	
-	function get_boat_owners($boat_id){
-		$this->db->select('owner_id')->from('sc_boat_owners')->where('boat_id', $boat_id);
-		$query = $this->db->get();
-		// $this->firephp->log($this->db->last_query());
-		if($query->num_rows() > 0){
-			return $query->result();
-		}
 	}
 	
 	function set_club_boat($club_id, $boat_id){
@@ -114,15 +102,12 @@ class boats_model extends CI_Model {
 	}
 
 	function get_boat_meta($boat_id, $field_name, $single = true){
-		$query = $this->db->select('value', 'field')->from('sc_boat_meta')->where('boat_id', $boat_id)->where('field', $field_name)->get();
+		$query = $this->db->select('value', 'field', 'id')->from('sc_boat_meta')->where('boat_id', $boat_id)->where('field', $field_name)->get();
 		if($query->num_rows() > 0){
 			if($single === true){
-				return $query->row()->value;
+				return $query->row();
 			}else{
-				foreach($result as $row){
-					$retval[] = $row->value;
-				}
-				return $retval;
+				$query->results();
 			}
 		}else{
 			return false;
@@ -135,6 +120,24 @@ class boats_model extends CI_Model {
 		$insert_id = $this->db->insert_id();
 		if($insert_id){
 			return true;
+		}
+	}
+
+	/**
+	 *		Function to delete boat meta data
+	 * 		$args is an associative array and can be made up of:
+	 * 			boat_id  			Must Be paired with field
+	 * 			field 				Must be paired with boat_id
+	 *			id 					Can be standalone, and used to delete an individual field
+	 */	
+	function delete_boat_meta($args){
+		extract($args);
+		if(isset($id)){
+			$this->db->where('id', $id)->delete('sc_boat_meta');
+		}elseif(isset($field) && isset($boat_id)){
+			$this->db->where('boat_id', $boat_id)->where('field', $field)->delete('sc_boat_meta');
+		}else{
+			return false;
 		}
 	}
 
@@ -174,6 +177,21 @@ class boats_model extends CI_Model {
 		$this->db->order_by('handicap', 'desc');
 		$this->db->group_by('sc_boats.id');		
 		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			return $query->result();
+		}else{
+			return false;
+		}
+	}
+
+	function get_owners($boat_id){
+		$this->db->select('sc_owners.id, sc_owners.name, sc_owners.email, sc_owners.phone, sc_owners.user_id, sc_boats.id as boat_id');
+		$this->db->from('sc_owners');
+		$this->db->join('sc_boat_owners', 'sc_boat_owners.owner_id = sc_owners.id');
+		$this->db->join('sc_boats', 'sc_boats.id = sc_boat_owners.boat_id');
+		$this->db->where('sc_boats.id', $boat_id);
+		$query = $this->db->get();
+		
 		if($query->num_rows() > 0){
 			return $query->result();
 		}else{

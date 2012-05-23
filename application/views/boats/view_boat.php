@@ -35,6 +35,14 @@
 									<th class="">Model</th>
 									<td id="tb_model" class="editable" target="<?=base_url('ajax/edit/boats/model/text') .'/' . $boat->id;?>"><?=$boat->model?></td>
 								</tr>
+								<tr>
+									<th>Type</th>
+									<td id="tb_type" class="editable" target="<?=base_url('ajax/edit/boats/main_class/dropdown/' . $boat->id);?>"><?=$boat->main_class;?></td>
+								</tr>
+								<tr>
+									<th>Class</th>
+									<td id="tb_sub_class" class="editable" target="<?=base_url('ajax/edit/boats/sub_class/text/' .$boat->id);?>"><?=$boat->sub_class;?></td>
+								</tr>
 							</tbody>
 						</table>
 					</section>
@@ -58,16 +66,17 @@
 						?>
 						<div class="clearfix"></div>
 					</header>
-					<section id="ctr-ajax-handicaps">
+					<section id="ctr-ajax-handicaps" class="ajax-container">
 						<? if(isset($handicaps)) $this->load->view('boats/tbl_handicaps');?>
 					</section>
 				</section>
+
 				<section class="portlet leading">
 					<header>
 						<h2>Recent Races</h2>
 						<div class="clearfix"></div>
 					</header>
-					<section>
+					<section class="ajax-container">
 						<? $this->load->view('boats/recent_races');?>
 					</section>
 				</section>
@@ -82,20 +91,22 @@
 				<header>
 					<h2>Owners</h2>
 					<?
-						$add_boat = array(
+						$add_owner = array(
 							array(
-							'title' => 'Add Owner',
-							'action' => 'owner/create',
-							'classes' => '',
-							'parameters' => $boat->id,
-							'icon' => 'user'
+								'type' => 'button',
+								'title' => 'Add Owner',
+								'action' => 'owner/create',
+								'classes' => 'btn-ajax-activate',
+								'parameters' => $boat->id,
+								'icon' => 'user',
+								'attributes' => 'data-target-id="ctr-ajax-owners" data-target="'. base_url("owner/create/" .$boat->id) . '"'
 							)
 						);
-						$this->load->view('common/toolbar', array('buttons' => $add_boat));
+						$this->load->view('common/toolbar', array('buttons' => $add_owner));
 					?>
 					<div class="clearfix"></div>
 				</header>
-				<section>
+				<section class="ajax-container" id="ctr-ajax-owners">
 					<? if(isset($owners)) $this->load->view('owners/list_owners'); ?>
 				</section>
 			</section>

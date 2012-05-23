@@ -14,7 +14,7 @@
 					<h2>Current Active Regattas</h2>
 					<div class="btn-group pull-right">
 						<a class="btn" href="regatta/create"><i class="icon-plus"></i> New Regatta</a>
-						<a class="btn" href="<?=base_url('regatta');?>"><i class="icon-list"></i> Show All</a>
+						<a class="btn" href="<?=base_url('regatta/list_all');?>"><i class="icon-list"></i> Show All</a>
 					</div>
 					<div class="clearfix"></div>
 				</header>
@@ -44,7 +44,7 @@
 				<header>
 					<h2>Boats</h2>
 					<div class="btn-group pull-right">
-						<a class="btn" href="boat/create"><i class="icon-plus"></i> New Boat</a>
+						<a class="btn" href="boats/create"><i class="icon-plus"></i> New Boat</a>
 					</div>
 					<div class="clearfix"></div>
 				</header>

@@ -17,9 +17,7 @@ class User extends CI_Controller {
 	// Function to create new user record.
 	// Displays the form, validates the data, and inserts the record
 	function create() {
-		$this->load->library('Form_validation');
-		$this->load->view('common/header');	
-		$this->load->helper('form');
+		$data['breadcrumb'] = $this->breadcrumb->get_path();
 		if($this->input->post('submit') && $this->input->post('action') == 'user/create'){
 			
 			$this->form_validation->set_error_delimiters('<div class="error"><span>&nbsp;</span>', '</div>');
@@ -34,9 +32,8 @@ class User extends CI_Controller {
 				$this->load->view('user/user_profile', $this->userData);
 			}
 		}else {
-			$this->load->view('user/new_user_form');			
+			$this->load->view('user/new_user_form', $data);			
 		}
-		$this->load->view('common/footer');
 	}
 	
 	// Function to display user profile

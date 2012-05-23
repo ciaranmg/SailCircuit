@@ -8,26 +8,12 @@ class Owner_model extends CI_Model{
 	}
 	
 	function get($owner_id){
-	
 		$this->db->from('sc_owners');
 		$this->db->where('id', $owner_id);
 		$query = $this->db->get();
-		
 		return $query->row();
 	}
 	
-	function get_owners($owners){
-		$owner_array = array();
-		foreach($owners as $o){
-			$owner_array[] = $o->owner_id;
-			
-		}
-		// $this->firephp->log($owner_array);
-		$this->db->from('sc_owners')->where_in('id', $owner_array);
-		$query = $this->db->get();
-		// $this->firephp->log($this->db->last_query()); 
-		return $query->result();
-	}
 
 	function get_field($field, $id){
 		$this->db->select($field);
@@ -46,5 +32,9 @@ class Owner_model extends CI_Model{
 							);
 		$this->db->where('id', $id);
 		$this->db->update('sc_owners', $parameters);	
+	}
+
+	function delete_owner($id){
+		$this->db->where('id', $id)->delete('sc_owners');
 	}
 }

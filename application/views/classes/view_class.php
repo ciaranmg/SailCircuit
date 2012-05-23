@@ -2,22 +2,19 @@
 <div class="row">
 	<header class="span6">
 		<h1 class="editable" id="hc_name" target="<?=base_url('ajax/edit/classes/name/text') . '/' . $class->id;?>"><?=$class->name;?></h1>
-		<? if(isset($class->description)):?>
-			<p id="hc_description" class="lead editable" target="<?=base_url('ajax/edit/classes/description/text') . '/' . $class->id;?>"><?=$class->description;?></p>
-		<? endif;?>
+		<p id="hc_description" class="lead editable" target="<?=base_url("ajax/edit/classes/description/text/" .$class->id);?>"><?if($class->description != ''): echo $class->description; else: echo '<span class="light">Click to Edit Description</span>'; endif;?></p>
 	</header>
 	<div class="span6 leading">
 		<?
 			$buttons = array(
-						/* Making the classes a one-way street for now 
-						Todo: Make classes editable
+						
 						array(
-								'title'=>'Edit Class',
-								'action'=>'classes/edit',
+								'title'=>'Recalculate',
+								'action'=>'race/edit',
 								'parameters' => $class->id, //Todo: Insert class ID
-								'classes' => '',
-								'icon' => 'edit'
-						), */
+								'classes' => ($class->status == 'modified') ? 'btn-danger' : ' hidden',
+								'icon' => 'refresh icon-white',
+							),
 						array(
 								'title'=> 'Delete Class',
 								'action' => '#classes/delete',
@@ -30,11 +27,13 @@
 			
 			$boat_buttons = array(
 								array(
-									'title' => 'Add Boats to Class',
-									'action'=> 'class/boats',
+									'title' => 'Edit Class Boats',
+									'type' => 'button',
+									'action'=> '#class/boats',
 									'parameters' => $class->id,
-									'classes'=>'',
-									'icon' => 'plus'
+									'classes'=>'btn-ajax-activate',
+									'icon' => 'pencil',
+									'attributes' => 'data-target-id="ctr-class-boats" data-target="'. base_url('classes/ajax_boat_selector/' . $class->id) .'"'
 								)
 				);
 			$race_buttons = array(
@@ -62,19 +61,19 @@
 				<table class="table table-bordered">
 					<tr>
 						<th>Discards</th>
-						<td><?=$class->discards;?></td>
+						<td class="editable" id="hc_edit_class_discard_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/discards/text/'.$class->id);?>"><?=$class->discards;?></td>
 					</tr>
 					<tr>
 						<th>Rating System</th>
-						<td><?=$class->handicap_name;?></td>
+						<td class="editable" id="hc_edit_class_rating_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/rating_system_id/dropdown/'.$class->id);?>"><?=$class->handicap_name;?></td>
 					</tr>
 					<tr>
 						<th>Tiebreak System</th>
-						<td><?=$class->ties_name;?></td>
+						<td class="editable" id="hc_edit_class_tiebreak_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/tiebreak_system/dropdown/'.$class->id);?>"><?=$class->ties_name;?></td>
 					</tr>
 					<tr>
 						<th>Scoring System</th>
-						<td><?=$class->scoring_name;?></td>
+						<td class="editable" id="hc_edit_class_scoring_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/scoring_system/dropdown/'.$class->id);?>"><?=$class->scoring_name;?></td>
 					</tr>
 				</table>
 			</section>
@@ -87,7 +86,7 @@
 				<? $this->load->view('common/toolbar', array('buttons' => $race_buttons)); ?>
 				<div class="clearfix"></div>
 			</header>
-			<section>
+			<section id="ctr-ajax-races" class="ajax-container">
 				<? $this->load->view('races/tbl_list_races');?>
 			</section>
 		</section>
@@ -101,7 +100,7 @@
 				<? $this->load->view('common/toolbar', array('buttons' => $boat_buttons));?>
 				<div class="clearfix"></div>
 			</header>
-			<section>
+			<section id="ctr-class-boats" class="ajax-container">
 				<? 
 					$this->load->view('boats/tbl_list_boats'); 
 				?>

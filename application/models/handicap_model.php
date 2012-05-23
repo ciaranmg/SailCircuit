@@ -20,6 +20,21 @@ class Handicap_model extends CI_Model {
 		}
 	}
 
+	function get_boat_handicaps($boat_id){
+		$this->db->select('sc_boat_meta.field as name, sc_boat_meta.value, sc_boat_meta.boat_id, sc_boat_meta.id');
+		$this->db->from('sc_boat_meta');
+		$this->db->join('sc_handicap_systems', 'sc_handicap_systems.name = sc_boat_meta.field');
+		$this->db->where('sc_boat_meta.boat_id', $boat_id);
+		$query = $this->db->get();
+
+		if($query->num_rows() > 0){
+			return $query->result();
+		}else{
+			return false;
+		}
+
+	}
+
 	function get_boat_handicap($boat_id, $name){
 		$this->load->model('boats_model');
 		if($name == 'Level Rating'){
@@ -29,7 +44,7 @@ class Handicap_model extends CI_Model {
 			if($handicap === false){
 				return 0.00;
 			}else{
-				return $handicap;
+				return $handicap->value;
 			}
 		}
 	}

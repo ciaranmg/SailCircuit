@@ -10,6 +10,9 @@
 				<th>
 					Start Date
 				</th>
+				<th>
+					End Date
+				</th>
 				<? if(isset($regattas[0]->club_name)): ?>
 					<th>
 						Club
@@ -25,7 +28,7 @@
 		</thead>
 		<tbody>
 			<? foreach($regattas as $regatta): ?>
-			<tr>	
+			<tr class="<?=($regatta->end_date < time()) ? 'inactive' : '';?>">
 				<td>
 					<a href="<?=base_url('regatta/view') .'/'. $regatta->id?>" title="<?=$regatta->name;?>">
 						<?=$regatta->name;?>
@@ -36,6 +39,9 @@
 				</td>
 				<td>
 					<?=sc_date_format($regatta->start_date);?>
+				</td>
+				<td class="hidden-phone">
+					<?=sc_date_format($regatta->end_date);?>
 				</td>
 				<? if(isset($regatta->club_name)): ?>
 				<td>
@@ -62,7 +68,7 @@
 			<? endforeach; ?>
 		</tbody>
 	</table>
-
+	<?=$this->pagination->create_links();?>
 	<? 
 		// Set up the bare bones for the modal. We'll populate the actual details using javascript.
 		$data = array(

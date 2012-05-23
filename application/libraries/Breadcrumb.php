@@ -30,8 +30,8 @@ class breadcrumb {
 				if(!isset($segments[1])){
 					$this->path[] = array(
 									'title' => 'List Regattas',
-									'ci_url' => base_url('regatta/list'),
-									'url' => base_url('regatta/list'),
+									'ci_url' => 'regatta/list',
+									'url' => 'regatta/list',
 									'current' => true
 								);
 				}elseif($segments[1] == 'view'){
@@ -117,40 +117,52 @@ class breadcrumb {
 										);
 			}
 		}elseif($segments[0] == 'race'){
-
-			
+			if($segments[1] == 'input'){
+				$this->path[] = array(
+						'title' => 'Input Race Data',
+						'ci_url' => 'races/input',
+						'url' => 'races/input',
+						'current' => true
+					);
+			}elseif($segments[1] == 'view'){
+				$this->path[] = array(
+						'title' => 'View Race',
+						'ci_url' => 'races/view',
+						'url' => 'races/view'
+					);
+			}
 		}elseif($segments[0] == 'boats'){
 			if(!isset($segments[1])){
 				$this->path[] = array(
 						'title' => 'List Boats',
-						'ci_url' => base_url('boats'),
-						'url' => base_url('boats'),
+						'ci_url' => 'boats',
+						'url' => 'boats',
 						'current' => true
 					);
 			}elseif($segments[1] == 'view'){
 				$this->path[] = array(
 						'title' => 'List Boats',
-						'ci_url' => base_url('boats'),
-						'url' => base_url('boats'),
+						'ci_url' => 'boats',
+						'url' => 'boats',
 						'current' => false
 					);
 				$this->path[] = array(
 						'title' => 'View Boat',
-						'ci_url' => base_url('boats/view'),
-						'url' => base_url('boats/view'),
+						'ci_url' => 'boats/view',
+						'url' => 'boats/view',
 						'current' => true
 						);
 			}elseif($segments[1] == 'create'){
 				$this->path[] = array(
 						'title' => 'List Boats',
-						'ci_url' => base_url('boats'),
-						'url' => base_url('boats'),
+						'ci_url' => 'boats',
+						'url' => 'boats',
 						'current' => false
 					);
 				$this->path[] = array(
 						'title' => 'Add New Boat',
-						'ci_url' => base_url('boats/create'),
-						'url' => base_url('boats/create'),
+						'ci_url' => 'boats/create',
+						'url' => 'boats/create',
 						'current' => true
 						);
 			}

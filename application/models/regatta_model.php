@@ -41,16 +41,20 @@ class Regatta_model extends CI_Model{
 			return $x;
 		}
 		
-		function get_regattas($club_id=null, $criteria = null){
-			
+		function get_regattas($club_id=null, $criteria = null, $limit=5, $offset=0){
+			$this->load->library('pagination');	
+			$config['base_url'] = base_url('regatta');
+			$config['total_rows'] = 100;
+
 			// Todo: Pagination & Sorting
 			$this->db->select('sc_regattas.id, 
 								sc_regattas.name, 
 								sc_regattas.description, 
-								sc_regattas.start_date, 
+								sc_regattas.start_date,
+								sc_regattas.end_date, 
 								coalesce(count(sc_classes.id)) as classes,
 								sc_regattas.club_id');
-			$this->db->from('sc_regattas');
+			// $this->db->from('sc_regattas');
 			$this->db->join('sc_classes', 'sc_regattas.id = sc_classes.regatta_id', 'left');
 			if($club_id) {
 				$this->db->where('club_id', $club_id);
@@ -63,12 +67,16 @@ class Regatta_model extends CI_Model{
 			}
 			$this->db->order_by('start_date', 'DESC');
 			$this->db->group_by('sc_regattas.id');
-			$query = $this->db->get();
-			$this->firephp->log($this->db->last_query());
+			$query = $this->db->get('sc_regattas', $limit, $offset);
+			// $this->firephp->log($this->db->last_query());
 			return $query->result();
 			
 		}
 		
+		function num_rows($club_id){
+			return $this->db->from('sc_regattas')->where('club_id', $club_id)->count_all_results();
+		}
+
 		function get_parent_regatta($class_id){
 			$this->db->select('sc_regattas.id, sc_regattas.name');
 			$this->db->from('sc_regattas');

@@ -9,14 +9,28 @@ class Regatta extends CI_Controller {
 								'club_id' => ''
 							);
 	function index(){
+		redirect('/regatta/list_all', 'location', 301);
+	}
+
+	function list_all($page = null){
 		$this->userlib->force_login();
 		$this->load->model('regatta_model');
 		
-		$regattas = $this->regatta_model->get_regattas($this->userlib->active_club());
+		$this->load->library('pagination');
+		
+		$config['base_url'] = base_url('regatta/list_all');
+		$config['total_rows'] = $this->regatta_model->num_rows($this->session->userdata('club_id'));
+		$config['per_page'] = 50; 
+
+
+		$this->pagination->initialize($config);
+		
+		$regattas = $this->regatta_model->get_regattas($this->userlib->active_club(), null, $config['per_page'], $page);
 		$data = array('title' => 'All Regattas', 'intro'=> 'List of all regattas, both active and inactive', 'regattas' => $regattas, 'breadcrumb' => $this->breadcrumb->get_path());
 		$this->load->view('regattas/index', $data);
 	}
 	
+
 
 	function create(){
 		$this->userlib->force_login();
@@ -131,6 +145,7 @@ class Regatta extends CI_Controller {
 	
 	function view($id=null){
 		$this->userlib->force_login();
+		
 		$this->load->model('regatta_model');		
 		$this->load->model('classes_model');
 		
@@ -151,8 +166,8 @@ class Regatta extends CI_Controller {
 		$breadcrumb = $this->breadcrumb->get_path();
 	
 		$data = array('regatta' => $regatta, 'classes' => $classes, 'regatta_id' => $id, 'breadcrumb' => $breadcrumb);
+		
 		$this->load->view('regattas/view_regatta', $data);
-
 	}
 	
 	function edit($field, $type, $id){
@@ -192,7 +207,7 @@ class Regatta extends CI_Controller {
 
 
 	public function date_compare($fromDate){
-		if($fromDate < $this->input->post('regatta_end_date')) {	
+		if($fromDate <= $this->input->post('regatta_end_date')) {	
 			return true;
 		}else{
 			$this->form_validation->set_message('date_compare', 'Start Date must be before End Date');

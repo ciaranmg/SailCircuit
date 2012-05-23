@@ -9,5 +9,5 @@
 ?>
 <?=form_input($data); ?>
 <script>
-	$('#<?=$field;?>').datepicker();
+	$('#<?=$field;?>').datepicker({dateFormat: datelocale});
 </script>

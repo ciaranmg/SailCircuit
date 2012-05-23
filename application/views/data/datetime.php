@@ -1,1 +1,1 @@
-<?=sc_db_datetime_format($content);?>
+<?=sc_date_format($content) . ' ' . sc_time_format($content); ?>

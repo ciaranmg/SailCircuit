@@ -50,29 +50,34 @@ $config = array(
 								),
 				'boats/create' => array(
 									array(
-											'field'=> 'boat_name',
+											'field'=> 'name',
 											'label' => 'Boat Name',
 											'rules' => 'trim|required|xss_clean'
 									),
 									array(
-											'field'=> 'boat_sail_number',
+											'field'=> 'sail_number',
 											'label' => 'Sail Number',
 											'rules' => 'trim|required|xss_clean'
 									),
 									array(
-											'field'=> 'boat_make',
+											'field'=> 'make',
 											'label' => 'Manufacturer/Builder',
-											'rules' => 'trim|required|xss_clean'
+											'rules' => 'trim|xss_clean'
 									),
 									array(
-											'field'=> 'boat_model',
+											'field'=> 'model',
 											'label' => 'Model',
 											'rules' => 'trim|required|xss_clean'
 									),
 									array(
-											'field'=> 'boat_length',
+											'field'=> 'length',
 											'label' => 'Boat Length',
 											'rules' => 'trim|numeric|required|xss_clean'
+									),
+									array(
+											'field' => 'sub_class',
+											'label' => 'Class',
+											'rules' => 'trim|xss_clean'
 									)
 								),
 				'regatta/create' => array(
@@ -139,7 +144,7 @@ $config = array(
 											'rules' => 'trim|integer|xss_clean'
 									),
 								),
-				'owner' =>	array(
+				'owner/create' =>	array(
 									array(
 											'field'=> 'name',
 											'label' => 'Name',
@@ -148,12 +153,12 @@ $config = array(
 									array(
 											'field'=> 'email',
 											'label' => 'Email Address',
-											'rules' => 'trim|valid_email|required|xss_clean'
+											'rules' => 'trim|valid_email|xss_clean'
 									),
 									array(
 											'field'=> 'phone',
 											'label' => 'Phone Number',
-											'rules' => 'trim|required|xss_clean'
+											'rules' => 'trim|xss_clean'
 									)
 								),
 				'handicap' => array(

@@ -1,3 +1,4 @@
+<? $this->load->view('common/header');?>
 <div id="userForm" class="defaultForm">
 	<?=validation_errors(); ?>
 	<?=form_open('user/create'); ?>
@@ -16,5 +17,6 @@
 		<input type="password" name="password2" id="password2" value="">
 		
 		<?=form_submit('submit', 'Sign Up');?>
-	</form>
+	<?=form_close();?>
 </div>
+<? $this->load->view('common/footer');?>
