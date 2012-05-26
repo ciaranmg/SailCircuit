@@ -1,5 +1,4 @@
 <?
-
 $config['boat_meta'] = array(
 							array(
 							'field' => 'bow_number',
@@ -21,6 +20,12 @@ $config['boat_meta'] = array(
 							'field' => 'notes',
 							'label' => 'Notes',
 							'type' => 'text',
+								),
+							array(
+							'field' => 'fleet',
+							'label' => 'Fleet',
+							'type' => 'text',
+							'single' => true
 								),
 							array(
 							'field' => 'crew',
@@ -63,7 +68,13 @@ $config['regatta_meta'] = array(
 							'label' => 'Sponsor Image',
 							'type' => 'file',
 							'single' => true
-								));
+								),
+							array(
+							'field' => 'file',
+							'label' => 'File',
+							'type' => 'file'
+								)
+							);
 $config['club_meta'] = array(
 							array(
 							'field' => 'notes',

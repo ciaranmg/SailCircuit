@@ -10,6 +10,13 @@
 |
 */
 
+$hook['post_controller_constructor'] = array(
+								// 'class'    => 'MyOtherClass',
+                                'function' => 'sc_profiler',
+                                'filename' => 'sc_profiler.php',
+                                'filepath' => 'hooks',
+                                // 'params'   => array('red', 'yellow', 'blue')
+	);
 
 
 /* End of file hooks.php */

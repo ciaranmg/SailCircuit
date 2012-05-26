@@ -7,13 +7,19 @@
     margin: 0;
 }
 
-.ajax-spinner{
-    width: 100px;
+.icon-ajax-spinner{
     margin: 0 auto;
-    height: 100px;
     background-image: url('../images/ajax-loader-trans.gif');
     background-position: center;
     background-repeat: no-repeat;
+}
+
+.large-ajax-spinner{
+    background-image: url('../images/ajax-loader-large.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 300px;
+    width: 100%;
 }
 
 button.flat-button{
@@ -24,14 +30,14 @@ button.flat-button{
 }
 
 #ctr-race-info, #ctr-race-data{
-    height: 400px;
+    min-height: 400px;
 }
 
 
 #ctr-race-data textarea { 
     width: 100%; 
     padding: 10px; 
-    height: 90%;
+    height: 380px;
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* IE 8+ */
@@ -67,12 +73,24 @@ h2.editable, h2.editMode {
     float: none!important;
 }
 
+h2 small {
+    font-size: 14px;
+}
+
+.help{
+    margin-bottom: 20px;
+}
+
 .input-tiny{
     width: 45px;
 }
 
 .leading{
 	margin-top:15px;
+}
+
+.leading-small{
+    margin-top: 10px
 }
 
 .light {
@@ -151,7 +169,7 @@ padding: 20px;
     text-align: right;
 }
 
-.table td.aligncenter, .table thead td.aligncenter, .table th.aligncenter {
+.table td.aligncenter, .table thead td.aligncenter, .table th.aligncenter, div.aligncenter {
     text-align: center;
 }
 
@@ -161,6 +179,25 @@ padding: 20px;
 
 .table tr.inactive a:link, .table tr.inactive a:visited {
     color: #99DDFF;
+}
+
+.table tr.error{
+    background: #f2dede;
+}
+
+.table tr.error td{
+    border-bottom: 1px solid #bd362f; 
+
+}
+
+#tbl-race-input{
+
+}
+
+#tbl-race-input .race-info{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px
 }
 
 /* Tiny Scrollbar Styles */

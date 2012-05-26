@@ -50,6 +50,27 @@ function IRCcalc($elapsed, $handicap){
 		}
 }
 
+// Function to calculate for level timed races
+// Parameters: 	$elapsed
+//				Type: integer, number of seconds of elapsed time
+// 				$handicap
+//				Type: This is ignored anyway.
+// Returns:		integer, number of seconds of corrected time
+function LevelCalc($elapsed, $handicap){
+	return $elapsed;
+}
+
+/**
+ * Function to calculate the number of seconds between two times
+ * Parameters:
+ *				datetime string $start_time		A human readable string of the date. The following is allowed:
+ *								dd/mm/yyyy hh:mm:ss
+ *								mm/dd/yyyy hh:mm:ss
+ */
+function elapsed_time($start_time, $finish_time){
+	return sc_strtotime($finish_time) - sc_strtotime($start_time);
+}
+
 function sec2time($sec){
 // Function to convert seconds to readable elapsed time
 // Parameters:	$sec

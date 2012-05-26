@@ -26,22 +26,44 @@ class classes_model extends CI_Model {
 	}
 	
 	function get_classes($regatta_id){
-		$this->db->select('sc_classes.id, sc_classes.race_count, sc_classes.name, sc_classes.description, sc_classes.scoring_system');
+		$this->db->select('sc_classes.id,  
+							sc_classes.name, 
+							sc_classes.description, 
+							coalesce(count(sc_races.id)) as race_count, 
+							sc_classes.scoring_system, 
+							sc_classes.regatta_id');
 		$this->db->select('sc_handicap_systems.name AS system_name');
 		$this->db->from('sc_classes');
 		$this->db->where('regatta_id', $regatta_id);
+		$this->db->join('sc_races', 'sc_classes.id = sc_races.class_id', 'left');
 		$this->db->join('sc_handicap_systems', 'sc_handicap_systems.id = sc_classes.rating_system_id');
+		$this->db->order_by('sc_classes.name', 'asc');
+		$this->db->group_by('sc_classes.id');
 		$query = $this->db->get();
 		$this->firephp->log($this->db->last_query());
 		if($query->num_rows() > 0){
 			return $query->result();
 		}
 	}
+
+	/**
+	 * Function to get the options for a dropdown list of classes given a regatta_id
+	 */
+	public function get_classes_dropdown($regatta_id){
+		$query = $this->db->select('id, name')->from('sc_classes')->where('regatta_id', $regatta_id)->get();
+		$classes_list[] = array('value' => 0, 'display' => 'Choose One');
+		if($query->num_rows() > 0){
+			foreach($query->result() as $r){
+				$classes_list[] = array('value' => $r->id, 'display' => $r->name);
+			}
+		}
+		return $classes_list;
+	}
 	
 	function get($class_id){
 		$this->db->select('sc_classes.id, 
-				sc_classes.race_count, 
-				sc_classes.name, 
+				sc_classes.name,
+				coalesce(count(sc_races.id)) as race_count, 
 				sc_classes.description, 
 				sc_classes.discards, 
 				sc_classes.status,
@@ -52,6 +74,7 @@ class classes_model extends CI_Model {
 				sc_handicap_systems.name handicap_name, 
 				sc_handicap_systems.id as handicap_id');
 		$this->db->from('sc_classes');
+		$this->db->join('sc_races', 'sc_classes.id = sc_races.class_id', 'left');
 		$this->db->join('sc_scoring_systems', 'sc_scoring_systems.id = sc_classes.scoring_system');
 		$this->db->join('sc_series_ties', 'sc_series_ties.id = sc_classes.tiebreak_system');
 		$this->db->join('sc_handicap_systems', 'sc_handicap_systems.id = sc_classes.rating_system_id');

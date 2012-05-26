@@ -38,19 +38,7 @@
 			if($class){
 				$this->userlib->force_permission('classes_view', array('class_id' => $id));							
 				$races = $this->race_model->get_races($id);
-				
-				if($races){ 
-					$race_count = sizeof($races);
-				}else{ 
-					$race_count = 0;
-				}
-				$this->firephp->log($race_count);
-				if($race_count < $class->race_count){
-					$races_to_create = $class->race_count - $race_count;
-					$names = array_fill(0, $races_to_create, 'Race');
-					$this->race_model->create_race_framework($names, $id, $class->discards);
-				}
-				$races = $this->race_model->get_races($id);
+
 				$boats = $this->boats_model->get_class_boats($id);
 				$data = array('class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
 				
@@ -70,7 +58,6 @@
 			$this->load->model('handicap_model');
 			$this->load->model('classes_model');
 			$this->load->model('boats_model');
-
 
 			// Todo: make use of the classlib function that returns options for the dropdowns
 			
@@ -200,7 +187,6 @@
 					//Double Check security first
 					$this->userlib->force_permission('classes_create', array('regatta_id' => $this->input->post('parent')));
 
-
 					$handicap_system = $this->handicap_model->get($this->input->post('rating_system_id'));
 					// $this->firephp->log('here ' . $handicap_system);
 
@@ -223,14 +209,20 @@
 								}
 								unset($x);
 							}
+						}elseif($field['name'] = 'race_count'){
+							// Race count isn't a field in the classes database. We'll initialise the races below
+							$race_count = $this->input->post($field['name']);
 						}else{
 							$this->class[$field['name']] = $this->input->post($field['name']);
 						}
 					}
 
 					$this->class['regatta_id'] = $this->input->post('parent');
+					
 					$class_id = $this->classes_model->insert($this->class);
 					
+					$this->race_model->initialise_races('Race ', $class_id, $race_count);
+
 					if(sizeof($this->class_boats) > 0) $this->classes_model->set_class_boats($this->class_boats, $class_id);			
 					
 					$this->session->set_flashdata('message', 'Class Successfully Created. <a href="'. base_url('classes/create') . '/' . $this->class['regatta_id'] . '">Create another</a>');

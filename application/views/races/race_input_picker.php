@@ -5,11 +5,11 @@ $datetime = array('field' => 'race_datetime', 'value' => array('22/05/2012', '17
 <fieldset>
 	<legend>Pick a race</legend>
 	<label for="regatta_picker">Regatta</label>
-	<?=form_dropdown();?>
+	<?=form_dropdown('regatta_picker', $regattas, 0, 'id="regatta_picker"');?>
 	<label for="class_picker">Class</label>
-	<?=form_dropdown();?>
+	<?=form_dropdown('class_picker', array('0' => ''), 0, 'id="class_picker"');?>
 	<label for="race_picker">Race</label>
-	<?=form_dropdown();?>
+	<?=form_dropdown('race_picker', array(''=> ''), 0, 'id="race_picker" class="required" data-original-title="You must Pick a Race"');?>
 </fieldset>
 <fieldset>
 	<legend>Race Parameters</legend>

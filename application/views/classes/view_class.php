@@ -19,7 +19,7 @@
 								'title'=> 'Delete Class',
 								'action' => '#classes/delete',
 								'classes' => '',
-								'parameters' => $class->id, //Todo: Insert class ID
+								'parameters' => $class->id,
 								'icon' => 'trash',
 								'attributes' => 'data-toggle="modal" data-target="#delete_class_modal"'
 					)
@@ -39,10 +39,12 @@
 			$race_buttons = array(
 								array(
 									'title' => 'Add Races',
-									'action' => 'classes/add-races',
+									'type'=> 'button',
+									'action' => '#classes/edit',
 									'parameters' => $class->id,
-									'classes' => '',
-									'icon' => 'plus'
+									'classes' => 'btn-ajax-activate',
+									'icon' => 'plus',
+									'attributes' => 'data-target-id="ctr-ajax-races" data-target="'. base_url('race/ajax_add_races/' . $class->id). '"'
 								)
 					);
 			

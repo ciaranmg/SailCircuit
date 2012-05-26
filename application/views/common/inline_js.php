@@ -7,11 +7,17 @@
 		$('.editable').tooltip({
 			title: '<i class="icon-pencil icon-white"></i> Click to Edit',
 			trigger: 'hover',
-			placement: 'left', 
+			placement: 'left',
 		});
-		$('.editable').click(function(){
+		
+		$(document).on('click', '.editable', function(){
+			$(this).tooltip('hide');
 			singleFieldEditForm($(this));
 		});
+
+		/* $('.editable').click(function(){
+			singleFieldEditForm($(this));
+		});*/
 		$('.btn-ajax-activate').click(function(){
 			ajaxEditForm($(this));
 		});
@@ -25,7 +31,6 @@
 
 		/* 			Set up ajax delete buttons		*/
 		$(document).on('click', '.sc-delete', function(){
-			console.log('ping');
 			modalTrigger = $(this);
 			
 			var modal = $(modalTrigger.attr('href'));
@@ -38,6 +43,17 @@
 				$('form', modal).attr('action', modalTrigger.attr('data-action'));
 				$('form', modal).bind('submit', function(){ ajaxDeleteForm($(this)); return false;});
 			}
+		});
+
+		$('.show-help').click(function(event){
+			if($('div.help').is(":visible")){
+				$('div.help').slideUp();
+				$(this).html('Show Help <i class="icon-chevron-down"></i>');
+			}else{
+				$('div.help').slideDown().removeClass('hidden');
+				$(this).html('Hide Help <i class="icon-chevron-up"></i>');
+			}
+			event.stopPropagation();
 		});
 	});
 

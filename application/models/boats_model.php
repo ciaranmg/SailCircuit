@@ -28,18 +28,64 @@ class boats_model extends CI_Model {
 		return true;
 	}
 	
-	
-	function get_by_sail_number($sailNumber) {
-		$this->load->database();
-		$result = $this->db->get_where('sc_boats', array('sail_number' => $sailNumber));
-		if($result->num_rows() > 0){
-			$row = $result->row();
-			return $this->boats_model->retrieve($row->id);
-		}else{
-			return false;
+
+	/**
+	 * 	Method to search for boats given various different parameters
+	 *	Parameters:
+	 *				array $args
+	 *	Returns:
+	 *				object 
+	 *						->id
+	 *						->name
+	 *			OR
+	 *				array objects 	
+	 *						->id
+	 *						->name
+	 */
+	function search_boats($args){
+		$this->db->select('sc_boats.id, sc_boats.name, sc_boats.sail_number')->from('sc_boats');
+
+		if($args){
+			
+			foreach($args as $key => $value){
+				switch($key){
+					case 'club_id':
+						$this->db->join('sc_club_boats', 'sc_club_boats.boat_id = sc_boats.id', 'left');
+						$this->db->join('sc_clubs', 'sc_clubs.id = sc_club_boats.club_id', 'left');
+						$this->db->where('sc_clubs.id', $value);
+					break;
+					case 'class_id':
+						$this->db->join('sc_class_boats', 'sc_class_boats.boat_id = sc_boats.id', 'left');
+						$this->db->where('sc_class_boats.class_id', $value);
+					break;
+					
+					case 'regatta_id':
+						$this->db->join('sc_class_boats', 'sc_class_boats.boats_id = sc_boats.id', 'left');
+						$this->db->join('sc_classes', 'sc_classes.id = sc_class_boats.class_id', 'left');
+						$this->db->where('sc_classes.regatta_id', $value);
+					break;
+					
+					case 'race_id':
+						$this->db->join('sc_race_data', 'sc_race_data.boat_id = sc_boats.id', 'left');
+						$this->db->where('sc_race_data.race_id', $value);
+					break;
+					case 'sail_number':
+						$this->db->like('sc_boats.sail_number', $value);
+					break;
+				}
+			}
+			$query = $this->db->get();
+			
+			
+			if($query->num_rows() == 0){
+				return false;
+			}elseif($query->num_rows() == 1){
+				return $query->first_row();
+			}else{
+				return $query->result();
+			}
 		}
 	}
-	
 	function get_boats($args, $order_by = null){
 		$this->db->select('sc_boats.id, sc_boats.length, sc_boats.name, model, sail_number, coalesce(group_concat(sc_owners.name SEPARATOR \', \'), \' \') as owner ', FALSE);
 		$this->db->from('sc_boats');

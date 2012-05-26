@@ -41,7 +41,7 @@ class Regatta_model extends CI_Model{
 			return $x;
 		}
 		
-		function get_regattas($club_id=null, $criteria = null, $limit=5, $offset=0){
+		function get_regattas($club_id=null, $criteria = null, $limit=10, $offset=0){
 			$this->load->library('pagination');	
 			$config['base_url'] = base_url('regatta');
 			$config['total_rows'] = 100;
@@ -71,6 +71,19 @@ class Regatta_model extends CI_Model{
 			// $this->firephp->log($this->db->last_query());
 			return $query->result();
 			
+		}
+
+		function get_regattas_dropdown($club_id){
+			$query = $this->db->select('id, name')->from('sc_regattas')->where('club_id', $club_id)->where('end_date >', time())->get();
+			if($query->num_rows() > 0){
+				$regatta_list[]  = 'Choose One';
+				foreach($query->result() as $r){
+					$regatta_list[$r->id] = $r->name;
+				}
+				return $regatta_list;
+			}else{
+				return false;
+			}
 		}
 		
 		function num_rows($club_id){

@@ -20,6 +20,16 @@ class Handicap_model extends CI_Model {
 		}
 	}
 
+	function get_class_handicap($boat_id, $class_id){
+		$this->select('sc_class_boats.handicap')->from('sc_class_boats')->where('boat_id', $boat_id)->where('class_id', $class_id)->limit(1);
+		$query = $this->get();
+		if($query->num_rows() >0 ){
+			return $query->result()->handicap;
+		}else{
+			return 0.00;
+		}
+	}
+
 	function get_boat_handicaps($boat_id){
 		$this->db->select('sc_boat_meta.field as name, sc_boat_meta.value, sc_boat_meta.boat_id, sc_boat_meta.id');
 		$this->db->from('sc_boat_meta');

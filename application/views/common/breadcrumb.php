@@ -13,5 +13,9 @@
 			</li>
 		<? endif;?>
 	<? endforeach;?>
+
+	<? if(isset($help)):?>
+		<li class="pull-right"><a class="show-help">Show Help <i class="icon-chevron-down"></i></a></li>
+	<? endif;?>
 </ul>
 <? endif;?>

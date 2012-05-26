@@ -21,7 +21,7 @@ class scoring_system
 			$this->dnf = json_decode($row->dnf, true);
 			$this->dsq = json_decode($row->dsq, true);
 			$this->dne = json_decode($row->dne, true);
-			$this->custom = $row->custom;
+			$this->custom = json_decode($row->custom, true);
 			$this->status = $row->status; 
 			$this->club_id = $row->club_id;
 		}
