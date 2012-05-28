@@ -137,9 +137,9 @@
 		var formData = formInput.serialize();
 
 		var savedState = $('#ctr-race-data .step2').html();
-		$('#ctr-race-data .step2').html('<div class="large-ajax-spinner">&nbsp;</div>');
-		$('#ctr-race-info').parent('.span4').fadeOut();
-		$('#ctr-race-data').parent('.span8').animate({width: '100%'}).addClass('span12');
+		// $('#ctr-race-data .step2').html('<div class="large-ajax-spinner">&nbsp;</div>');
+		// $('#ctr-race-info').parent('.span4').fadeOut();
+		// $('#ctr-race-data').parent('.span8').animate({width: '100%'}).addClass('span12');
 		$.ajax({
 			url: target,
 			data: formData,

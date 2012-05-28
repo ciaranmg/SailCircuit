@@ -62,9 +62,7 @@ class User extends CI_Controller {
 	// Function to process user login
 	// Sets session variables on successful login.
 	function login(){
-		$this->load->helper('form');
 		$this->load->library('Form_validation');
-		
 		$data['action'] = 'user/login';
 		
 		if($this->session->flashdata('redirect')){
@@ -72,8 +70,7 @@ class User extends CI_Controller {
 		}else{
 			$data['redirect'] = '/'; // Set a default redirect for the login action
 		}
-		
-		
+		$this->firephp->log('here');
 		// Check if the login form has been submitted
 		if($this->input->post('action') == 'user/login'){
 			if($this->form_validation->run('login')===false){
@@ -81,7 +78,6 @@ class User extends CI_Controller {
 				$this->session->set_flashdata('redirect', $data['redirect']);
 				redirect('user/login');
 			}else{
-				
 				$user = array(
 								'email' => $this->input->post('username'), 
 								'password' => $this->input->post('password')

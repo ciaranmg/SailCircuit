@@ -1,65 +1,6 @@
 <?
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
-function PYcalc($elapsed, $handicap){
-// Function to calculate the corrected time based on RYA PY handicap
-// Parameters: 	$elapsed
-//				Type: integer, number of seconds of elapsed time
-// 				$handicap
-//				Type: float, the RYA PY handicap value
-// Returns:		integer, number of seconds of corrected time
-
-	if(is_int($elapsed) && is_int($handicap)){
-			$tcc = round($elapsed * 1000 / $handicap, 0);
-			return $tcc;
-		} else {
-			return false;
-		}
-}
-
-function ECHOcalc($elapsed, $handicap){
-// Function to calculate the corrected time based on ECHO handicap
-// Parameters: 	$elapsed
-//				Type: integer, number of seconds of elapsed time
-// 				$handicap
-//				Type: float, the ECHO handicap value
-// Returns:		integer, number of seconds of corrected time
-
-	if(is_int($elapsed) && is_float($handicap)){
-			$tcc = round($elapsed * $handicap, 0);
-			return $tcc;
-		} else {
-			return false;
-		}
-}
-
-function IRCcalc($elapsed, $handicap){
-// Function to calculate the corrected time based on IRC handicap
-// Parameters: 	$elapsed
-//				Type: integer, number of seconds of elapsed time
-// 				$handicap
-//				Type: float, the IRC handicap value
-// Returns:		integer, number of seconds of corrected time
-
-	if(is_int($elapsed) && is_float($handicap)){
-			$tcc = round($elapsed * $handicap, 0);
-			return $tcc;
-		} else {
-			return false;
-		}
-}
-
-// Function to calculate for level timed races
-// Parameters: 	$elapsed
-//				Type: integer, number of seconds of elapsed time
-// 				$handicap
-//				Type: This is ignored anyway.
-// Returns:		integer, number of seconds of corrected time
-function LevelCalc($elapsed, $handicap){
-	return $elapsed;
-}
-
 /**
  * Function to calculate the number of seconds between two times
  * Parameters:

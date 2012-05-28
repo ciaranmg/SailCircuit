@@ -22,6 +22,47 @@
 			$this->load->view('races/input', $data);
 		}
 
+		function test2(){
+			$this->load->model('scoring_model');
+			$x = $this->scoring_model->get(2);
+			
+					// --------------------- Array Output  ------------------------
+					print "<pre>";
+					print_r($x);
+					print "</pre>";
+					// --------------------- End Array Output  --------------------
+					
+		}
+
+		function test($race_id){
+			$this->load->model('race_model');
+			$this->load->model('scoring_model');
+
+			$race = $this->race_model->get($race_id);
+			
+			$provisional_results = $this->race_model->get_result_data($race_id);
+			
+			// Load the scoring info
+			$scoring = $this->scoring_model->get($race->scoring_system);
+			$slib = $scoring->library;
+			$this->load->library('scoring/'.$slib);
+
+			// Get the processed Results
+			$processed = $this->$slib->process_race($provisional_results, $scoring);
+
+			$this->load->view('races/test', array('processed'=>$processed));
+
+			usort($processed, 'ucomp');
+					// --------------------- Array Output  ------------------------
+					print "<pre>";
+					print_r($processed);
+					print "</pre>";
+					// --------------------- End Array Output  --------------------
+					
+			echo "<hr>";
+			$this->load->view('races/test', array('processed'=>$processed));
+	
+		}
 		/**
 		 * Method to handle the form data submitted by the race data input form.
 		 * 			1. Stores the data in a raceData object
@@ -32,11 +73,36 @@
 		public function ajax_handle_data(){
 			if(!is_ajax()) show_404('ajax_handle_data');
 			$this->load->model('race_model');
+			$this->load->model('scoring_model');
 
 			if($this->input->post('submit') && $this->input->post('confirm')){
 				// Check if the form has been submitted and confirmed
-				
-				$this->race_model->process_data();
+				$race_id = $this->input->post('race_id');
+				$race = $this->race_model->get($race_id);
+
+				if($this->userlib->check_permission('race_edit', array('race_id' => $race_id))){
+					if($this->race_model->process_data($race_id)){
+						//The data is in the database. Now calculate the corrected times.
+						$this->race_model->calculate_corrected($race_id);
+						$provisional_results = $this->race_model->get_result_data($race_id);
+						
+						// Load the scoring info
+						$scoring = $this->scoring_model->get($race->scoring_system);
+						$slib = $scoring->library;
+						$this->load->library('scoring/'.$slib);
+
+						// Get the processed Results
+						$processed = $this->$slib->process_race($provisional_results, $scoring);
+
+						// Update the database with the processed results
+						$this->race_model->update_results($processed);
+
+					}else{
+						echo "<p>There was a problem inserting the race results into the database. Please try again</p>";
+					}
+				}else{
+					$this->load->view('common/forbidden');
+				}
 
 			}elseif($this->input->post('submit')){
 				// Just the first round has been submitted. Parse the data and return for the user to confirm.
