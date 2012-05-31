@@ -1,3 +1,12 @@
+
+<?
+		// --------------------- Array Output  ------------------------
+		print "<pre>";
+		print_r($processed);
+		print "</pre>";
+		// --------------------- End Array Output  --------------------
+		
+?>
 <table width="100%" border="1" cellpadding="4">
 	<thead>
 		<tr>
@@ -10,7 +19,6 @@
 			<th>Handicap</th>
 			<th>Corrected</th>
 			<th>Finish Position</th>
-			
 			<th>Status</th>
 		</tr>
 	</thead>
@@ -25,7 +33,6 @@
 		<td><?=($p->handicap) ? $p->handicap : '&nbsp;';?></td>
 		<td><?=sec2time($p->corrected_time)?></td>
 		<td><?=($p->position) ? $p->position : '&nbsp;';?></td>
-		
 		<td><?=$p->status?></td>
 	</tr>
 <? endforeach;?>

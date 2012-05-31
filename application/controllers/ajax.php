@@ -49,6 +49,8 @@ class Ajax extends CI_Controller {
 
 						if($type == 'datetime'){
 							$value = array(sc_date_format($result->$field), sc_time_format($result->$field));
+						}elseif($type== 'date'){
+							$value = sc_date_format($result->field);
 						}else{
 							$value = $result->$field;
 						}

@@ -12,21 +12,9 @@
 			'tiebreak_system' => 0
 		);
 
-		// An array of std Objects
-		private $class_boats = array(
-				/*
-					array(
-						'boat_id' =>
-						'class_id' =>
-						'handicap' =>
-					)
-				*/
-			);
-
 		function index(){
 			redirect(base_url('/'));
 		}
-
 		
 		function view($id=null){
 			$this->load->model('classes_model');
@@ -61,24 +49,25 @@
 
 			// Todo: make use of the classlib function that returns options for the dropdowns
 			
-			// Build the form options
-			$handicaps = $this->handicap_model->get_handicaps();
+				// Build the form options
+				$handicaps = $this->handicap_model->get_handicaps();
 
-			$classRatingSystems = array('0' => 'Choose One');
-			foreach($handicaps as $h){
-				$classRatingSystems[$h->id] = $h->name;
-			}
-			$classTiebreakers = array('0' => 'Choose One');
-	
-			foreach($this->classes_model->get_tiebreakers() as $tb){
-				$classTiebreakers[$tb->id] = $tb->name;
-			}
+				$classRatingSystems = array('0' => 'Choose One');
+				foreach($handicaps as $h){
+					$classRatingSystems[$h->id] = $h->name;
+				}
+				$classTiebreakers = array('0' => 'Choose One');
+		
+				foreach($this->classes_model->get_tiebreakers() as $tb){
+					$classTiebreakers[$tb->id] = $tb->name;
+				}
 
-			$classScoringSystems = array('0' => 'Choose One');
-			foreach($this->classes_model->get_scoring_systems() as $ss){
-				$classScoringSystems[$ss->id] = $ss->name;
-				// $this->firephp->log($ss);
-			}
+				$classScoringSystems = array('0' => 'Choose One');
+				foreach($this->classes_model->get_scoring_systems() as $ss){
+					$classScoringSystems[$ss->id] = $ss->name;
+					// $this->firephp->log($ss);
+				}
+
 			// Get boats to populate the boat selectors
 			$boats = $this->boats_model->get_boats(array('club_id' => $this->session->userdata('club_id')), 'sail_number' );
 			$i = 0;
@@ -159,7 +148,6 @@
 				)
 			);
 
-
 			$data['form'] = $form;
 			$data['breadcrumb'] = $this->breadcrumb->get_path();
 			$data['title'] = 'Create New Class';
@@ -196,10 +184,9 @@
 							if(sizeof($this->input->post('boats_in')) > 0 ){
 								$x = 0;
 								$boats = $this->input->post('boats_in');
-								$this->firephp->log($boats);
+								
 								foreach($boats as $boat_id){
 									// An array that contains the boat_id and handicap values for the classes selected handicap.
-
 									$this->class_boats[] = array(
 													'boat_id' => intval($boat_id),
 													'handicap' => $this->handicap_model->get_boat_handicap($boat_id, $handicap_system->name)
@@ -235,7 +222,7 @@
 			}
 		}
 		/**
-		 * 		Loads an a form in AJAX to allow the user to select boats for the current class
+		 * 		Loads a form in AJAX to allow the user to select boats for the current class
 		 *		
 		 */
 		function ajax_boat_selector($class_id){
@@ -306,6 +293,7 @@
 		 *						Races
 		 *						Class Boats
 		 *						Class Meta
+		 *						Race Result Data
 		 */
 		function delete(){
 			$this->userlib->force_login();
@@ -319,10 +307,10 @@
 				
 				if($races = $this->race_model->get_races($this->input->post('object_id'))){
 					foreach($races as $race){
+						$this->race_model->clear_race_data($race->id);
 						$this->race_model->delete_races($race->id);
 					}
 				}
-
 				if($x===true){
 					$this->session->set_flashdata('message', 'Class Deleted Successfully');
 				}else{
@@ -337,29 +325,5 @@
 				redirect(base_url(''));
 			}
 		}
-
-	function ajax_delete_race($class_id = null){
-		if(!is_ajax()) show_404("classes/ajax_delete_race/$class_id");
-		$this->load->model('classes_model');
-		$this->load->model('race_model');
-
-		if($this->userlib->check_permission('classes_delete', array('class_id' => $class_id)) && $this->input->post('submit')){
-			$this->race_model->delete_races($this->input->post('object_id'));
-			
-			if($data['races'] = $this->race_model->get_races($class_id)){
-				// Update the race_count field in the classes table
-				$this->classes_model->update_field('race_count', sizeof($data['races']), $class_id );
-				// Change the status field on the class to modified which signifies that the race results need to be recalculated.
-				$this->classes_model->update_field('status', 'modified', $class_id);
-				$this->load->view('races/tbl_list_races', $data);
-			}else{
-				echo "There are no races in this class";
-			}
-		} else{
-			echo '<div class="alert alert-error">You do not have permission to edit this resource</div>';
-			error_log('User' . $this->session->userdata('user_id') .'Tried to delete race' . $this->input->post('object_id'));
-		}
-	}
-
 }
 ?>

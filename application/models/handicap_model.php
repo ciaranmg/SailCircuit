@@ -38,7 +38,7 @@ class Handicap_model extends CI_Model {
 		$this->db->join('sc_handicap_systems', 'sc_handicap_systems.name = sc_boat_meta.field');
 		$this->db->where('sc_boat_meta.boat_id', $boat_id);
 		$query = $this->db->get();
-
+		
 		if($query->num_rows() > 0){
 			return $query->result();
 		}else{
@@ -59,67 +59,6 @@ class Handicap_model extends CI_Model {
 				return $handicap->value;
 			}
 		}
-	}
-
-	function PY_calc($elapsed, $handicap){
-	// Function to _calculate the corrected time based on RYA PY handicap
-	// Parameters: 	$elapsed
-	//				Type: integer, number of seconds of elapsed time
-	// 				$handicap
-	//				Type: float, the RYA PY handicap value
-	// Returns:		integer, number of seconds of corrected time
-
-		if(is_int($elapsed) && is_int($handicap)){
-				$tcc = round($elapsed * 1000 / $handicap, 0);
-				return $tcc;
-			} else {
-				error_log('Invalid data types supplied to PY_calc');
-				return false;
-			}
-	}
-
-	function ECHO_calc($elapsed, $handicap){
-	// Function to calculate the corrected time based on ECHO handicap
-	// Parameters: 	$elapsed
-	//				Type: integer, number of seconds of elapsed time
-	// 				$handicap
-	//				Type: float, the ECHO handicap value
-	// Returns:		integer, number of seconds of corrected time
-
-		if(is_int($elapsed) && is_float($handicap)){
-				$tcc = round($elapsed * $handicap, 0);
-				return $tcc;
-			} else {
-				error_log('Invalid data types supplied to ECHO_calc');
-				return false;
-			}
-	}
-
-	function IRC_calc($elapsed, $handicap){
-	// Function to calculate the corrected time based on IRC handicap
-	// Parameters: 	$elapsed
-	//				Type: integer, number of seconds of elapsed time
-	// 				$handicap
-	//				Type: float, the IRC handicap value
-	// Returns:		integer, number of seconds of corrected time
-
-		if(is_int($elapsed) && is_float($handicap)){
-				$tcc = round($elapsed * $handicap, 0);
-				return $tcc;
-			} else {
-				error_log('Invalid data types supplied to IRC_calc');
-				return false;
-			}
-	}
-
-	// Function to calculate for level timed races
-	// Parameters: 	$elapsed
-	//				Type: integer, number of seconds of elapsed time
-	// 				$handicap
-	//				Type: This is ignored anyway.
-	// Returns:		integer, number of seconds of corrected time
-	function Level_calc($elapsed, $handicap){
-		return $elapsed;
 	}
 }
 ?>

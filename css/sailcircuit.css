@@ -22,6 +22,10 @@
     width: 100%;
 }
 
+#boat-image{
+    text-align: center;
+}
+
 button.flat-button{
     border: none;
     background: none;

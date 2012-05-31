@@ -12,17 +12,44 @@ class Boats extends CI_Controller {
 		);
 			
 	function index(){
+		redirect(base_url('/boats/list_all/'));
+	}
+
+	function set_filter($filter = null){
+		if ($filter == null OR $filter == 'all') {
+			$this->session->set_userdata('main_class', null);
+		}else{
+			$this->session->set_userdata('main_class', $filter);
+		}
+			redirect(base_url('/boats/list_all'));
+	}
+
+	function list_all($page = null){
 		$this->userlib->force_login();
 		$this->load->model('boats_model');
+		$this->load->library('pagination');
 
-		$boats = $this->boats_model->get_boats(array('club_id' => $this->session->userdata('club_id')));
+
+		if($this->session->userdata('main_class')) $boat_args['main_class'] = $this->session->userdata('main_class');
+
+		$config['base_url'] = base_url('boats/list_all/');
+		$config['total_rows'] = $this->boats_model->num_rows($this->session->userdata('club_id'), (isset($boat_args['main_class']))? $boat_args['main_class'] : null);
+		$config['per_page'] = $this->config->item('per_page');
+		$this->pagination->initialize($config);
+
+		$boat_args['club_id'] = $this->session->userdata('club_id');
+		
+		
+
+		$boats = $this->boats_model->get_boats($boat_args, null, $config['per_page'], $page);
 		$data = array(
 						'boats' => $boats,
 						'breadcrumb' => $this->breadcrumb->get_path(),
 						'title' => 'List Boats',
-						'intro' => 'All Boats in ' . $this->session->userdata('club_name')
+						'intro' => 'All Boats in ' . $this->session->userdata('club_name'),
+						'filter' => $this->session->userdata('main_class')
 						);
-		// $this->firephp->log($data);
+		
 		$this->load->view('boats/list_boats', $data);	
 	}
 	
@@ -143,15 +170,13 @@ class Boats extends CI_Controller {
 			$this->userlib->force_permission('boats_view', array('boat_id' => $id));
 
 			$owner_ids = $this->boats_model->get_owners($id);
-			// $this->firephp->log($owner_ids);
+
 			
 			if($owners = $this->boats_model->get_owners($id)){
 				$data['owners'] = $owners;
 			}
-					
-			// Todo: 	Get list of races
-			// 			Get list of classes
-			//			AJAX Form for adding owners
+			$data['recent_races'] = $this->boats_model->get_boat_races($id);
+			// 	Todo:		Get list of classes
 
 			$handicaps = $this->handicap_model->get_boat_handicaps($id);
 
@@ -241,7 +266,6 @@ class Boats extends CI_Controller {
 					$this->form_validation->set_error_delimiters('<p>', '</p>');
 					$this->load->view('boats/handicap_form', $data);
 				}else{
-					$this->firephp->log('true');
 					// Save the form data
 					$this->boats_model->save_boat_meta($id, $this->input->post('system_name'), $this->input->post('handicap_value'));
 					// Get handicap data to populate the table

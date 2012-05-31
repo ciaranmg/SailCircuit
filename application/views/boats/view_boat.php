@@ -77,13 +77,13 @@
 						<div class="clearfix"></div>
 					</header>
 					<section class="ajax-container">
-						<? $this->load->view('boats/recent_races');?>
+						<? if($recent_races) $this->load->view('boats/recent_races');?>
 					</section>
 				</section>
 		</div>
 		<div class="span5">
 			<section class="portlet headerless">
-				<section>
+				<section id="boat-image">
 					<? $this->load->view('boats/profile_photo'); ?>
 				</section>
 			</section>

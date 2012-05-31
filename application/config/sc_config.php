@@ -11,6 +11,7 @@ $config['sc_debug'] = true;
 $config['sc_class_max_races'] = 50;
 
 $config['race_status_options'] = array(
+							'completed' => 'Completed',
 							'dnc' => 'DNC',		// Did not come to the starting area
 							'dns' => 'DNS',		// Did not start
 							'ocs' => 'OCS',		// Over the start line

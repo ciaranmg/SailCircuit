@@ -17,7 +17,7 @@ class breadcrumb {
 		$this->CI =& get_instance();
 	}
 
-	function get_path(){
+	function get_path($trail = null){
 		$segments = explode('/', uri_string());
 
 		if($segments[0] == 'home' OR $segments[0] == ''){
@@ -65,8 +65,8 @@ class breadcrumb {
 
 		}elseif($segments[0] == 'classes'){
 			// We're looking at a class, which has a parent which is a regatta
-			$this->CI->load->model('regatta_model');
-			$parent = $this->CI->regatta_model->get_parent_regatta($segments[2]);
+			$this->CI->load->model('classes_model');
+			$parent = $this->CI->classes_model->get_parent($segments[2]);
 			if($segments[1]=='view'){
 				$this->path[] = array(
 										'title' => $parent->name,
@@ -102,7 +102,7 @@ class breadcrumb {
 									);
 
 			}elseif($segments[1] == 'create'){
-				$regatta = $this->CI->regatta_model->get($segments[2]);
+				$regatta = $this->CI->classes_model->get_parent($segments[2]);
 				$this->path[] = array(
 										'title' => $regatta->name,
 										'ci_url' => 'regatta/view/' . $regatta->id,
@@ -125,10 +125,26 @@ class breadcrumb {
 						'current' => true
 					);
 			}elseif($segments[1] == 'view'){
+				$this->CI->load->model('race_model');
+				$this->CI->load->model('classes_model');
+				$class = $this->CI->race_model->get_parent($segments[2]);
+				$regatta = $this->CI->classes_model->get_parent($class->id);
+				
+				$this->path[] = array(
+						'title' => $regatta->name,
+						'ci_url' => 'regatta/view/' . $regatta->id,
+						'url' => 'regatta/view/' . $regatta->id,
+						'current' => false);
+				$this->path[] = array(
+						'title' => $class->name,
+						'ci_url' => 'classes/view/' . $class->id,
+						'url' => 'classes/view/' . $class->id,
+						'current' => false);
 				$this->path[] = array(
 						'title' => 'View Race',
 						'ci_url' => 'races/view',
-						'url' => 'races/view'
+						'url' => 'races/view',
+						'current' => true
 					);
 			}
 		}elseif($segments[0] == 'boats'){

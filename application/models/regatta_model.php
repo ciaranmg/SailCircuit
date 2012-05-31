@@ -65,7 +65,7 @@ class Regatta_model extends CI_Model{
 			if(isset($criteria['active'])){
 				$this->db->where('end_date >', time());
 			}
-			$this->db->order_by('start_date', 'DESC');
+			$this->db->order_by('end_date', 'DESC');
 			$this->db->group_by('sc_regattas.id');
 			$query = $this->db->get('sc_regattas', $limit, $offset);
 			// $this->firephp->log($this->db->last_query());
@@ -89,21 +89,10 @@ class Regatta_model extends CI_Model{
 		function num_rows($club_id){
 			return $this->db->from('sc_regattas')->where('club_id', $club_id)->count_all_results();
 		}
-
-		function get_parent_regatta($class_id){
-			$this->db->select('sc_regattas.id, sc_regattas.name');
-			$this->db->from('sc_regattas');
-			$this->db->join('sc_classes', 'sc_classes.regatta_id = sc_regattas.id');
-			$this->db->where('sc_classes.id', $class_id);
-			$query = $this->db->get();
-			if($query->num_rows()){
-				return $query->first_row();
-			}
-		}
 		
 		function update_field($field, $data, $id, $type){
 			if($type == 'date' OR $type == 'datetime'){
-				$data = strtotime($data);
+				$data = sc_strtotime($data);
 			}
 			$parameters = array(
 								$field => $data

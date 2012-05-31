@@ -8,6 +8,7 @@
  */
 
 function series_entry($entries, $n){
+		
 		return count($entries) + $n;
 
 	}

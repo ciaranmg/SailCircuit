@@ -49,3 +49,4 @@
 		<? endforeach; endif; ?>
 	</tbody>
 </table>
+<?=$this->pagination->create_links();?>

@@ -28,7 +28,9 @@ class classes_model extends CI_Model {
 	function get_classes($regatta_id){
 		$this->db->select('sc_classes.id,  
 							sc_classes.name, 
-							sc_classes.description, 
+							sc_classes.description,
+							sc_classes.discards,
+							sc_classes.min_races_discard, 
 							coalesce(count(sc_races.id)) as race_count, 
 							sc_classes.scoring_system, 
 							sc_classes.regatta_id');
@@ -66,13 +68,15 @@ class classes_model extends CI_Model {
 				coalesce(count(sc_races.id)) as race_count, 
 				sc_classes.description, 
 				sc_classes.discards, 
+				sc_classes.min_races_discard,
 				sc_classes.status,
 				sc_scoring_systems.name as scoring_name, 
 				sc_scoring_systems.id as scoring_id, 
 				sc_series_ties.name as ties_name, 
 				sc_series_ties.id as ties_id, 
-				sc_handicap_systems.name handicap_name, 
-				sc_handicap_systems.id as handicap_id');
+				sc_handicap_systems.name handicap_name,
+				sc_handicap_systems.id as handicap_id,
+				sc_classes.regatta_id');
 		$this->db->from('sc_classes');
 		$this->db->join('sc_races', 'sc_classes.id = sc_races.class_id', 'left');
 		$this->db->join('sc_scoring_systems', 'sc_scoring_systems.id = sc_classes.scoring_system');
@@ -81,7 +85,6 @@ class classes_model extends CI_Model {
 		$this->db->where('sc_classes.id', $class_id);
 		$query = $this->db->get();
 		if($query->num_rows() > 0) {
-			$this->firephp->log($query->first_row());
 			return $query->first_row();
 		}else{
 			return false;
@@ -98,14 +101,14 @@ class classes_model extends CI_Model {
 	function get_scoring_systems(){
 		$this->db->from('sc_scoring_systems')->where('club_id', 0)->or_where('club_id', $this->session->userdata['club_id'])->order_by('name', 'asc');
 		$query = $this->db->get();
-		require_once APPPATH.'libraries/data_objects.class.php';
-		// $this->firephp->log($this->db->last_query());
 		if($query->num_rows() >0){
-			foreach($query->result() as $row){
-				$scoring_systems[] = new scoring_system($row);
+			$result = $query->result();
+			foreach ($result as &$r) {
+				$r->rules = json_decode($r->rules);
 			}
-
-			return $scoring_systems;	
+			return $result;
+		}else{
+			return false;
 		}
 	}
 
@@ -123,7 +126,7 @@ class classes_model extends CI_Model {
 
 	function update_field($field, $data, $id, $type = null){
 		if($type == 'date' OR $type == 'datetime'){
-			$data = strtotime($data);
+			$data = sc_strtotime($data);
 		}
 
 		$parameters = array($field => $data);
@@ -224,4 +227,15 @@ class classes_model extends CI_Model {
 		$this->db->where('id', $class_id);
 		$this->db->update('sc_classes', array('status' => $status));
 	}
+
+	function get_parent($class_id){
+			$this->db->select('sc_regattas.id, sc_regattas.name');
+			$this->db->from('sc_regattas');
+			$this->db->join('sc_classes', 'sc_classes.regatta_id = sc_regattas.id');
+			$this->db->where('sc_classes.id', $class_id);
+			$query = $this->db->get();
+			if($query->num_rows()){
+				return $query->first_row();
+			}
+		}
 }

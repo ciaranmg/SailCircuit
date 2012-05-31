@@ -71,7 +71,7 @@
 					<td>
 						<? 
 							if($entry->status) { 
-								echo form_dropdown('entry_status_' . $entry->id, $this->config->item('race_status_options'), $entry->status, 'class="input-small"');
+								echo form_dropdown('entry_status_' . $entry->id, $this->config->item('race_status_options'), strtolower($entry->status), 'class="input-small"');
 							}else{
 								echo "Completed";
 								echo form_hidden('entry_status_' . $entry->id, 'completed');

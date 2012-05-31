@@ -6,8 +6,8 @@
 		<dt class="editable" id="hc_edit_owner_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/name/text') . '/' . $owner->id;?>">
 			<?=$owner->name?>
 		</dt>
-		<dd>Phone: <span class="editable" id="hc_edit_phone_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/phone/text') . '/' . $owner->id;?>"><?=$owner->phone?></span></dd>
-		<dd>Email: <span class="editable" id="hc_edit_email_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/email/text') . '/' . $owner->id;?>"><?=$owner->email?></span></dd>	
+		<dd>Phone: <span class="editable" id="hc_edit_phone_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/phone/text') . '/' . $owner->id;?>"><?=($owner->phone =='') ? 'Click to Enter a phone number' : $owner->phone;?></span></dd>
+		<dd>Email: <span class="editable" id="hc_edit_email_<?=$owner->id;?>" target="<?=base_url('ajax/edit/owner/email/text') . '/' . $owner->id;?>"><?=($owner->email == '') ? 'Click to enter an email address' : $owner->email;?></span></dd>	
 	<? endforeach;?>
 </dl>
 

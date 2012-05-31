@@ -13,33 +13,34 @@ function elapsed_time($start_time, $finish_time){
 }
 
 function sec2time($sec){
-// Function to convert seconds to readable elapsed time
-// Parameters:	$sec
-//				Type: integer
-// Returns:		string
+	// Function to convert seconds to readable elapsed time
+	// Parameters:	$sec
+	//				Type: integer
+	// Returns:		string
 	$returnstring = " ";
 	$days = intval($sec/86400);
 	$hours = intval ( ($sec/3600) - ($days*24));
 	$minutes = intval( ($sec - (($days*86400)+ ($hours*3600)))/60);
 	$seconds = $sec - ( ($days*86400)+($hours*3600)+($minutes * 60));
+	// if($seconds =='')  $seconds = '00';
 
 	$returnstring .= ($days)?(($days == 1) ? "1 Day " : sprintf("%02d", $days). " Days ") : "";
 	$returnstring .= ($days && $hours && !$minutes && !$seconds) ? "" : "";
 	$returnstring .= ($days > 0 && $hours == 0)? "00:": "";
-	$returnstring .= ($hours)?( ($hours == 1) ? "01:" : sprintf("%02d", $hours) .":") : "";
+	$returnstring .= ($hours)?( ($hours == 1) ? "01:" : sprintf("%02d", $hours) .":") : "00:";
 	$returnstring .= (($days || $hours) && ($minutes && !$seconds))?"":"";
-	$returnstring .= ($minutes)?( ($minutes == 1)?"1:": sprintf("%02d", $minutes) .":"):"";
-	$returnstring .= (($days || $hours || $minutes) && $seconds)?"":" ";
-	$returnstring .= ($seconds)?( ($seconds == 1)?"1": sprintf("%02d", $seconds)):"";
+	$returnstring .= ($minutes)?( ($minutes == 1)?"1:": sprintf("%02d", $minutes) .":"):"00:";
+	$returnstring .= (($days || $hours || $minutes) && $seconds)?"":"";
+	$returnstring .= ($seconds) ? (($seconds == 1)? "1" : sprintf("%02d", $seconds)):"00";
 	if ($returnstring != " ") return ($returnstring);
 }
 
 function time2sec($time){
-// Function to convert elapsed time to seconds
-// Parameters: 	$time
-//				Type: string
-//				Format: dd:hh:mm:ss
-// Returns:		integer
+	// Function to convert elapsed time to seconds
+	// Parameters: 	$time
+	//				Type: string
+	//				Format: dd:hh:mm:ss
+	// Returns:		integer
 
 	$day = 86400;
 	$hour = 3600;
@@ -97,10 +98,66 @@ function sc_us_date_format($date){
 	return date('m/d/Y', $date);
 }
 
+	function PY_calc($elapsed, $handicap){
+	// Function to _calculate the corrected time based on RYA PY handicap
+	// Parameters: 	$elapsed
+	//				Type: integer, number of seconds of elapsed time
+	// 				$handicap
+	//				Type: float, the RYA PY handicap value
+	// Returns:		integer, number of seconds of corrected time
 
-// Take a timestamp and return a MySQL friendly format
-function sc_php2db_timestamp($timestamp){
-	return date('Y-m-d H:i:s', $timestamp);
-}
+		// Different countries use different PY bases
+		$ci =& get_instance();
+		if($ci->userdata->session('locale') == 'uk'){
+			$base = 1000;
+		}else{
+			$base = 100;
+		}
+		
+		if($reverse){
+			return round(intval($elapsed) * intval($handicap) / $base, 0);
+		}else{
+			$tcc = round(intval($elapsed) * $base / intval($handicap), 0);
+			return $tcc;
+		}
+	}
 
+	function ECHO_calc($elapsed, $handicap, $reverse = false){
+	// Function to calculate the corrected time based on ECHO handicap
+	// Parameters: 	$elapsed
+	//				Type: integer, number of seconds of elapsed time
+	// 				$handicap
+	//				Type: float, the ECHO handicap value
+	// Returns:		integer, number of seconds of corrected time
+
+		if($reverse){
+			return intval(round(intval($elapsed) / floatval($handicap), 0));
+		}else{
+			return intval(round(intval($elapsed) * floatval($handicap), 0));
+		} 
+	}
+
+	function IRC_calc($elapsed, $handicap, $reverse = false){
+	// Function to calculate the corrected time based on IRC handicap
+	// Parameters: 	$elapsed
+	//				Type: integer, number of seconds of elapsed time
+	// 				$handicap
+	//				Type: float, the IRC handicap value
+	// Returns:		integer, number of seconds of corrected time
+		if($reverse){
+			return intval(round(intval($elapsed) / floatval($handicap), 0));
+		}else{
+			return intval(round(intval($elapsed) * floatval($handicap), 0));
+		}
+	}
+
+	// Function to calculate for level timed races
+	// Parameters: 	$elapsed
+	//				Type: integer, number of seconds of elapsed time
+	// 				$handicap
+	//				Type: This is ignored anyway.
+	// Returns:		integer, number of seconds of corrected time
+	function Level_calc($elapsed, $handicap = null, $reverse = null){
+		return $elapsed;
+	}
 ?>

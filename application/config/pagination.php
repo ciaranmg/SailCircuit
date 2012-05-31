@@ -1,6 +1,6 @@
 <?
 	$config['uri_segment'] = 3;
-	$config['per_page'] = 10;
+	$config['per_page'] = 50;
 	$config['num_links'] = 5;
 	$config['full_tag_open'] = '<div class="pagination"><ul class="pull-right">';
 	$config['full_tag_close'] = '</ul></div>';

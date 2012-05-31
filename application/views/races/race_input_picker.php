@@ -9,7 +9,13 @@ $datetime = array('field' => 'race_datetime', 'value' => array('22/05/2012', '17
 	<label for="class_picker">Class</label>
 	<?=form_dropdown('class_picker', array('0' => ''), 0, 'id="class_picker"');?>
 	<label for="race_picker">Race</label>
-	<?=form_dropdown('race_picker', array(''=> ''), 0, 'id="race_picker" class="required" data-original-title="You must Pick a Race"');?>
+	<? 
+		if(isset($race)){
+			echo form_dropdown('race_picker', array($race->id => $race->name), $race->id, 'id="race_picker" class="required" data-original-title="You must Pick a Race"');
+		}else{
+			echo form_dropdown('race_picker', array(''=> ''), 0, 'id="race_picker" class="required" data-original-title="You must Pick a Race"');
+		}
+	?>
 </fieldset>
 <fieldset>
 	<legend>Race Parameters</legend>

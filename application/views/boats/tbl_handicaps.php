@@ -1,4 +1,4 @@
-<? if(sizeof($handicaps) > 0):?>
+<? if(isset($handicaps)): if(sizeof($handicaps) > 0):?>
 <table class="table table-bordered">
 	<tbody>
 		<? foreach($handicaps as $h):?>
@@ -7,7 +7,7 @@
 					<?=$h->name;?>
 				</th>
 				<td>
-					<?=$h->value;?>
+					<?=hcap_format($h->value, $h->name);?>
 					<button href="#delete_handicap_modal" class="btn-mini sc-delete flat-button pull-right" rel="tooltip" data-original-title="Delete Handicap" data-subject-title="Are you sure you want to delete the <?=$h->name;?> handicap from this boat?" data-action="<?=base_url('boats/ajax_delete_handicap') . '/'. $h->boat_id; ?>" data-subject-id="<?=$h->id;?>" data-ajax="true">
 						<i class="icon-remove"></i>
 					</button>
@@ -16,8 +16,7 @@
 		<? endforeach; ?>
 	</tbody>
 </table>
-<? endif;?>
-
+<? endif; endif;?>
 <? 
 	// Set up the bare bones for the modal. We'll populate the actual details using javascript.
 	$data = array(

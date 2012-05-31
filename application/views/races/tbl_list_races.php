@@ -26,8 +26,9 @@
 							</td>
 							<td>
 								<?
-									$buttons = array(
-												0 => array(
+								unset($buttons);
+									if($race->status == 'open'){
+										$buttons[] = array(
 													'title' => '',
 													'tooltip'=>'Input Race Data',
 													'action' => 'race/input',
@@ -35,8 +36,19 @@
 													'parameters' => $race->id,
 													'icon' => 'plus',
 													'attributes' => 'data-original-title="Input Race Data For '. $race->name .'" rel="tooltip"'
-												),
-												1 => array(
+												);
+									}else{
+										$buttons[] = array(
+													'title' => '',
+													'tooltip'=>'View Race Data',
+													'action' => 'race/view',
+													'classes' => 'btn-mini',
+													'parameters' => $race->id,
+													'icon' => 'eye-open',
+													'attributes' => 'data-original-title="View Race Results For '. $race->name .'" rel="tooltip"'
+												);
+									}
+									$buttons[] = array(
 													'type' => 'button',
 													'title' => '',
 													'tooltip' => 'Delete this race',
@@ -44,7 +56,7 @@
 													'classes' => 'btn-mini sc-delete',
 													'parameters' => $race->id,
 													'icon' => 'trash',
-													'attributes' => 'data-action="'.base_url('classes/ajax_delete_race/'.$race->class_id) .'"
+													'attributes' => 'data-action="'.base_url('race/ajax_delete_race/'.$race->class_id) .'"
 																	 data-subject-id="'.$race->id .'"
 																	 href="#delete_race_modal" 
 																	 data-original-title="Delete '. $race->name .'"
@@ -53,10 +65,10 @@
 																	 data-target="#delete_race_modal" 
 																	 data-subject-title="Are you sure you want to delete ' .$race->name .' <br>All results for this race will be lost." 
 																	 rel="tooltip"'
-												)
-									);
+												);
 		
 									$this->load->view('common/toolbar', array('buttons' => $buttons));
+									unset($buttons);
 								?>
 							</td>
 						</tr>

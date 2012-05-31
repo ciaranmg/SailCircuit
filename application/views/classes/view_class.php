@@ -66,6 +66,10 @@
 						<td class="editable" id="hc_edit_class_discard_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/discards/text/'.$class->id);?>"><?=$class->discards;?></td>
 					</tr>
 					<tr>
+						<th>Minimum number of races Before Discard</th>
+						<td class="editable" id="hc_edit_class_min_races_discard_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/min_races_discard/text/'.$class->id);?>"><?=$class->min_races_discard;?></td>
+					</tr>
+					<tr>
 						<th>Rating System</th>
 						<td class="editable" id="hc_edit_class_rating_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/rating_system_id/dropdown/'.$class->id);?>"><?=$class->handicap_name;?></td>
 					</tr>

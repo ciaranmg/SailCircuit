@@ -3,6 +3,13 @@ class Race_model extends CI_Model{
 	
 	var $race_data;
 
+	/**
+	 * Method to get list of races given a class_id
+	 * Parameters
+	 *				int 		$class_id
+	 * Returns
+	 *				array 		Array of race objects
+	 */
 	function get_races($class_id){
 		$this->db->from('sc_races')->where('class_id', $class_id);
 		$this->db->order_by('start_date','asc');
@@ -18,21 +25,32 @@ class Race_model extends CI_Model{
 		}
 	}
 
+
+	/**
+	 * Method to get an individual race given it's ID
+	 * Parameters:
+	 *					int 			$race_id
+	 * Returns:
+	 *					object 			Object of race data
+	 */
 	function get($race_id){
-		$this->db->select('sc_races.id, 
-							sc_races.class_id,
-							sc_races.name, 
-							sc_races.start_date, 
-							sc_races.discard, 
-							sc_classes.scoring_system,
-							sc_classes.tiebreak_system,
-							sc_handicap_systems.id as handicap_id, 
-							sc_handicap_systems.name as handicap_name');
-		$this->db->from('sc_races');
-		$this->db->join('sc_classes', 'sc_classes.id = sc_races.class_id');
-		$this->db->join('sc_handicap_systems', 'sc_handicap_systems.id = sc_classes.rating_system_id');
-		$this->db->where('sc_races.id', $race_id);
+		$this->db->select('races.id, 
+							races.class_id,
+							races.name, 
+							races.start_date, 
+							races.discard,
+							races.status, 
+							classes.scoring_system,
+							classes.tiebreak_system,
+							handicap_systems.id as handicap_id, 
+							handicap_systems.name as handicap_name');
+		$this->db->from('races');
+		$this->db->join('classes', 'classes.id = races.class_id');
+		$this->db->join('handicap_systems', 'handicap_systems.id = classes.rating_system_id');
+		$this->db->where('races.id', $race_id);
+		$this->db->group_by('races.id');
 		$query = $this->db->limit(1)->get();
+
 		if($query->num_rows() > 0){
 			return $query->first_row();
 		}else{
@@ -41,7 +59,13 @@ class Race_model extends CI_Model{
 
 	}
 
-	function get_races_dropdown($class_id, $status){
+	/**
+	 * Method to get a list of race names, and ID's for use in a dropdown menu
+	 * Parameters:
+	 *					int 			$class_id
+	 * 					string 			[$status] 		A string containing a status to filter for
+	 */
+	function get_races_dropdown($class_id, $status = 'open'){
 		$query = $this->db->select('sc_races.id, sc_races.name')->from('sc_races')->where('class_id', $class_id)->where('status', $status)->get();
 		$races_list[] = array('value' => '0', 'display' => 'Choose One');
 		if($query->num_rows() > 0){
@@ -78,7 +102,19 @@ class Race_model extends CI_Model{
 	 *				array stdObject		An array of objects that relate to the sc_race_results table
 	 */
 	function update_results($race_data){
-		$this->db->update_batch('race_results', $race_data, 'id');
+
+		foreach($race_data as $rd){
+			$this->db->where('id', $rd->id);
+			$this->db->update('race_results', $rd);
+		}
+	}
+
+	function insert_results($race_data){
+		$fields = array('elapsed_time', 'handicap', 'corrected_time', 'position', 'points', 'status', 'sail_number', 'boat_id', 'race_id');
+		foreach($race_data as $rd){
+			$rd = get_object_vars($rd);
+			$this->db->insert('race_results', elements($fields, $rd));
+		}
 	}
 
 	/**
@@ -99,20 +135,34 @@ class Race_model extends CI_Model{
 	 * Method to get a readable results table for display to the user
 	 */
 	function get_readable_results($race_id){
+		$this->load->model('scoring_model');
+		// Load the scoring library so we can fetch the order by info
+		$race = $this->race_model->get($race_id);
+		$scoring = $this->scoring_model->get($race->scoring_system);
+		$slib = $scoring->library;
+		$this->load->library('scoring/'.$slib);
+		$order_by = $this->$slib->order_by();
+
 		$this->db->select('race_results.points,
 							 race_results.sail_number, 
-							 boats.name, 
+							 boats.name as boat_name, 
+							 coalesce(group_concat(sc_owners.name SEPARATOR \', \'), \' \') as owner,
 							 race_results.elapsed_time, 
 							 race_results.handicap, 
 							 race_results.corrected_time,
 							 race_results.position,
 							 race_results.status,
 							 race_results.boat_id,
-							 race_resuls.race_id
-							 ');
+							 race_results.race_id,
+							 race_results.id
+							 ', false);
 		$this->db->from('race_results');
-		$this->db->join('boats', 'boats.id = race_resuls.boat_id');
-		$this->db->where('race_results.race_id', $race_id);
+		$this->db->join('boats', 'boats.id = race_results.boat_id');
+		$this->db->join('boat_owners', 'race_results.boat_id = boat_owners.boat_id', 'left');
+		$this->db->join('owners', 'boat_owners.owner_id = owners.id', 'left');
+		$this->db->where('race_id', $race_id, false);
+		$this->db->order_by($order_by['field'], $order_by['order']);
+		$this->db->group_by('race_results.id');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			return $query->result();
@@ -120,70 +170,75 @@ class Race_model extends CI_Model{
 			return false;
 		}
 	}
+
+
 	/**
 	 * Method to calculate the race corrected times.
-	 * This method first clears the race_results table of any existing result for the given race_id;
+	 * Parameters:
+	 *				int 	$race_id
+	 *				array 	$race_data 		Array of race_data objects
+	 * Returns:
+	 *				array 					Array of race_data objects
 	 */
-	function calculate_corrected($race_id){
-		$this->load->model('handicap_model');
-
+	function calculate_corrected($race_id, $race_data){
 		$race = $this->race_model->get($race_id);
-
 		// Clear out any existing race results
-		$this->db->where('race_id', $race_id)->delete('race_results');
+		// $this->db->where('race_id', $race_id)->delete('race_results');
 		
-		$race_data = $this->db->where('race_id', $race_id)->get('sc_race_data');
-
+		// $race_data = $this->db->where('race_id', $race_id)->get('sc_race_data');
 		$handicap_function = $race->handicap_name . '_calc';
 
-		foreach($race_data->result() as $entry){
+		foreach($race_data as &$entry){
+			$entry->corrected_time = 0;
 			if(intval($entry->elapsed_time) > 0){
-				$entry->handicap = $this->handicap_model->get_class_handicap($entry->boat_id, $race->class_id);
-				if($entry->handicap == 0 OR $entry->handicap == 0.00){
-					// If the handicap isn't found with the class, try looking in the boat record
-					$x = $this->handicap_model->get_boat_handicap($entry->boat_id, $race->handicap_name);
-					// If there's no handicap for the boat, then disqualify them.
-					if($x == 0 OR $x == 0.00) {
-						$entry->status = 'DSQ';
-						$this->session->set_flashdata('err_message', $entry->sail_number . ' Was disqualified because they did not have a handicap for this class');
-					}else{
-						$entry->handicap = $x;
-					}
-				}
-				$entry->corrected_time =  $this->handicap_model->$handicap_function(intval($entry->elapsed_time), floatval($entry->handicap));
+
+				$entry->corrected_time =  $handicap_function($entry->elapsed_time, $entry->handicap);
+				
 			}
-			unset($entry->finish_time);
-			$entry->id = null;
-			$this->db->insert('race_results', $entry);
 		}
+		return $race_data;
 	} // End function calculate_corrected
 
 
 	/**
-	 * Method to take the form data of a race, calculate the corrected times and commit to the database.
+	 * Method to take the form data of a race, process it into a usable array and return it to the controller.
 	 * Parameters:
-	 *				None: 	This method pulls from the post variables
+	 *				int 	$race_id
+	 *				This method pulls from the post variables
 	 */
-	function process_data($race_id){
-		
+	function process_data($race_id){	
+		$this->load->model('handicap_model');
 		$i=0;
+		$race = $this->race_model->get($race_id);
 
 		foreach($this->input->post('entry') as $entry){
+			$race_data[$i] = new stdClass;
+			$boat_ids[] = $race_data[$i]->boat_id = $this->input->post('entry_boat_id_'.$entry);
+			$race_data[$i]->race_id = $race_id;
+			$race_data[$i]->sail_number = $this->input->post('entry_sail_number_'.$entry);
+					
+			$x = $this->handicap_model->get_class_handicap($race_data[$i]->boat_id, $race->class_id);
+			if($x == 0 OR $x == 0.00){
+				$x = $this->handicap_model->get_boat_handicap($race_data[$i]->boat_id, $race->handicap_name);
+				if($x == 0 OR $x == 0.00){
+					$race_data[$i]->status = 'DSQ';
+					$this->session->set_flashdata('err_message', $race_data[$i]->sail_number . ' Was disqualified because they did not have a handicap for this class');
+				}
+				$race_data[$i]->handicap = $x;
+			}else{
+				$race_data[$i]->handicap = $x;
+			}
 
-			$boat_ids[] = $race_data[$i]['boat_id'] = $this->input->post('entry_boat_id_'.$entry);
-			$race_data[$i]['race_id'] = $race_id;
-			$race_data[$i]['sail_number'] = $this->input->post('entry_sail_number_'.$entry);
 			if($this->input->post('finish_date_'.$entry) && $this->input->post('timer') == 'finishtime'){	
 				$ft = trim($this->post('finish_date_'.$entry)) . ' ' . trim($this->input->post('finish_time_' . $entry));
-				$race_data[$i]['finish_time'] = $ft;
-				$race_data[$i]['elapsed_time'] = sc_elapsed_time($this->input->post('race_date') . ' ' . $this->input->post('race_time'), $ft);
-				unset($ft);
-			
+				$race_data[$i]->finish_time = $ft;
+				$race_data[$i]->elapsed_time = sc_elapsed_time($this->input->post('race_date') . ' ' . $this->input->post('race_time'), $ft);
+				unset($ft);		
 			}else{
-				$race_data[$i]['finish_time'] = '';
-				$race_data[$i]['elapsed_time'] = time2sec(trim($this->input->post('finish_time_'.$entry)));
+				$race_data[$i]->finish_time = '';
+				$race_data[$i]->elapsed_time = time2sec(trim($this->input->post('finish_time_'.$entry)));
 			}
-			$race_data[$i]['status'] = $this->input->post('entry_status_' . $entry);
+			$race_data[$i]->status = $this->input->post('entry_status_' . $entry);
 			$i++;
 		}
 		
@@ -191,22 +246,25 @@ class Race_model extends CI_Model{
 		$total_boats = count($race_data) + count($missing_boats);
 		$j = 0;
 		for($i = count($race_data); $i < $total_boats ; $i++){
-			$race_data[$i]['boat_id'] = $missing_boats[$j]->id;
-			$race_data[$i]['race_id'] = $race_id;
-			$race_data[$i]['sail_number'] = $missing_boats[$j]->sail_number;
-			$race_data[$i]['finish_time'] = 0;
-			$race_data[$i]['elapsed_time'] = 0;
-			$race_data[$i]['status'] = 'DNC';
+			$race_data[$i] = new stdClass;
+			$race_data[$i]->boat_id = $missing_boats[$j]->id;
+			$race_data[$i]->race_id = $race_id;
+			$race_data[$i]->sail_number = $missing_boats[$j]->sail_number;
+			$race_data[$i]->finish_time = 0;
+			$race_data[$i]->elapsed_time = 0;
+			$race_data[$i]->status = 'DNC';
 			$j++;
 		}
-		$result = $this->db->insert_batch('sc_race_data', $race_data);
+
+		return $race_data;
+		/* $result = $this->db->insert_batch('sc_race_data', $race_data);
 		if($result){
 			$this->db->where('id' , $race_id);
 			$this->db->update('sc_races', array('status' => 'completed'));
 			return true;
 		}else{
 			return false;
-		}
+		} */
 	}
 
 	function get_missing_boats($boat_ids, $race_id){
@@ -226,10 +284,15 @@ class Race_model extends CI_Model{
 
 	/**
 	 * Method to take data submitted by the form and convert it to usable variables & objects
+	 * This method does not commit anything to the database, it returns the race data in a standardised format
 	 * Parameters:
 	 *				string 	$string 		- A string of text given to a textarea field of sail numbers and finish times (or statuses)
 	 *				array 	$args 			- An array of arguments passed straight to the boats_model->search_boats method
-	 *							
+	 * Returns:
+	 *				array 			
+	 *						=> 	object 		$count		An object containing data about the number of boats found, not-found etc.
+	 *						=>  array 		$race_data 	An array of objects with the parsed race data
+	 *											
 	 */
 	function process_raw_data($string, $args){
 		$this->load->model('boats_model');
@@ -293,12 +356,12 @@ class Race_model extends CI_Model{
 					);
 	}
 
-	/*----------------------------------------------------------------------------
-	Description: Create a race, or races
-	
-	Parameters: $name: Array or String
-				$class_id: integer
-	----------------------------------------------------------------------------*/
+	/**
+	* Create a race, or races
+	*
+	* Parameters: $name: Array or String
+	* 			$class_id: integer
+	**/
 	function initialise_races($name, $class_id, $races_to_create){
 		$this->load->model('classes_model');
 
@@ -331,13 +394,27 @@ class Race_model extends CI_Model{
 			return $query->first_row();
 	}
 
-	function update_field($field, $data, $id, $type){
+	function update_field($field, $data, $id, $type='text'){
+		if($type == 'date' OR $type == 'datetime'){
+			$data = sc_strtotime($data);
+		}
 		$this->load->model('classes_model');
 		$this->db->where('id', $id);
 		$this->db->update('sc_races', array($field => $data));
 		// Finally update the class status because the reace info has changed.
 		$this->classes_model->update_status(array('race_id' => $id), 'modified');
 	}
+
+	function get_parent($race_id){
+			$this->db->select('classes.id, classes.name');
+			$this->db->from('classes');
+			$this->db->join('races', 'races.class_id = classes.id');
+			$this->db->where('races.id', $race_id);
+			$query = $this->db->get();
+			if($query->num_rows()){
+				return $query->first_row();
+			}
+		}
 
 }
 ?>
