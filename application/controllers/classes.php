@@ -16,19 +16,52 @@
 			redirect(base_url('/'));
 		}
 		
+		function test($class_id){
+			$this->load->model('classes_model');
+			$this->load->model('race_model');
+			$this->load->model('scoring_model');
+
+			$data['class'] = $this->classes_model->get($class_id);
+			$data['races'] = $this->race_model->get_races($class_id);
+			$data['points_table'] = $this->classes_model->get_class_table($class_id);
+
+			$scoring = $this->scoring_model->get($data['class']->scoring_id);
+			$slib = $scoring->library;
+			$this->load->library('scoring/'.$slib);
+
+			$data['points_table'] = $this->$slib->process_class($data['points_table'], $data['class']);
+			$this->firephp->log($data['class']);
+			$this->load->view('classes/tbl_standings', $data);
+		}
+
+		function test2($class_id){
+			$this->load->model('race_model');
+
+			$this->race_model->clear_discards($class_id);
+
+		}
+
 		function view($id=null){
 			$this->load->model('classes_model');
 			$this->load->model('race_model');
 			$this->load->model('boats_model');
+			$this->load->model('scoring_model');
 
 			$this->userlib->force_login();
 			$class = $this->classes_model->get($id);
 			if($class){
-				$this->userlib->force_permission('classes_view', array('class_id' => $id));							
-				$races = $this->race_model->get_races($id);
+				$this->userlib->force_permission('classes_view', array('class_id' => $id));	
+				
+				$scoring = $this->scoring_model->get($class->scoring_id);
+				$slib = $scoring->library;
+				$this->load->library('scoring/'.$slib);
 
+				$races = $this->race_model->get_races($id);
+				$completed_races = $this->race_model->count_completed_races($id);
+				$points_table = $this->classes_model->get_class_table($id);
+				$points_table = $this->$slib->process_class($points_table, $class);
 				$boats = $this->boats_model->get_class_boats($id);
-				$data = array('class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
+				$data = array('completed_races' => $completed_races, 'points_table' => $points_table, 'class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
 				
 				if($class->status == 'modified'){
 					$data['err_message'] = "Settings for this class have been changed. Click the refresh button to calculate race results based on these new settings";
@@ -238,8 +271,10 @@
 				if($this->input->post('submit')){
 					// Form has been submitted.
 					$this->classes_model->update_class_boats($class_id, $this->input->post('boats_in'));
+
 					// Update the class status because it's been modified.
 					$this->classes_model->update_status(array('class_id' => $class_id), 'modified');
+					
 					$data['boats'] = $this->boats_model->get_class_boats($class_id);
 					$this->load->view('boats/tbl_list_boats', $data);
 				}else{

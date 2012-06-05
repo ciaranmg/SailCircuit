@@ -3,12 +3,12 @@
 		<tr>
 			<th>Sail No.</th>
 			<th>Name</th>
-			<th>Owner(s)</th>
-			<th>Type</th>
+			<th class="hidden-phone">Owner(s)</th>
+			<th class="hidden-phone">Type</th>
 			<? if(isset($show_handicap)):?>
 			<th class="alignright"><?=(isset($class->handicap_name)) ? $class->handicap_name : 'Handicap' ;?></th>
 			<? endif;?>
-			<th class="alignright">Length (m)</th>
+			<th class="alignright hidden-phone">Length (m)</th>
 			<th>&nbsp;</th>
 		</tr>
 	</thead>
@@ -29,7 +29,7 @@
 					<?=number_format(floatval($boat->handicap), 3, '.', ',');?>
 				</td>
 				<? endif;?>
-				<td class="alignright"><?=number_format(floatval($boat->length), 2, '.', ',');?></td>
+				<td class="alignright hidden-phone"><?=number_format(floatval($boat->length), 2, '.', ',');?></td>
 				<td>
 					<?
 						$boat_buttons = array(

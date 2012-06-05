@@ -35,7 +35,6 @@
   </head>
 
   <body class="<?=$this->uri->segment(1);?>">
-
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -103,7 +102,8 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container wrapper">
+        <div class="ribbon-wrapper-green hidden-phone hidden-tablet"><div class="ribbon-green">Beta</div></div>
         <div class="row">
             <div class="span12">
                 <? $this->load->view('common/breadcrumb');?>

@@ -1,6 +1,84 @@
 <?
 class classes_model extends CI_Model {
 	
+
+	function get_class_table($class_id){
+		$this->load->model('race_model');
+		$this->load->model('boats_model');
+
+		$class_boats = $this->boats_model->get_class_boats($class_id);
+
+		foreach($class_boats as &$b){
+			$this->db->select('SUM(IF(discarded = 0, points, 0)) as series_points', false);
+			$this->db->from('race_results');
+			$this->db->join('races', 'races.id = race_results.race_id');
+			$this->db->where('races.status', 'completed');
+			$this->db->where('races.class_id', $class_id);
+			$this->db->where('race_results.boat_id', $b->id);
+			$query = $this->db->get();
+
+			if($query->num_rows() > 0 ){
+				$x = $query->row();
+				$b->series_points = $x->series_points;
+				
+			}
+			$query->free_result();
+
+			$this->db->select('points, position, discarded, sc_races.name', false);
+			$this->db->from('race_results');
+			$this->db->join('races', 'races.id = race_results.race_id');
+			$this->db->where('races.status', 'completed');
+			$this->db->where('races.class_id', $class_id);
+			$this->db->where('race_results.boat_id', $b->id);
+			$this->db->order_by('races.start_date', 'asc');
+			$query = $this->db->get();
+			if($query->num_rows() >0){
+				$b->race_results = $query->result();
+			}else{
+				$b->race_results = false;
+			}
+			$query->free_result();
+		}
+		return $class_boats;
+	}
+	/**
+	 * Method to apply discards to races given a class_id
+	 * Iterates through each boat in the class and discards the worst result provided:
+	 *			1. The class has discards
+	 *			2. The minimum number of races for discards has been run
+	 *			
+	 */
+	function apply_discards($class_id){
+			$this->load->model('race_model');
+			$this->load->model('boats_model');
+
+			// First clear the discards so we can apply them fresh.
+			$this->race_model->clear_discards($class_id);
+
+			// Get the class. We'll need this to know how many discards we can apply
+			$class = $this->classes_model->get($class_id);
+			
+			$discardable_races = $this->race_model->get_discardable_races($class_id);
+
+			if(count($discardable_races) >= $class->min_races_discard){
+				$class_boats = $this->boats_model->get_class_boats($class_id);	
+				$non_discardable_status = $this->config->item('sc_non_discardable');
+
+				foreach($class_boats as $boat){
+					$this->db->set('discarded', 1);
+					$this->db->where('boat_id', $boat->id);
+					$this->db->where_in('race_id', $discardable_races);
+					$this->db->where_not_in('status', $non_discardable_status);
+					$this->db->order_by('points', 'DESC');
+					$this->db->limit($class->discards);
+					$this->db->update('race_results');
+				}
+			}
+	}
+
+	/**
+	 *  Method to insert class data into the database
+	 */
 	function insert($class_data){
 		$this->db->insert('sc_classes', $class_data);
 			$x = $this->db->insert_id();
@@ -152,6 +230,7 @@ class classes_model extends CI_Model {
 		// 2. Get the boat data for the boats_in form field
 		// 3. If a boat was already in the class, then update the boat data with the existing handicap value
 		// 3a. If not just double check that the user is allowed to use that boat.
+		// 3b. If not, add the boat to race results for completed races.
 		// 4. Clear all boats from the class
 		// 5. Add the boats from #2 to the class
 
@@ -198,7 +277,6 @@ class classes_model extends CI_Model {
 		}
 		$this->db->delete('sc_class_boats', array('class_id' => $class_id));
 		if(sizeof($update_class_boats) > 0){
-			$this->firephp->log($update_class_boats);
 			$this->db->insert_batch('sc_class_boats', $update_class_boats);
 		}
 	}

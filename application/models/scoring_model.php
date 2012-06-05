@@ -14,5 +14,16 @@ class Scoring_model extends CI_Model{
 			return false;
 		}
 	}
+
+	function get_tiebreakers($tiebreaker_id){
+		$query = $this->db->where('id', $tiebreaker_id)->limit(1)->get('series_ties');
+		if($query->num_rows() > 0){
+			$tb = $query->row();
+			$tb->rules = json_decode($tb->rules);
+			return $tb;
+		}else{
+			return false;
+		}
+	}
 }
 ?>

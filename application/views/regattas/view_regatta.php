@@ -28,8 +28,8 @@
 			?>
 		</div>
 	</div>
-	<div class="row leading">
-		<div class="span6">
+	<div class="row">
+		<div class="span6 leading">
 			<section class="portlet">
 				<header>
 					<h2 class="editable" id="fc_name" target="<?=base_url('ajax/edit/regatta/name/text') . '/' . $regatta->id;?>">
@@ -57,7 +57,7 @@
 				</section>
 			</section>
 		</div>
-		<div class="span6">
+		<div class="span6 leading">
 			<section class="portlet">
 				<header>
 					<h2>Classes</h2>

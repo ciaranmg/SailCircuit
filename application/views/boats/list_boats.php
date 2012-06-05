@@ -23,12 +23,20 @@
 </div>
 <div class="row">
 	<div class="span12">
-		<ul class="nav nav-pills">
-			<li class="<?=(!$filter) ? 'active' : '';?>"><a href="<?=base_url('/boats/set_filter/all');?>">All</a></li>
-			<li class="<?=($filter == 'Keelboat') ? 'active' : '';?>"><a href="<?=base_url('/boats/set_filter/Keelboat');?>">Keelboats</a></li>
-			<li class="<?=($filter == 'Dinghy') ? 'active' : '';?>"><a href="<?=base_url('/boats/set_filter/Dinghy');?>">Dinghies</a></li>
-		</ul>
-		<?=$this->load->view('boats/tbl_list_boats');?>
+		<section class="portlet">
+			<header>
+				<h2>Boats</h2>
+				<div class="clearfix"></div>
+			</header>
+			<section>
+				<ul class="nav nav-pills">
+					<li class="<?=(!$filter) ? 'active' : '';?>"><a href="<?=base_url('/boats/set_filter/all');?>">All</a></li>
+					<li class="<?=($filter == 'Keelboat') ? 'active' : '';?>"><a href="<?=base_url('/boats/set_filter/Keelboat');?>">Keelboats</a></li>
+					<li class="<?=($filter == 'Dinghy') ? 'active' : '';?>"><a href="<?=base_url('/boats/set_filter/Dinghy');?>">Dinghies</a></li>
+				</ul>
+				<?=$this->load->view('boats/tbl_list_boats');?>
+			</section>
+		</section>
 	</div>
 </div>
 <? $this->load->view('common/footer');?>

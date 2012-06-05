@@ -30,22 +30,19 @@
 				<header>
 					<h2>Recent Races</h2>
 					<div class="btn-group pull-right">
-						<a class="btn" href="race/input"><i class="icon-plus"></i> Input Race Results</a>
+						<a class="btn" href="<?=base_url('/race/input');?>"><i class="icon-plus"></i> Input Race Results</a>
 					</div>
 					<div class="clearfix"></div>
 				</header>
 				<section>
-				
+					<? if($recent_races) $this->load->view('regattas/tbl_recent_races');?>
 				</section>
 			</section>
 		</div>
 		<div class="span6">
 			<section class="portlet leading">
 				<header>
-					<h2>Boats</h2>
-					<div class="btn-group pull-right">
-						<a class="btn" href="boats/create"><i class="icon-plus"></i> New Boat</a>
-					</div>
+					<h2>Calendar</h2>
 					<div class="clearfix"></div>
 				</header>
 				<section>

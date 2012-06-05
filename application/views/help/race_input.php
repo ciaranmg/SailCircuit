@@ -42,5 +42,8 @@ For long races, put the full date
 				<p>You can record the time a boat crosses the finish line. Remember to set the start time for the race</p>
 			</div>
 		</div>
+		<ul>
+			<li class="pull-right"><a class="show-help">Hide Help <i class="icon-chevron-up"></i></a></li>
+		</ul>
 	</div>
 </div>

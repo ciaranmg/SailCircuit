@@ -11,6 +11,7 @@
 				<th>To Win</th>
 			<? endif; ?>
 			<th>Points</th>
+			<th class="hidden-phone">Discarded</th>
 			<th>Comments</th>
 		</tr>
 	</thead>
@@ -39,6 +40,7 @@
 					</td>
 				<? endif;?>
 				<td><?=($r->points != 0) ? $r->points : '&nbsp;' ;?></td>
+				<td class="hidden-phone"><?=($r->discarded == 1) ? '<i class="icon-ban-circle"></i>' : '';?> </td>
 				<td><?=($r->status !== 'completed') ? $r->status : '&nbsp;' ;?></td>
 			</tr>
 		<? endforeach;?>

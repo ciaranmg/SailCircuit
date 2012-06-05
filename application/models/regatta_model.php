@@ -89,6 +89,25 @@ class Regatta_model extends CI_Model{
 		function num_rows($club_id){
 			return $this->db->from('sc_regattas')->where('club_id', $club_id)->count_all_results();
 		}
+
+		function get_recent_races($club_id, $limit = 10){
+			$this->db->select('races.id, races.name, races.start_date, coalesce(count(sc_race_results.boat_id)) as competitors');
+			$this->db->join('race_results', 'race_results.race_id = races.id');
+			$this->db->join('classes', 'classes.id = races.class_id');
+			$this->db->join('regattas', 'regattas.id = classes.regatta_id');
+			$this->db->join('clubs', 'clubs.id = regattas.club_id');
+			$this->db->where('clubs.id', $club_id);
+			$this->db->where('races.status', 'completed');
+			$this->db->where('race_results.status !=', 'DNC');
+			$this->db->group_by('races.id');
+			$query = $this->db->get('races', $limit);
+			$this->firephp->log($this->db->last_query());
+			if($query->num_rows()>0){
+				return $query->result();
+			}else{
+				return false;
+			}
+		}
 		
 		function update_field($field, $data, $id, $type){
 			if($type == 'date' OR $type == 'datetime'){

@@ -4,6 +4,32 @@ class Race_model extends CI_Model{
 	var $race_data;
 
 	/**
+	 * Method to get the race_ids of all the races in a class that can be discarded;
+	 */
+	function get_discardable_races($class_id){
+		$query = $this->db->select('id')->from('races')->where('discard', 1)->where('class_id', $class_id)->where('status', 'completed')->order_by('start_date', 'ASC')->get();
+		if($query->num_rows() >0){
+
+			foreach($query->result() as $r){
+				$ids[] = $r->id;
+			}
+			return $ids;
+		}else{
+			return false;
+		}
+	}
+
+	function clear_discards($class_id){
+		$this->db->query('UPDATE sc_race_results, sc_races SET discarded = 0 WHERE sc_race_results.race_id = sc_races.id AND sc_races.class_id =' .$class_id);
+	}
+	/**
+	 * Method to count the number of completed races in a given class
+	 */
+	function count_completed_races($class_id){
+		return $this->db->from('races')->where('status', 'completed')->where('class_id', $class_id)->count_all_results();
+	}
+
+	/**
 	 * Method to get list of races given a class_id
 	 * Parameters
 	 *				int 		$class_id
@@ -153,6 +179,7 @@ class Race_model extends CI_Model{
 							 race_results.position,
 							 race_results.status,
 							 race_results.boat_id,
+							 race_results.discarded,
 							 race_results.race_id,
 							 race_results.id
 							 ', false);

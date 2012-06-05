@@ -4,7 +4,7 @@
  */
 
 // With Debug enabled Codeigniter will output profiler information
-$config['sc_debug'] = true;
+$config['sc_debug'] = false;
 
 
 // Maximum number of races a class can have
@@ -26,5 +26,11 @@ $config['race_status_options'] = array(
 							'rdg' => 'RDG',		// Redress given
 							'scp' => 'SCP',		// Scoring Penalty
 							'Custom' => 'Other'	// Other
+							);
+$config['sc_non_discardable'] = array('DNE', 'DGM');
+$config['sc_image_sizes'] = array(
+							'large' => array('width' => 640, 'height' => 400),
+							'medium' => array('width'=> 320, 'height' => 200),
+							'small' => array('width' => 170, 'height' => 100)
 							);
 ?>

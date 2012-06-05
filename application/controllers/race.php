@@ -68,7 +68,7 @@
 						$data['race'] = $race;
 						$data['results'] = $readable;
 						
-						$this->load->view('races/tbl_race_results', $data);
+						$this->load->view('races/ajax_race_results', $data);
 
 					}else{
 						echo '<div class="alert alert-error">There was a problem inserting the race results into the database. Please try again</div>';

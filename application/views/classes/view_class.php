@@ -52,8 +52,8 @@
 		?>
 	</div>
 </div>
-<div class="row leading">
-	<div class="span5">
+<div class="row">
+	<div class="span5 leading">
 		<section class="portlet">
 			<header>
 				<h2 class="editable" id="h2_name" target="<?=base_url('ajax/edit/classes/name/text') . '/' . $class->id;?>"><?=$class->name;?></h2>
@@ -85,7 +85,7 @@
 			</section>
 		</section>
 	</div>
-	<div class="span7">
+	<div class="span7 leading">
 		<section class="portlet">
 			<header>
 				<h2>Races</h2>
@@ -98,6 +98,21 @@
 		</section>
 	</div>
 </div>
+<? if($completed_races):?>
+	<div class="row">
+		<div class="span12 leading">
+			<section class="portlet">
+				<header>
+					<h2>Standings</h2>
+					<div class="clearfix"></div>
+				</header>
+				<section>
+					<? $this->load->view('classes/tbl_standings');?>
+				</section>
+			</section>
+		</div>
+	</div>
+<? endif;?>
 <div class="row">
 	<div class="span12">
 		<section class="portlet leading">
