@@ -20,6 +20,9 @@ class Handicap_model extends CI_Model {
 		}
 	}
 
+	/**
+	 * Method to get the boat handicap for a given class
+	 */
 	function get_class_handicap($boat_id, $class_id){
 		$this->db->select('sc_class_boats.handicap')->from('sc_class_boats')->where('boat_id', $boat_id)->where('class_id', $class_id)->limit(1);
 		$query = $this->db->get();
@@ -47,12 +50,12 @@ class Handicap_model extends CI_Model {
 
 	}
 
-	function get_boat_handicap($boat_id, $name){
+	function get_boat_handicap($boat_id, $handicap_name){
 		$this->load->model('boats_model');
-		if($name == 'Level Rating'){
+		if($handicap_name == 'Level Rating'){
 			return 1;
 		}else{
-			$handicap = $this->boats_model->get_boat_meta($boat_id, $name);
+			$handicap = $this->boats_model->get_boat_meta($boat_id, $handicap_name);
 			if($handicap === false){
 				return 0.00;
 			}else{

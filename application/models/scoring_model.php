@@ -25,5 +25,20 @@ class Scoring_model extends CI_Model{
 			return false;
 		}
 	}
+
+
+	function get_scoring_systems(){
+		$this->db->from('sc_scoring_systems')->where('club_id', 0)->or_where('club_id', $this->session->userdata['club_id'])->order_by('name', 'asc');
+		$query = $this->db->get();
+		if($query->num_rows() >0){
+			$result = $query->result();
+			foreach ($result as &$r) {
+				$r->rules = json_decode($r->rules);
+			}
+			return $result;
+		}else{
+			return false;
+		}
+	}
 }
 ?>

@@ -13,8 +13,6 @@ class lowpoints {
 
 	function process_class($class_data, $class){
 		$this->ci->load->model('scoring_model');
-		$num_entries = count($class_data);
-
 		$tie_breakers = $this->ci->scoring_model->get_tiebreakers($class->ties_id);
 
 		usort($class_data, 'cmp_lowpoints');
@@ -26,18 +24,18 @@ class lowpoints {
 		}
 
 		$pass = 0;
-		$all_ties = $this->detect_series_ties($class_data);
+		$all_ties = $this->catch_series_ties($class_data);
 		
-		while($all_ties AND $pass < 3){
-			foreach($all_ties as $ties){
-				$fn = $tie_breakers->rules[$pass]['function'];
+		while($all_ties && $pass < 3){
+			foreach($all_ties as $tie){
+				$fn = $tie_breakers->rules[$pass]->function;
 				if(method_exists($this, $fn)){
-					$class_data = $this->fn($class_data, $ties);
+					$class_data = $this->$fn($class_data, $tie);
 				}
 			}
 			$pass++;
+			$all_ties = $this->catch_series_ties($class_data);
 		}
-		
 		return $class_data;
 	}
 	/**
@@ -47,10 +45,12 @@ class lowpoints {
 	 * Returns:
 	 *				array 						An associative array
 	 */
-	function detect_series_ties($class_data){
+	function catch_series_ties($class_data){
 		$num_entries = count($class_data);
 		$i = 0;
+		$all_ties = array();
 		while($i < $num_entries){
+			// Only trigger on ties that haven't already been fixed.
 			if($i+1 != $num_entries && $class_data[$i]->series_points == $class_data[$i+1]->series_points AND !$class_data[$i]->tie_fixed){
 				// There's a tie in place. Skip ahead to find how many.
 				$ties = array();
@@ -69,7 +69,7 @@ class lowpoints {
 			}
 			$i++;
 		}
-		if(count($all_ties) > 0){
+		if(sizeof($all_ties) > 0){
 			return $all_ties;
 		}else{
 			return false;

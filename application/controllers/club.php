@@ -69,18 +69,7 @@ class Club extends CI_Controller {
 		
 		$this->load->view('common/footer');
 	} 
-	
-	function retrieve(){
-	
-	}
-	
-	function update(){
-	
-	}
-	
-	function delete(){
-	
-	}
+
 	
 }
 ?>

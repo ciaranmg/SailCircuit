@@ -10,13 +10,14 @@
 
 		function get_dropdown_options($field){
 			$this->CI->load->model('classes_model');
+			$this->CI->load->model('scoring_model');
 			if($field == 'rating_system_id'){
 				$this->CI->load->model('handicap_model');
 				$result = $this->CI->handicap_model->get_handicaps();
 			}elseif($field == 'tiebreak_system'){
 				$result = $this->CI->classes_model->get_tiebreakers();
 			}elseif($field == 'scoring_system'){
-				$result = $this->CI->classes_model->get_scoring_systems();
+				$result = $this->CI->scoring_model->get_scoring_systems();
 			}
 
 			foreach($result as $obj){

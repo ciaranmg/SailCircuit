@@ -15,6 +15,13 @@
 		function index(){
 			redirect(base_url('/'));
 		}
+		function test2($class_id){
+			$this->load->model('classes_model');
+			$class = $this->classes_model->get($class_id);
+
+					$this->firephp->log($class);
+					
+		}
 		
 		function test($class_id){
 			$this->load->model('classes_model');
@@ -34,12 +41,6 @@
 			$this->load->view('classes/tbl_standings', $data);
 		}
 
-		function test2($class_id){
-			$this->load->model('race_model');
-
-			$this->race_model->clear_discards($class_id);
-
-		}
 
 		function view($id=null){
 			$this->load->model('classes_model');
@@ -58,8 +59,15 @@
 
 				$races = $this->race_model->get_races($id);
 				$completed_races = $this->race_model->count_completed_races($id);
-				$points_table = $this->classes_model->get_class_table($id);
-				$points_table = $this->$slib->process_class($points_table, $class);
+				
+				
+				if($completed_races){
+					$points_table = $this->classes_model->get_class_table($id);
+					$points_table = $this->$slib->process_class($points_table, $class);
+				}else{
+					$points_table = false;
+				}
+				
 				$boats = $this->boats_model->get_class_boats($id);
 				$data = array('completed_races' => $completed_races, 'points_table' => $points_table, 'class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
 				
@@ -79,7 +87,7 @@
 			$this->load->model('handicap_model');
 			$this->load->model('classes_model');
 			$this->load->model('boats_model');
-
+			$this->load->model('scoring_model');
 			// Todo: make use of the classlib function that returns options for the dropdowns
 			
 				// Build the form options
@@ -96,7 +104,7 @@
 				}
 
 				$classScoringSystems = array('0' => 'Choose One');
-				foreach($this->classes_model->get_scoring_systems() as $ss){
+				foreach($this->scoring_model->get_scoring_systems() as $ss){
 					$classScoringSystems[$ss->id] = $ss->name;
 					// $this->firephp->log($ss);
 				}
@@ -263,6 +271,7 @@
 			$this->load->model('boats_model');
 			$this->load->model('classes_model');
 			$this->load->model('handicap_model');
+			$this->load->model('race_model');
 
 			$data['class_id'] = $class_id;
 			$data['show_handicap'] = true;
@@ -270,11 +279,12 @@
 			if($this->userlib->check_permission('classes_edit', array('class_id' => $class_id))){
 				if($this->input->post('submit')){
 					// Form has been submitted.
-					$this->classes_model->update_class_boats($class_id, $this->input->post('boats_in'));
-
+					$changes = $this->classes_model->update_class_boats($class_id, $this->input->post('boats_in'));
+					$class = $this->classes_model->get($class_id);
 					// Update the class status because it's been modified.
 					$this->classes_model->update_status(array('class_id' => $class_id), 'modified');
-					
+					$this->race_model->new_boats_to_races($changes['new_class_boats'], $class);
+					$this->race_model->remove_boats_races($changes['remove_class_boats'], $class);
 					$data['boats'] = $this->boats_model->get_class_boats($class_id);
 					$this->load->view('boats/tbl_list_boats', $data);
 				}else{

@@ -7,39 +7,42 @@ class classes_model extends CI_Model {
 		$this->load->model('boats_model');
 
 		$class_boats = $this->boats_model->get_class_boats($class_id);
+		if($class_boats){
+			foreach($class_boats as &$b){
+				$this->db->select('SUM(IF(discarded = 0, points, 0)) as series_points', false);
+				$this->db->from('race_results');
+				$this->db->join('races', 'races.id = race_results.race_id');
+				$this->db->where('races.status', 'completed');
+				$this->db->where('races.class_id', $class_id);
+				$this->db->where('race_results.boat_id', $b->id);
+				$query = $this->db->get();
 
-		foreach($class_boats as &$b){
-			$this->db->select('SUM(IF(discarded = 0, points, 0)) as series_points', false);
-			$this->db->from('race_results');
-			$this->db->join('races', 'races.id = race_results.race_id');
-			$this->db->where('races.status', 'completed');
-			$this->db->where('races.class_id', $class_id);
-			$this->db->where('race_results.boat_id', $b->id);
-			$query = $this->db->get();
+				if($query->num_rows() > 0 ){
+					$x = $query->row();
+					$b->series_points = $x->series_points;
+					
+				}
+				$query->free_result();
 
-			if($query->num_rows() > 0 ){
-				$x = $query->row();
-				$b->series_points = $x->series_points;
-				
+				$this->db->select('points, position, discarded, sc_races.name', false);
+				$this->db->from('race_results');
+				$this->db->join('races', 'races.id = race_results.race_id');
+				$this->db->where('races.status', 'completed');
+				$this->db->where('races.class_id', $class_id);
+				$this->db->where('race_results.boat_id', $b->id);
+				$this->db->order_by('races.start_date', 'asc');
+				$query = $this->db->get();
+				if($query->num_rows() >0){
+					$b->race_results = $query->result();
+				}else{
+					$b->race_results = false;
+				}
+				$query->free_result();
 			}
-			$query->free_result();
-
-			$this->db->select('points, position, discarded, sc_races.name', false);
-			$this->db->from('race_results');
-			$this->db->join('races', 'races.id = race_results.race_id');
-			$this->db->where('races.status', 'completed');
-			$this->db->where('races.class_id', $class_id);
-			$this->db->where('race_results.boat_id', $b->id);
-			$this->db->order_by('races.start_date', 'asc');
-			$query = $this->db->get();
-			if($query->num_rows() >0){
-				$b->race_results = $query->result();
-			}else{
-				$b->race_results = false;
-			}
-			$query->free_result();
+			return $class_boats;
+		}else{
+			return false;
 		}
-		return $class_boats;
 	}
 	/**
 	 * Method to apply discards to races given a class_id
@@ -141,6 +144,8 @@ class classes_model extends CI_Model {
 	}
 	
 	function get($class_id){
+		$this->load->model('scoring_model');
+
 		$this->db->select('sc_classes.id, 
 				sc_classes.name,
 				coalesce(count(sc_races.id)) as race_count, 
@@ -163,7 +168,9 @@ class classes_model extends CI_Model {
 		$this->db->where('sc_classes.id', $class_id);
 		$query = $this->db->get();
 		if($query->num_rows() > 0) {
-			return $query->first_row();
+			$class = $query->first_row();
+			$class->scoring_system = $this->scoring_model->get($class->scoring_id);
+			return $class;
 		}else{
 			return false;
 		}
@@ -176,19 +183,6 @@ class classes_model extends CI_Model {
 			if($query->num_rows() > 0) return $query->result();
 	}
 
-	function get_scoring_systems(){
-		$this->db->from('sc_scoring_systems')->where('club_id', 0)->or_where('club_id', $this->session->userdata['club_id'])->order_by('name', 'asc');
-		$query = $this->db->get();
-		if($query->num_rows() >0){
-			$result = $query->result();
-			foreach ($result as &$r) {
-				$r->rules = json_decode($r->rules);
-			}
-			return $result;
-		}else{
-			return false;
-		}
-	}
 
 	function get_field($field, $id){
 		if($field == "handicap"){
@@ -242,6 +236,7 @@ class classes_model extends CI_Model {
 		$this->db->join('sc_classes', 'sc_classes.rating_system_id = sc_handicap_systems.id');
 		$this->db->where('sc_classes.id', $class_id);
 		$query = $this->db->get();
+
 		if($query->num_rows() > 0){
 			$result = $query->first_row();
 			$handicap_name = $result->name;
@@ -252,33 +247,40 @@ class classes_model extends CI_Model {
 		$query = $this->db->get_where('sc_class_boats', array('class_id'=>$class_id));
 		if($query->num_rows() > 0){
 			$class_boats = $query->result();
-		}else{
-			$class_boats = array();
-		}
-
-		$update_class_boats = array();
-		$i = 0;
-		foreach($boats as $ci){
-			$found = false;
-			$update_class_boats[$i]['id'] = null;
-			$update_class_boats[$i]['class_id'] = $class_id;
-			$update_class_boats[$i]['boat_id'] = $ci;
 			foreach($class_boats as $cb){
-				if($cb->id == $ci){
-					$update_class_boats[$i]['handicap'] = $cb->handicap;
-					$found = true;
-					break;
-				}
+				$temp[$cb->boat_id] = new stdClass;
+				$temp[$cb->boat_id]->id = $cb->id;
+				$temp[$cb->boat_id]->handicap = $cb->handicap;
+				$temp[$cb->boat_id]->boat_id = $cb->boat_id;
 			}
-			if($found == false){
-				$update_class_boats[$i]['handicap'] = $this->handicap_model->get_boat_handicap($ci, $handicap_name);
+			$class_boats = $temp;
+		}
+		// This array will be populated with all the boats the class should have
+		$update_class_boats = array();
+		// This will be populated with all the boats that are new to the class so we can process the races 
+		$new_class_boats = array();
+
+		foreach($boats as $boat_id){
+			$update_class_boats[$boat_id]['class_id'] = $class_id;
+			$update_class_boats[$boat_id]['boat_id'] = $boat_id;
+			if(isset($class_boats[$boat_id])){
+				// Use the existing handicap
+				$update_class_boats[$boat_id]['handicap'] = $class_boats[$boat_id]->handicap;
+				// Unset an entry that's already there so that we'll be left with old values that no longer belong
+				unset($class_boats[$boat_id]); 
+			}else{
+				$handicap = $this->handicap_model->get_boat_handicap($boat_id, $handicap_name);
+				$update_class_boats[$boat_id]['handicap'] = $handicap;
+				$new_class_boats[$boat_id] = array('boat_id' => $boat_id, 'handicap'=> $handicap, 'class_id' => $class_id, 'status' => 'DNC');
 			}
-			$i++;
 		}
-		$this->db->delete('sc_class_boats', array('class_id' => $class_id));
-		if(sizeof($update_class_boats) > 0){
-			$this->db->insert_batch('sc_class_boats', $update_class_boats);
-		}
+		$remove_class_boats = $class_boats;
+
+		// Remove the existing record of class boats
+		$this->db->delete('class_boats', array('class_id' => $class_id));
+		$this->db->insert_batch('class_boats', $update_class_boats);
+
+		return array('remove_class_boats'=> $remove_class_boats, 'new_class_boats' => $new_class_boats);
 	}
 
 	/**

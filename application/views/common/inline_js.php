@@ -26,7 +26,7 @@
 		$( ".datepicker" ).datepicker({dateFormat: datelocale});
 
 		/*			Tooltips on mini buttons		*/
-		$('.btn-mini, .sc-icon-only').tooltip();
+		$('.btn-mini, .sc-icon-only, .tool-tip').tooltip();
 		
 
 		/* 			Set up ajax delete buttons		*/

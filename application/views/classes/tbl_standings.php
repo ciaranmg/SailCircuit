@@ -1,3 +1,4 @@
+<? $this->firephp->log($points_table, 'Points table in the view'); ?>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -17,10 +18,8 @@
 	<tbody>
 		<? foreach($points_table as $p):?>
 			<tr>
-				<td>
-					<?=($p->tie_fixed) ? '<span class="tooltip" data-original-title="' . $p->tie_fixed .'">' : '';?>
-						<?=$p->position;?>
-					<?=($p->tie_fixed) ? '</span>' : '';?>
+				<td <?=($p->tie_fixed) ? ' rel="tooltip" class="tool-tip" data-original-title="' . $p->tie_fixed .'"' : '';?>>
+					<?=$p->position;?>
 				</td>
 				<td><?=$p->sail_number;?></td>
 				<td><?=$p->name;?></td>

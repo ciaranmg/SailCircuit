@@ -3,7 +3,7 @@
 					<tr>
 						<th>Race Name</th>
 						<th>Start Date/Time</th>
-						<th class="aligncenter">Discard</th>
+						<th class="aligncenter">Discardable</th>
 						<th>&nbsp;</th>
 					</tr>
 				</thead>

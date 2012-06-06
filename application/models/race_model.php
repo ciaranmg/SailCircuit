@@ -3,6 +3,49 @@ class Race_model extends CI_Model{
 	
 	var $race_data;
 
+
+	/**
+	 * Method to insert race data for boats that have just been added to a class
+	 * Parameters:
+	 *				array 		$boats
+	 *				object 	$class
+	 */
+	function new_boats_to_races($boats, $class){
+		$this->load->library($class->scoring_system->library);
+		$query = $this->db->select('id')->from('races')->where('status', 'completed')->where('class_id', $class->id);
+		// if there's no races completed, do nothing.
+		if($query->num_rows() > 0){
+			foreach($query->result() as $r){
+				$this->db->insert_batch('race_results', $boats);
+				$race_data = $this->race_model->get_result_data($r->id);
+				$race_data = $this->$class->scoring_system->library($race_data, $class->scoring_system);
+				$this->race_model->update_results($race_data);
+			}
+		}
+	}
+
+	/**
+	 * Method to remove boat data from completed races
+	 * Parameters:
+	 *				array 		$boats
+	 *								->id 	(boat_id)
+	 *				object 		$class
+	 */
+	function remove_boats_races($boats, $class){
+		$this->load->library($class->scoring_system->library);
+		$query = $this->db->select('id')->from('races')->where('status', 'completed')->where('class_id', $class->id);
+		if($query->num_rows()>0){
+			foreach($query-result() as $r ){
+				foreach($boats as $b){
+					$this->db->delete('race_results', array('boat_id' => $b->id, 'race_id' => $r->id));
+				}
+				$race_data = $this->race_model->get_result_data($r->id);
+				$race_data = $this->$class->scoring_system->library($race_data, $class->scoring_system);
+				$this->race_model->update_results($race_data);
+			}
+		}
+	}
+
 	/**
 	 * Method to get the race_ids of all the races in a class that can be discarded;
 	 */
@@ -22,6 +65,7 @@ class Race_model extends CI_Model{
 	function clear_discards($class_id){
 		$this->db->query('UPDATE sc_race_results, sc_races SET discarded = 0 WHERE sc_race_results.race_id = sc_races.id AND sc_races.class_id =' .$class_id);
 	}
+
 	/**
 	 * Method to count the number of completed races in a given class
 	 */
