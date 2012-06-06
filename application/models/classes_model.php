@@ -46,7 +46,7 @@ class classes_model extends CI_Model {
 	}
 	/**
 	 * Method to apply discards to races given a class_id
-	 * Iterates through each boat in the class and discards the worst result provided:
+	 * Iterates through each boat in the class and discards the worst result. Provided:
 	 *			1. The class has discards
 	 *			2. The minimum number of races for discards has been run
 	 *			
@@ -275,7 +275,6 @@ class classes_model extends CI_Model {
 			}
 		}
 		$remove_class_boats = $class_boats;
-
 		// Remove the existing record of class boats
 		$this->db->delete('class_boats', array('class_id' => $class_id));
 		$this->db->insert_batch('class_boats', $update_class_boats);

@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title><? if(isset($headline)) echo $headline; ?> SailCircut</title>
+    <title><? if(isset($title)) echo $title; ?> Results Powered By SailCircut</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+    <meta name="description" content="<?=$intro;?>">
     <meta name="author" content="SailCircuit">
 
     <!-- Le styles -->
@@ -17,6 +17,7 @@
     </style>
     <link href="<?=base_url()?>css/bootstrap-responsive.css" rel="stylesheet">
     <link href="<?=base_url()?>css/sailcircuit.css" rel="stylesheet">
+    <link href="<?=base_url()?>css/public.css" rel="stylesheet">
     
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -33,10 +34,16 @@
   </head>
     <body>
         <section class="container-fluid">
-                <div class="row row-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <? $this->load->view('common/breadcrumb');?>
+                    </div>
+                </div>
+                <div class="row-fluid">
                     <header class="span12">
-                        
+                        <div class="page-header">
+                            <h1><?=$title;?> <small><?=$intro;?></small></h1>
+                        </div>
                     </header>
                 </div>
-            <div class="row row-fluid">
-                <section>
+            <div class="row-fluid">

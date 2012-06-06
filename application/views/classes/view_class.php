@@ -9,7 +9,7 @@
 			$buttons = array(
 						
 						array(
-								'title'=>'Recalculate',
+								'title'=>'Refresh',
 								'action'=>'race/edit',
 								'parameters' => $class->id, //Todo: Insert class ID
 								'classes' => ($class->status == 'modified') ? 'btn-danger' : ' hidden',
@@ -117,7 +117,7 @@
 	<div class="span12">
 		<section class="portlet leading">
 			<header>
-				<h2>Boats</h2>
+				<h2><?=count($boats);?> Boats</h2>
 				<? $this->load->view('common/toolbar', array('buttons' => $boat_buttons));?>
 				<div class="clearfix"></div>
 			</header>

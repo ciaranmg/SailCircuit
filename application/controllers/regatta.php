@@ -20,7 +20,7 @@ class Regatta extends CI_Controller {
 		
 		$config['base_url'] = base_url('regatta/list_all');
 		$config['total_rows'] = $this->regatta_model->num_rows($this->session->userdata('club_id'));
-		$config['per_page'] = 50; 
+		$config['per_page'] = 5; 
 
 
 		$this->pagination->initialize($config);

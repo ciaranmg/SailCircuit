@@ -52,7 +52,7 @@ class User_model extends CI_Model{
 	 */
 	function get_user_clubs($user_id){
 
-		$this->db->select('club_name, sc_clubs.id as club_id, sc_clubs.description, sc_clubs.locale, sc_clubs.language');
+		$this->db->select('name, sc_clubs.id as club_id, sc_clubs.description, sc_clubs.locale, sc_clubs.language');
 		$this->db->from('sc_clubs');
 		$this->db->join('sc_club_users', 'sc_club_users.club_id = sc_clubs.id');
 		$this->db->where('sc_club_users.user_id', $user_id);

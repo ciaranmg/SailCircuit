@@ -17,8 +17,11 @@ class Club_model extends CI_Model{
 		}
 	}
 
-	function retrieve(){
-		
+	function get($club_id){
+		$query = $this->db->get_where('clubs', array('id' => $club_id));
+		if($query->num_rows() > 0){
+			return $query->first_row();
+		}
 	}
 	
 	function update(){

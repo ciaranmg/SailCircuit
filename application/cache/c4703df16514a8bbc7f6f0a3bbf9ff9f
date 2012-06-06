@@ -1,0 +1,266 @@
+1339015930TS---><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Class 1 IRC Results Powered By SailCircut</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IRC Rating .900 to .950">
+    <meta name="author" content="SailCircuit">
+
+    <!-- Le styles -->
+    <link href="http://results.sailcircuit.com/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="http://results.sailcircuit.com/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="http://results.sailcircuit.com/css/sailcircuit.css" rel="stylesheet">
+    <link href="http://results.sailcircuit.com/css/public.css" rel="stylesheet">
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://results.sailcircuit.com/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://results.sailcircuit.com/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://results.sailcircuit.com/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="http://results.sailcircuit.com/ico/apple-touch-icon-57-precomposed.png">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  </head>
+    <body>
+        <section class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <ul class="breadcrumb">
+						<li>
+				<a href="http://results.sailcircuit.com/clubs/view/WHSC/2" title="WHSC">WHSC</a>
+				<span class="divider">/</span>
+			</li>
+								<li>
+				<a href="http://results.sailcircuit.com/clubs/view_series/WHSC/2/5" title="WHSC Cruiser Championships">WHSC Cruiser Championships</a>
+				<span class="divider">/</span>
+			</li>
+								<li class="active">Class 1 IRC</li>
+			
+	</ul>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <header class="span12">
+                        <div class="page-header">
+                            <h1>Class 1 IRC <small>IRC Rating .900 to .950</small></h1>
+                        </div>
+                    </header>
+                </div>
+            <div class="row-fluid">	<section class="portlet span12 leading">
+		<header>
+			<h2>Standings</h2>
+			<div class="clearfix"></div>
+		</header>
+		<section>
+			<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Position</th>
+			<th>Sail #</th>
+			<th>Boat</th>
+			<th class="hidden-phone">Owner(s)</th>
+							<th>Handicap</th>
+						<th>Series Points</th>
+							<th class="hidden-phone">
+					<a href="http://results.sailcircuit.com/clubs/view_race/whsc/2/25">
+						Day 1 Race 1					</a>
+				</th>
+					</tr>
+	</thead>
+	<tbody>
+					<tr>
+				<td >
+					1				</td>
+				<td>4170</td>
+				<td>Slack Alice</td>
+				<td class="hidden-phone">Shane Statham, Trudi O'Leary</td>
+				<td>0.000</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">9</td>
+							</tr>
+					<tr>
+				<td >
+					2				</td>
+				<td>222</td>
+				<td>Zoom</td>
+				<td class="hidden-phone">Nicola Harris, Stuart Harris</td>
+				<td>0.000</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">9</td>
+							</tr>
+					<tr>
+				<td >
+					3				</td>
+				<td>325</td>
+				<td>Orient Express</td>
+				<td class="hidden-phone">Frank O'Regan</td>
+				<td>0.000</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">1</td>
+							</tr>
+					<tr>
+				<td >
+					4				</td>
+				<td>6002</td>
+				<td>Stagefright</td>
+				<td class="hidden-phone">David Marchant</td>
+				<td>0.000</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">9</td>
+							</tr>
+					<tr>
+				<td >
+					5				</td>
+				<td>6564</td>
+				<td>Monkey Business</td>
+				<td class="hidden-phone">Bill McConnell</td>
+				<td>0.912</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">9</td>
+							</tr>
+					<tr>
+				<td >
+					6				</td>
+				<td>2424</td>
+				<td>Lady J</td>
+				<td class="hidden-phone">Adam Doyle, Ciaran McGrath</td>
+				<td>0.888</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">2</td>
+							</tr>
+					<tr>
+				<td >
+					7				</td>
+				<td>2266</td>
+				<td>Riptide</td>
+				<td class="hidden-phone">Gary Curran</td>
+				<td>0.954</td>
+				<td>0</td>
+									<td class="hidden-phone inactive">3</td>
+							</tr>
+			</tbody>
+</table>		</section>
+	</section>
+</div>  <!-- Ending the row -->
+<div class="row-fluid">
+			<section class="portlet span7 leading">
+			<header>
+				<h2>Class Information</h2>
+				<div class="clearfix"></div>
+			</header>
+			<section>
+				<table class="table table-bordered">
+					<tr>
+						<th>Discards</th>
+						<td>3</td>
+					</tr>
+					<tr>
+						<th>Minimum number of races Before Discard</th>
+						<td>0</td>
+					</tr>
+					<tr>
+						<th>Rating System</th>
+						<td>IRC</td>
+					</tr>
+					<tr>
+						<th>Tiebreak System</th>
+						<td>ISAF 2005-2012 with Windsurfing Rule B8.8</td>
+					</tr>
+					<tr>
+						<th>Scoring System</th>
+						<td>RRS Low Points</td>
+					</tr>
+				</table>
+			</section>
+		</section>
+				<section class="portlet span5 leading">
+			<header>
+				<h2>Races</h2>
+				<div class="clearfix"></div>
+			</header>
+			<section>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Race Name</th>
+							<th>Start Date/Time</th>
+							<th class="aligncenter">Discardable</th>
+						</tr>
+					</thead>
+					<tbody>
+													<tr>
+								<td>
+																			<a href="http://results.sailcircuit.com/clubs/view_race/whsc/2/25">
+											Day 1 Race 1										</a>
+																	</td>
+								<td>
+									22/05/2012 17:00								</td>
+								<td class="aligncenter">
+																			<i class="icon-ok"></i>
+																	</td>
+							</tr>
+													<tr>
+								<td>
+																			Day 1 Race 2																	</td>
+								<td>
+									23/05/2012 16:30								</td>
+								<td class="aligncenter">
+																			<i class="icon-ok"></i>
+																	</td>
+							</tr>
+													<tr>
+								<td>
+																			Day 3 Race 1																	</td>
+								<td>
+									23/05/2012 16:37								</td>
+								<td class="aligncenter">
+																			<i class="icon-ok"></i>
+																	</td>
+							</tr>
+													<tr>
+								<td>
+																			Day 2 Race 1																	</td>
+								<td>
+									12/12/2012 1:00								</td>
+								<td class="aligncenter">
+																			<i class="icon-ok"></i>
+																	</td>
+							</tr>
+													<tr>
+								<td>
+																			Day 2 Race 2																	</td>
+								<td>
+									12/12/2012 1:00								</td>
+								<td class="aligncenter">
+																			<i class="icon-ok"></i>
+																	</td>
+							</tr>
+											</tbody>
+				</table>
+			</section>
+		</section>
+	
+            </div>
+        </section>
+    	<footer class="container-fluid leading">
+    		<hr>
+    		<div class="aligncenter">Powered By <a href="http://www.sailcircuit.com">SailCircuit.com</a></div>
+    	</footer>
+        <script src="http://results.sailcircuit.com/js/bootstrap-transition.js"></script>
+        <script src="http://results.sailcircuit.com/js/bootstrap-modal.js"></script>
+        <script src="http://results.sailcircuit.com/js/bootstrap-tooltip.js"></script>
+        <script src="http://results.sailcircuit.com/js/bootstrap-popover.js"></script>
+        <script src="http://results.sailcircuit.com/js/bootstrap-button.js"></script>
+    </body>
+</html>

@@ -7,7 +7,7 @@
 		$('.editable').tooltip({
 			title: '<i class="icon-pencil icon-white"></i> Click to Edit',
 			trigger: 'hover',
-			placement: 'left',
+			placement: 'top',
 		});
 		
 		$(document).on('click', '.editable', function(){

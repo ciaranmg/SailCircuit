@@ -38,7 +38,7 @@ $config = array(
 								),
 				'club' => array(
 									array(
-											'field'=> 'club_name',
+											'field'=> 'name',
 											'label' => 'Club Name',
 											'rules' => 'trim|alpha|required|xss_clean'
 									),

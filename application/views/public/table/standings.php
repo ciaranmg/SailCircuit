@@ -10,7 +10,11 @@
 			<? endif;?>
 			<th>Series Points</th>
 			<? foreach($races as $r): if($r->status == 'completed'):?>
-				<th class="hidden-phone"><?=$r->name;?></th>
+				<th class="hidden-phone">
+					<a href="<?=base_url('clubs/view_race/' .strtolower($club->name) .'/' . $club->id . '/' . $r->id );?>">
+						<?=$r->name;?>
+					</a>
+				</th>
 			<? endif; endforeach;?>
 		</tr>
 	</thead>

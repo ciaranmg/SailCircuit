@@ -1,4 +1,4 @@
-<? if($breadcrumb): ?>
+<? if(isset($breadcrumb)): ?>
 <? 
 	$items = sizeof($breadcrumb);
 ?>

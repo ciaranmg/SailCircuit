@@ -50,24 +50,13 @@
 
 			$this->userlib->force_login();
 			$class = $this->classes_model->get($id);
+			$points_table = false;
+
 			if($class){
 				$this->userlib->force_permission('classes_view', array('class_id' => $id));	
-				
-				$scoring = $this->scoring_model->get($class->scoring_id);
-				$slib = $scoring->library;
-				$this->load->library('scoring/'.$slib);
-
 				$races = $this->race_model->get_races($id);
-				$completed_races = $this->race_model->count_completed_races($id);
-				
-				
-				if($completed_races){
-					$points_table = $this->classes_model->get_class_table($id);
-					$points_table = $this->$slib->process_class($points_table, $class);
-				}else{
-					$points_table = false;
-				}
-				
+				$points_table = $this->race_model->get_points_table($id);
+
 				$boats = $this->boats_model->get_class_boats($id);
 				$data = array('completed_races' => $completed_races, 'points_table' => $points_table, 'class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
 				

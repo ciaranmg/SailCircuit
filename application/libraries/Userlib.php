@@ -21,9 +21,9 @@ class userlib {
 			$this->name = $this->CI->session->userdata('name');
 			$this->clubs =  $this->CI->user_model->get_user_clubs($this->userid);
 			
-			if($this->CI->session->userdata('club_id') && $this->CI->session->userdata('club_name')){
+			if($this->CI->session->userdata('club_id') && $this->CI->session->userdata('name')){
 				$this->club_id = $this->CI->session->userdata('club_id');
-				$this->club_name = $this->CI->session->userdata('club_name');
+				$this->club_name = $this->CI->session->userdata('name');
 			}else{
 				$this->club_id = $this->clubs[0]->club_id;
 				$this->club_name = $this->clubs[0]->club_name;

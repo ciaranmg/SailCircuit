@@ -32,5 +32,26 @@ function cmp_lowpoints($a, $b){
  	return $a->series_points > $b->series_points;
 }
 
+function array_elements($fields, $data, $defaults = null){
+	$return_array = array();
+	$i=0;
+	foreach($data as $x){
+		foreach($fields as $field){
+			if(!isset($x[$field]) OR $x[$field] === '' OR  $x[$field] === null ){
+				if(is_array($defaults)){
+					$return_array[$i][$field] = $defaults[$field];
+				}else{
+					$return_array[$i][$field] = $defaults;
+				}
+			}else{
+				$return_array[$i][$field] = $x[$field];
+			}
+		}
+		$i++;
+	}
+
+	return $return_array;
+}
+
 
 ?>

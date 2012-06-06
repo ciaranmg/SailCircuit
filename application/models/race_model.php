@@ -2,8 +2,6 @@
 class Race_model extends CI_Model{
 	
 	var $race_data;
-
-
 	/**
 	 * Method to insert race data for boats that have just been added to a class
 	 * Parameters:
@@ -11,14 +9,16 @@ class Race_model extends CI_Model{
 	 *				object 	$class
 	 */
 	function new_boats_to_races($boats, $class){
-		$this->load->library($class->scoring_system->library);
-		$query = $this->db->select('id')->from('races')->where('status', 'completed')->where('class_id', $class->id);
+		if(is_array($boats) AND count($boats) == 0) return null;
+		$lib = $class->scoring_system->library;
+		$this->load->library('scoring/'. $lib);
+		$query = $this->db->select('id')->from('races')->where('status', 'completed')->where('class_id', $class->id)->get();
 		// if there's no races completed, do nothing.
 		if($query->num_rows() > 0){
 			foreach($query->result() as $r){
-				$this->db->insert_batch('race_results', $boats);
+				$this->db->insert_batch('race_results', array_elements(array('boat_id', 'handicap', 'status', 'race_id'), $boats, $r->id));
 				$race_data = $this->race_model->get_result_data($r->id);
-				$race_data = $this->$class->scoring_system->library($race_data, $class->scoring_system);
+				$race_data = $this->$lib->process_race($race_data, $class->scoring_system);
 				$this->race_model->update_results($race_data);
 			}
 		}
@@ -32,17 +32,44 @@ class Race_model extends CI_Model{
 	 *				object 		$class
 	 */
 	function remove_boats_races($boats, $class){
-		$this->load->library($class->scoring_system->library);
-		$query = $this->db->select('id')->from('races')->where('status', 'completed')->where('class_id', $class->id);
+		if(is_array($boats) AND count($boats) < 0) return null;
+		$lib = $class->scoring_system->library;
+		$this->load->library('scoring/' . $lib);
+		$query = $this->db->select('id')->from('races')->where('status', 'completed')->where('class_id', $class->id)->get();
 		if($query->num_rows()>0){
-			foreach($query-result() as $r ){
+			foreach($query->result() as $r ){
 				foreach($boats as $b){
-					$this->db->delete('race_results', array('boat_id' => $b->id, 'race_id' => $r->id));
+					$this->db->delete('race_results', array('boat_id' => $b->boat_id, 'race_id' => $r->id));
+					$this->firephp->log($this->db->last_query());
 				}
 				$race_data = $this->race_model->get_result_data($r->id);
-				$race_data = $this->$class->scoring_system->library($race_data, $class->scoring_system);
+				$race_data = $this->$lib->process_race($race_data, $class->scoring_system);
 				$this->race_model->update_results($race_data);
 			}
+		}
+	}
+
+	/**
+	 * Method to compile the standings of a given class
+	 */
+	function get_points_table($class_id){
+		$this->load->model('classes_model');
+		$completed_races = $this->race_model->count_completed_races($class_id);		
+		if($completed_races){
+			$class = $this->classes_model->get($class_id);
+			$scoring = $this->scoring_model->get($class->scoring_id);
+			$slib = $scoring->library;
+			$this->load->library('scoring/'.$slib);	
+
+			$this->classes_model->apply_discards($class_id);
+			
+			$points_table = $this->classes_model->get_class_table($class_id);
+			
+			$points_table = $this->$slib->process_class($points_table, $class);
+
+			return $points_table;
+		}else{
+			return false;
 		}
 	}
 
@@ -466,9 +493,6 @@ class Race_model extends CI_Model{
 	}
 
 	function update_field($field, $data, $id, $type='text'){
-		if($type == 'date' OR $type == 'datetime'){
-			$data = sc_strtotime($data);
-		}
 		$this->load->model('classes_model');
 		$this->db->where('id', $id);
 		$this->db->update('sc_races', array($field => $data));

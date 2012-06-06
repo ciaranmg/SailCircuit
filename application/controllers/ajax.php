@@ -35,7 +35,7 @@ class Ajax extends CI_Controller {
 						// Update the existing value, then fetch the value from the database taking care of the non-standard field types
 						
 						if($type == 'datetime') $data = sc_strtotime($data[0] .' '. $data[1]);
-
+						if($type == 'date') $data = sc_strtotime($data);
 						$this->$model_name->update_field($field, $data, $id, $type);
 						$result = $this->$model_name->get_field($field, $id);
 						if($type == 'dropdown'){
