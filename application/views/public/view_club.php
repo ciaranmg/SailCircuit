@@ -15,10 +15,10 @@
 						<th class="hidden-phone">
 							Description
 						</th>
-						<th>
+						<th class="hidden-phone">
 							Start Date
 						</th>
-						<th>
+						<th class="hidden-phone">
 							End Date
 						</th>
 						<th>
@@ -37,7 +37,7 @@
 						<td class="hidden-phone">
 							<?=$regatta->description?>
 						</td>
-						<td>
+						<td class="hidden-phone">
 							<?=sc_date_format($regatta->start_date);?>
 						</td>
 						<td class="hidden-phone">

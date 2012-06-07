@@ -31,7 +31,7 @@
   </head>
     <body>
         <section class="container-fluid">
-                <div class="row-fluid">
+                <div class="row-fluid" id="breadcrumb">
                     <div class="span12">
                         <? $this->load->view('common/breadcrumb');?>
                     </div>
@@ -43,7 +43,7 @@
                         </div>
                     </header>
                     <div class="span3">
-                        <div class="page-header">
+                        <div class="page-header" id="sharethis-buttons">
                             <span class='st_sharethis_large' displayText='ShareThis'></span>
                             <span class='st_facebook_large' displayText='Facebook'></span>
                             <span class='st_twitter_large' displayText='Tweet'></span>
