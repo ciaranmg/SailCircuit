@@ -9,12 +9,6 @@
 
     <!-- Le styles -->
     <link href="<?=base_url()?>css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-    </style>
     <link href="<?=base_url()?>css/bootstrap-responsive.css" rel="stylesheet">
     <link href="<?=base_url()?>css/sailcircuit.css" rel="stylesheet">
     <link href="<?=base_url()?>css/public.css" rel="stylesheet">
@@ -31,6 +25,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?=base_url()?>ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="<?=base_url()?>ico/apple-touch-icon-57-precomposed.png">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">var switchTo5x=true;</script>
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript">stLight.options({publisher: "2b0ff8ae-dbdf-4d36-a7d6-15c7c00cc639"}); </script>
   </head>
     <body>
         <section class="container-fluid">
@@ -40,10 +37,19 @@
                     </div>
                 </div>
                 <div class="row-fluid">
-                    <header class="span12">
+                    <header class="span9">
                         <div class="page-header">
                             <h1><?=$title;?> <small><?=$intro;?></small></h1>
                         </div>
                     </header>
+                    <div class="span3">
+                        <div class="page-header">
+                            <span class='st_sharethis_large' displayText='ShareThis'></span>
+                            <span class='st_facebook_large' displayText='Facebook'></span>
+                            <span class='st_twitter_large' displayText='Tweet'></span>
+                            <span class='st_googleplus_large' displayText='Google +'></span>
+                            <span class='st_email_large' displayText='Email'></span>
+                        </div>
+                    </div>
                 </div>
             <div class="row-fluid">

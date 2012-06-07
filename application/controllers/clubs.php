@@ -1,6 +1,6 @@
 <?
 class Clubs extends CI_Controller{
-
+	var $cache = false;
 	function index(){
 		redirect(base_url('/'));
 	}
@@ -16,7 +16,7 @@ $this->path[] = array(
 
 	// View Club and all its regattas
 	function view($club_name, $club_id, $offset = null){
-		$this->output->cache(60);
+		if($this->cache) $this->output->cache(60);
 		$club_name = 'whsc';
 		$this->load->model('regatta_model');
 		$this->load->model('club_model');
@@ -41,7 +41,7 @@ $this->path[] = array(
 
 	// View a regatta and all its classes
 	function view_series($club_name, $club_id, $regatta_id){
-		$this->output->cache(60);
+		if($this->cache) $this->output->cache(60);
 		$this->load->model('regatta_model');
 		$this->load->model('classes_model');
 		$this->load->model('club_model');
@@ -59,7 +59,7 @@ $this->path[] = array(
 
 	// View a class and all its races
 	function view_class($club_name, $club_id, $class_id){
-		$this->output->cache(60);
+		if($this->cache) $this->output->cache(60);
 		$this->load->model('regatta_model');
 		$this->load->model('classes_model');
 		$this->load->model('club_model');
@@ -81,7 +81,7 @@ $this->path[] = array(
 
 	// View a race and it's results
 	function view_race($club_name, $club_id, $race_id){
-		$this->output->cache(60);
+		if($this->cache) $this->output->cache(60);
 		$this->load->model('regatta_model');
 		$this->load->model('classes_model');
 		$this->load->model('club_model');

@@ -34,7 +34,7 @@ class userlib {
 			$this->name = $this->CI->session->userdata('name');
 			$this->clubs =  $this->CI->user_model->get_user_clubs($this->userid);
 			$this->club_id = $this->clubs[0]->club_id;
-			$this->club_name = $this->clubs[0]->club_name;
+			$this->club_name = $this->clubs[0]->name;
 			$this->locale = $this->clubs[0]->locale;
 			$this->language = $this->clubs[0]->language;
 			$this->set_club($this->club_id, $this->club_name);	

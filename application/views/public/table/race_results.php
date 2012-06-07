@@ -1,7 +1,7 @@
 <table class="table table-striped ">
 	<thead>
 		<tr>
-			<th>Place</th>
+			<th>Points</th>
 			<th>Sail #</th>
 			<th>Boat</th>
 			<th>Elapsed</th>
@@ -10,7 +10,8 @@
 				<th>Corrected</th>
 				<th class="hidden-phone">To Win</th>
 			<? endif; ?>
-			<th>Points</th>
+			<th>Place</th>
+			
 			<th class="hidden-phone">Discarded</th>
 			<th>Comments</th>
 		</tr>
@@ -18,7 +19,7 @@
 	<tbody>
 		<? foreach($results as $r): ?>
 			<tr>
-				<td><?=($r->position == 0) ? '&nbsp;' : $r->position;?></td>
+				<td><?=($r->points != 0) ? $r->points : '&nbsp;' ;?></td>
 				<td><?=$r->sail_number;?></td>
 				<td><?=$r->boat_name;?></td>
 				<td><?=($r->elapsed_time == 0) ? '&nbsp;' : sec2time($r->elapsed_time);?></td>
@@ -39,7 +40,8 @@
 						?>
 					</td>
 				<? endif;?>
-				<td><?=($r->points != 0) ? $r->points : '&nbsp;' ;?></td>
+				<td><?=($r->position == 0) ? '&nbsp;' : $r->position;?></td>
+				
 				<td class="hidden-phone aligncenter"><?=($r->discarded == 1) ? '<i class="icon-ban-circle"></i>' : '';?> </td>
 				<td><?=($r->status !== 'completed') ? $r->status : '&nbsp;' ;?></td>
 			</tr>
