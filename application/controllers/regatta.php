@@ -14,7 +14,7 @@ class Regatta extends CI_Controller {
 
 	function list_all($page = null){
 		$this->userlib->force_login();
-		$this->load->model('regatta_model');
+		
 		
 		$this->load->library('pagination');
 		
@@ -35,7 +35,7 @@ class Regatta extends CI_Controller {
 	function create(){
 		$this->userlib->force_login();
 		$this->userlib->force_permission('regatta_create');
-		$this->load->model('regatta_model'); 
+		 
 		$data = array(
 						'regatta_parent' => $this->userlib->active_club(), 
 						'title' => "Create Regatta",
@@ -106,9 +106,9 @@ class Regatta extends CI_Controller {
  	 */
 	function delete(){
 		$this->userlib->force_login();
-		$this->load->model('classes_model');
-		$this->load->model('race_model');
-		$this->load->model('regatta_model');
+		
+		
+		
 
 		if($this->input->post('submit') == 'submit' AND $this->input->post('confirm_delete') == 'form_submit') {
 			$this->userlib->force_permission('regatta_delete', array('regatta_id' => $this->input->post('object_id')));
@@ -146,8 +146,8 @@ class Regatta extends CI_Controller {
 	function view($id=null){
 		$this->userlib->force_login();
 		
-		$this->load->model('regatta_model');		
-		$this->load->model('classes_model');
+				
+		
 		
 		$regatta = $this->regatta_model->get($id);
 		if(!$regatta) show_404('regatta/view/invalidid');
@@ -172,7 +172,7 @@ class Regatta extends CI_Controller {
 	
 	function edit($field, $type, $id){
 		$this->userlib->force_login();
-		$this->load->model('regatta_model');
+		
 		if($this->userlib->check_permission('regatta_edit', array('regatta_id' => $id))){
 			if($this->input->post('submit')){
 				//form has been submitted

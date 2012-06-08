@@ -1,11 +1,27 @@
 <? $this->load->view('common/header'); ?>
 	<div class="row">
-		<header class="span12">
+		<header class="span8">
 			<h1><?=$headline;?></h1>
 			<? if(isset($intro)):?>
 			<p class="lead"><?=$intro;?></p>
 			<? endif;?>
 		</header>
+		<div class="span4">
+			<? $buttons = array(
+								array(
+									'title' => 'Public Page',
+									'action' => 'regatta/view',
+									'parameters' => '',
+									'type' => 'link',
+									'url' => base_url('clubs/view/' . $this->session->userdata('club_name') . '/' . $this->session->userdata('club_id')),
+									'icon' => 'share',
+									'attributes' => 'target="_blank"',
+									'classes' => ''
+									)
+				);
+				$this->load->view('common/toolbar', array('buttons' => $buttons));
+			?>
+		</div>
 	</div>
 	<div class="row">
 		<div class="span12">

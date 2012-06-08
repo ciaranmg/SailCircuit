@@ -11,8 +11,8 @@ class Owner extends CI_Controller{
 	
 	function create($boat_id){
 		if(!is_ajax()) show_404("owner/create/$boat_id");
-		$this->load->model('owner_model');
-		$this->load->model('boats_model');
+		
+		
 		
 		if($this->userlib->check_permission('boats_edit', array('boat_id' => $boat_id))){
 
@@ -54,7 +54,7 @@ class Owner extends CI_Controller{
 	}
 	
 	function show($id, $ajax=null){
-		$this->load->model('owner_model');
+		
 		$owner = $this->owner_model->get($id);
 		
 		if($ajax == 'ajax') $ajax = true;

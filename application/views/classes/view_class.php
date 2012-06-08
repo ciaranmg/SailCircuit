@@ -16,6 +16,17 @@
 								'icon' => 'refresh icon-white',
 							),
 						array(
+								'title' => 'Public Page',
+								'action' => 'classes/view',
+								'url' => base_url('clubs/view_class/' . $this->session->userdata('club_name') . '/'. $this->session->userdata('club_id') .'/' . $class->id),
+								'parameters' => '',
+								'classes' => '',
+								'icon' => 'share',
+								'type' => 'link',
+								'attributes' => 'target="_blank"'
+
+							),
+						array(
 								'title'=> 'Delete Class',
 								'action' => '#classes/delete',
 								'classes' => '',
@@ -98,7 +109,7 @@
 		</section>
 	</div>
 </div>
-<? if($completed_races):?>
+<? if($points_table):?>
 	<div class="row">
 		<div class="span12 leading">
 			<section class="portlet">
@@ -117,7 +128,7 @@
 	<div class="span12">
 		<section class="portlet leading">
 			<header>
-				<h2><?=count($boats);?> Boats</h2>
+				<h2><?=($boats) ? sizeof($boats) .' Boats' : 'There are no Boats in this class';?></h2>
 				<? $this->load->view('common/toolbar', array('buttons' => $boat_buttons));?>
 				<div class="clearfix"></div>
 			</header>

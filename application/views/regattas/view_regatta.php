@@ -22,7 +22,17 @@
 							'parameters' => $regatta->id,
 							'icon' => 'trash',
 							'attributes' => 'data-toggle="modal" data-target="#delete_regatta_modal"'
-						)
+						),
+						array(
+							'title' => 'Public Page',
+							'action' => 'regatta/view',
+							'classes' => '',
+							'parameters' => $regatta->id,
+							'type' => 'link',
+							'icon' => 'share',
+							'attributes' => 'target="_blank"',
+							'url' => base_url('clubs/view_series/' . $this->session->userdata('club_name') . '/' . $this->session->userdata('club_id') . '/' . $regatta->id)
+							)
 					);
 				$this->load->view('common/toolbar', array('buttons' => $buttons));
 			?>

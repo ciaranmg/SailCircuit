@@ -17,7 +17,7 @@ class race_data
 	 * Method to take data submitted by the form and convert it to usable variables & objects
 	 */
 	function process_raw_data($string, $args){
-		$this->load->model('boats_model');
+		
 
 		// Split into lines
 		$lines = preg_split( '/\r\n|\r|\n/', $string );

@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-striped table-condensed">
 	<thead>
 		<tr>
 			<th>Position</th>

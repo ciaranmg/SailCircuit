@@ -20,6 +20,16 @@
 							'parameters' => $race->id,
 							'icon' => 'pencil',
 							'attributes' => 'data-target-id="ctr-race-results" data-target="'. base_url('race/edit/' .$race->id) .'"'
+							),
+							array(
+								'type' => 'link',
+								'title' => 'Public Page',
+								'action' => 'race/view',
+								'classes' => '',
+								'parameters' => '',
+								'icon' => 'share',
+								'attributes' => 'target="_blank"',
+								'url' => base_url('clubs/view_race/'. $this->session->userdata('club_name') . '/' . $this->session->userdata('club_id') . '/' . $race->id)
 							)
 						);
 						$this->load->view('common/toolbar', array('buttons' => $add_handicap));

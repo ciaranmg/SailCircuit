@@ -83,7 +83,6 @@ h2.editable, h2.editMode {
 h2 small {
     font-size: 14px;
 }
-
 .help{
     margin-bottom: 20px;
 }
@@ -161,6 +160,8 @@ padding: 20px;
     margin: 0;
     float: left;
 }
+
+
 .show-help{
     cursor: pointer;
 }

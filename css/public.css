@@ -3,14 +3,19 @@
     	background-image: none;
     	padding-top: 20px;
     	padding-bottom: 20px;
+        font-size: 10pt;
     }
 
+    .breadcrumb {
+        margin-bottom: 8px;
+    }
     h1, h2, h3 {
     	color: #00447A;
     }
 
     .page-header {
         padding-bottom: 0;
+        margin-top: 8px;
     }
     .portlet header {
         background-color: #00447A;

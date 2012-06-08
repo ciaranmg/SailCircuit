@@ -53,7 +53,7 @@ class Race_model extends CI_Model{
 	 * Method to compile the standings of a given class
 	 */
 	function get_points_table($class_id){
-		$this->load->model('classes_model');
+		
 		$completed_races = $this->race_model->count_completed_races($class_id);		
 		if($completed_races){
 			$class = $this->classes_model->get($class_id);
@@ -232,7 +232,7 @@ class Race_model extends CI_Model{
 	 * Method to get a readable results table for display to the user
 	 */
 	function get_readable_results($race_id){
-		$this->load->model('scoring_model');
+		
 		// Load the scoring library so we can fetch the order by info
 		$race = $this->race_model->get($race_id);
 		$scoring = $this->scoring_model->get($race->scoring_system);
@@ -305,7 +305,7 @@ class Race_model extends CI_Model{
 	 *				This method pulls from the post variables
 	 */
 	function process_data($race_id){	
-		$this->load->model('handicap_model');
+		
 		$i=0;
 		$race = $this->race_model->get($race_id);
 
@@ -393,7 +393,7 @@ class Race_model extends CI_Model{
 	 *											
 	 */
 	function process_raw_data($string, $args){
-		$this->load->model('boats_model');
+		
 		
 		$total = 0;
 		$not_found = 0;
@@ -461,7 +461,7 @@ class Race_model extends CI_Model{
 	* 			$class_id: integer
 	**/
 	function initialise_races($name, $class_id, $races_to_create){
-		$this->load->model('classes_model');
+		
 
 		$num_races = $this->db->where('class_id', $class_id)->count_all_results('sc_races');
 		$class = $this->classes_model->get($class_id);
@@ -493,7 +493,7 @@ class Race_model extends CI_Model{
 	}
 
 	function update_field($field, $data, $id, $type='text'){
-		$this->load->model('classes_model');
+		
 		$this->db->where('id', $id);
 		$this->db->update('sc_races', array($field => $data));
 		// Finally update the class status because the reace info has changed.

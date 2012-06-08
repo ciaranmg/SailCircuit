@@ -12,9 +12,9 @@
 		 */
 		public function input($race_id = false){			
 			$this->userlib->force_login();
-			$this->load->model('regatta_model');
-			$this->load->model('classes_model');
-			$this->load->model('race_model');
+			
+			
+			
 
 			if($race_id) {
 				$race = $this->race_model->get($race_id);
@@ -37,8 +37,8 @@
 		 */
 		public function ajax_handle_data(){
 			if(!is_ajax()) show_404('ajax_handle_data');
-			$this->load->model('race_model');
-			$this->load->model('scoring_model');
+			
+			
 
 			if($this->input->post('submit') && $this->input->post('confirm')){
 				// Check if the form has been submitted and confirmed
@@ -105,9 +105,9 @@
 		}
 
 		public function view($race_id){
-			$this->load->model('regatta_model');
-			$this->load->model('classes_model');
-			$this->load->model('race_model');
+			
+			
+			
 
 			$race = $this->race_model->get($race_id);
 			$class = $this->classes_model->get($race->class_id);
@@ -124,9 +124,9 @@
 		}
 
 		public function edit($race_id){
-			$this->load->model('race_model');
-			$this->load->model('handicap_model');
-			$this->load->model('scoring_model');
+			
+			
+			
 
 			$race = $this->race_model->get($race_id);
 			$scoring = $this->scoring_model->get($race->scoring_system);
@@ -172,7 +172,7 @@
 		 * Method to get the start date and time of a race
 		 */
 		function get_race_datetime($race_id, $json=true){
-			$this->load->model('race_model');
+			
 
 			$result = $this->race_model->get_field('start_date', $race_id);
 
@@ -190,7 +190,7 @@
 		public function ajax_classes_list($regatta_id){
 
 			if(!is_ajax()) show_404('ajax_classes_list');
-			$this->load->model('classes_model');
+			
 
 			if($regatta_id == 0 OR $regatta_id =='') echo json_encode(array('value'=> '0', 'display' => ''));
 
@@ -208,7 +208,7 @@
 		 */
 		public function ajax_races_list($class_id){
 			if(!is_ajax()) show_404('ajax_races_list');
-			$this->load->model('race_model');
+			
 
 			if($class_id == 0 OR $class_id == '') echo json_encode(array('value'=> '0', 'display' => ''));
 
@@ -225,8 +225,8 @@
 		 */
 		public function ajax_add_races($class_id){
 			if(!is_ajax()) show_404('ajax_add_races');
-			$this->load->model('race_model');
-			$this->load->model('classes_model');
+			
+			
 
 			// Check if the user has permission to do this
 			if($this->userlib->check_permission('classes_edit', array('class_id'=>$class_id))){
@@ -267,8 +267,8 @@
 	 */
 	function ajax_delete_race($class_id = null){
 		if(!is_ajax()) show_404("classes/ajax_delete_race/$class_id");
-		$this->load->model('classes_model');
-		$this->load->model('race_model');
+		
+		
 
 		if($this->userlib->check_permission('classes_delete', array('class_id' => $class_id)) && $this->input->post('submit')){
 			

@@ -4,7 +4,7 @@ class Home extends CI_Controller {
 	public function index()
 	{
 		$this->userlib->force_login();
-		$this->load->model('regatta_model');
+		
 		$data['breadcrumb'] = $this->breadcrumb->get_path();
 		$data['headline'] = $this->lang->line('dashboard_headline');
 		$data['intro'] = $this->lang->line('dashboard_intro');

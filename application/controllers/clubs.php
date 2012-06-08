@@ -18,7 +18,7 @@ $this->path[] = array(
 	function view($club_name, $club_id, $offset = null){
 		if($this->cache) $this->output->cache(60);
 		$club_name = 'whsc';
-		$this->load->model('regatta_model');
+		
 		$this->load->model('club_model');
 		if(!$club_id) show_404('Club Not Found');
 		$club = $this->club_model->get($club_id);
@@ -42,8 +42,8 @@ $this->path[] = array(
 	// View a regatta and all its classes
 	function view_series($club_name, $club_id, $regatta_id){
 		if($this->cache) $this->output->cache(60);
-		$this->load->model('regatta_model');
-		$this->load->model('classes_model');
+		
+		
 		$this->load->model('club_model');
 
 
@@ -60,10 +60,10 @@ $this->path[] = array(
 	// View a class and all its races
 	function view_class($club_name, $club_id, $class_id){
 		if($this->cache) $this->output->cache(60);
-		$this->load->model('regatta_model');
-		$this->load->model('classes_model');
+		
+		
 		$this->load->model('club_model');
-		$this->load->model('race_model');
+		
 
 		$races = $this->race_model->get_races($class_id);
 		$club = $this->club_model->get($club_id);
@@ -82,10 +82,10 @@ $this->path[] = array(
 	// View a race and it's results
 	function view_race($club_name, $club_id, $race_id){
 		if($this->cache) $this->output->cache(60);
-		$this->load->model('regatta_model');
-		$this->load->model('classes_model');
+		
+		
 		$this->load->model('club_model');
-		$this->load->model('race_model');
+		
 
 		$race_results = $this->race_model->get_readable_results($race_id);
 		$race = $this->race_model->get($race_id);

@@ -109,7 +109,7 @@ $autoload['language'] = array('sc');
 |
 */
 
-$autoload['model'] = array('user_model');
+$autoload['model'] = array('user_model', 'regatta_model', 'classes_model', 'race_model', 'boats_model', 'handicap_model', 'owner_model', 'scoring_model');
 
 
 /* End of file autoload.php */

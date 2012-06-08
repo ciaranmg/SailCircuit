@@ -16,7 +16,7 @@
 			redirect(base_url('/'));
 		}
 		function test2($class_id){
-			$this->load->model('classes_model');
+			
 			$class = $this->classes_model->get($class_id);
 
 					$this->firephp->log($class);
@@ -24,9 +24,9 @@
 		}
 		
 		function test($class_id){
-			$this->load->model('classes_model');
-			$this->load->model('race_model');
-			$this->load->model('scoring_model');
+			
+			
+			
 
 			$data['class'] = $this->classes_model->get($class_id);
 			$data['races'] = $this->race_model->get_races($class_id);
@@ -43,10 +43,10 @@
 
 
 		function view($id=null){
-			$this->load->model('classes_model');
-			$this->load->model('race_model');
-			$this->load->model('boats_model');
-			$this->load->model('scoring_model');
+			
+			
+			
+			
 
 			$this->userlib->force_login();
 			$class = $this->classes_model->get($id);
@@ -58,7 +58,7 @@
 				$points_table = $this->race_model->get_points_table($id);
 
 				$boats = $this->boats_model->get_class_boats($id);
-				$data = array('completed_races' => $completed_races, 'points_table' => $points_table, 'class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
+				$data = array('points_table' => $points_table, 'class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
 				
 				if($class->status == 'modified'){
 					$data['err_message'] = "Settings for this class have been changed. Click the refresh button to calculate race results based on these new settings";
@@ -73,10 +73,10 @@
 			$this->userlib->force_login();
 			$this->userlib->force_permission('classes_create', array('regatta_id'=> $regatta_id));
 
-			$this->load->model('handicap_model');
-			$this->load->model('classes_model');
-			$this->load->model('boats_model');
-			$this->load->model('scoring_model');
+			
+			
+			
+			
 			// Todo: make use of the classlib function that returns options for the dropdowns
 			
 				// Build the form options
@@ -257,10 +257,10 @@
 		 */
 		function ajax_boat_selector($class_id){
 			// if(!is_ajax()) show_404('classes/ajax_boat/selector/'.$class_id);
-			$this->load->model('boats_model');
-			$this->load->model('classes_model');
-			$this->load->model('handicap_model');
-			$this->load->model('race_model');
+			
+			
+			
+			
 
 			$data['class_id'] = $class_id;
 			$data['show_handicap'] = true;
@@ -331,8 +331,8 @@
 		 */
 		function delete(){
 			$this->userlib->force_login();
-			$this->load->model('classes_model');
-			$this->load->model('race_model');
+			
+			
 
 			if($this->input->post('submit') == 'submit' AND $this->input->post('confirm_delete') == 'form_submit') {
 				$this->userlib->force_permission('classes_delete', array('class_id' => $this->input->post('object_id')));

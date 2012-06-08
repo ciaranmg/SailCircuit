@@ -26,7 +26,7 @@ class Boats extends CI_Controller {
 
 	function list_all($page = null){
 		$this->userlib->force_login();
-		$this->load->model('boats_model');
+		
 		$this->load->library('pagination');
 
 
@@ -56,7 +56,7 @@ class Boats extends CI_Controller {
 	function create() {	
 		$this->userlib->force_login();
 		$this->userlib->force_permission('boats_create', array('club_id' => $this->session->userdata('club_id')));
-		$this->load->model('boats_model');
+		
 
 		$form = array(
 				'action' => 'boats/create',
@@ -156,9 +156,9 @@ class Boats extends CI_Controller {
 	
 	
 	function view($id=null){
-		$this->load->model('boats_model');
-		$this->load->model('owner_model');
-		$this->load->model('handicap_model');
+		
+		
+		
 
 		// First up force a login
 		$this->userlib->force_login();
@@ -195,7 +195,7 @@ class Boats extends CI_Controller {
 
 	function ajax_list_boats($type = null){
 		if(!is_ajax()) show_404('boats/ajax_list_boats');
-		$this->load->model('boats_model');
+		
 
 		if($type == 'Dinghy' OR $type == 'Keelboat'){
 			$boats = $this->boats_model->get_boats(array('club_id' => $this->session->userdata('club_id'), 'main_class' => $type), 'sail_number');
@@ -207,8 +207,8 @@ class Boats extends CI_Controller {
 	}
 
 	function ajax_delete_handicap($id){
-		$this->load->model('handicap_model');
-		$this->load->model('boats_model');
+		
+		
 
 		if(!is_ajax()) show_404("boats/ajax_delete_handicap/$id");
 
@@ -223,8 +223,8 @@ class Boats extends CI_Controller {
 	}
 
 	function ajax_delete_owner($id){
-		$this->load->model('owner_model');
-		$this->load->model('boats_model');
+		
+		
 		
 		if(!is_ajax()) show_404("boats/ajax_delete_owner/$id");
 
@@ -241,7 +241,7 @@ class Boats extends CI_Controller {
 
 	function add_handicaps($id){
 		if(!is_ajax()) show_404("boats/add_handicap/$id");
-		$this->load->model('handicap_model');
+		
 		
 		if($this->userlib->check_permission('boats_edit', array('boat_id' => $id))){
 

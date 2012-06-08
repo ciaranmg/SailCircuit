@@ -30,7 +30,7 @@
 							if($r->corrected_time !=0){
 								$sec_to_win = $r->corrected_time - $results[0]->corrected_time;
 								if($sec_to_win !=0){
-									$this->load->model('handicap_model');
+									
 									$fn = $race->handicap_name . '_calc';
 									$to_win = $fn($sec_to_win, $r->handicap, true);
 									echo sec2time($to_win);

@@ -3,8 +3,8 @@ class classes_model extends CI_Model {
 	
 
 	function get_class_table($class_id){
-		$this->load->model('race_model');
-		$this->load->model('boats_model');
+		
+		
 
 		$class_boats = $this->boats_model->get_class_boats($class_id);
 		if($class_boats){
@@ -52,8 +52,8 @@ class classes_model extends CI_Model {
 	 *			
 	 */
 	function apply_discards($class_id){
-			$this->load->model('race_model');
-			$this->load->model('boats_model');
+			
+			
 
 			// First clear the discards so we can apply them fresh.
 			$this->race_model->clear_discards($class_id);
@@ -144,7 +144,7 @@ class classes_model extends CI_Model {
 	}
 	
 	function get($class_id){
-		$this->load->model('scoring_model');
+		
 
 		$this->db->select('sc_classes.id, 
 				sc_classes.name,
@@ -229,7 +229,7 @@ class classes_model extends CI_Model {
 		// 5. Add the boats from #2 to the class
 
 		if(!is_integer($class_id) AND !is_array($boats)) return false;
-		$this->load->model('handicap_model');
+		
 		// Get handicap name
 		$this->db->select('sc_handicap_systems.name');
 		$this->db->from('sc_handicap_systems');

@@ -9,7 +9,8 @@ function sc_button($action, $text, $classes=null){
 //						classes
 //						priority - primary, secondary, tertiary
 
-	if(!$classes) $classes = "secondary center";
+	if(!isset($classes)) $classes = "secondary center";
+	if($type == 'link') $action = $url;
 
 	$buttonCode = '<div class="button '. $classes . '">
 					<a href="'. $action .'">'. $text .'</a>

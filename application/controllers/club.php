@@ -23,7 +23,7 @@ class Club extends CI_Controller {
 	function dashboard(){
 	// Function to load the users club(s) dashboard
 	$this->userlib->force_login();
-	$this->load->model('regatta_model');
+	
 	if(!$this->session->userdata('club_id')){
 		$user_clubs = $this->user_model->get_user_clubs($this->userlib->activeuser());
 		$this->userlib->set_club($user_clubs[0]['club_id']);
