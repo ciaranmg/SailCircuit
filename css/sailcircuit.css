@@ -36,6 +36,10 @@ button.flat-button{
     
 }
 
+#ctr-column-chooser{
+  display: none;
+}
+
 #ctr-race-info, #ctr-race-data{
     min-height: 400px;
 }
@@ -64,6 +68,29 @@ button.flat-button{
     position: relative;
     width: 60px;
     left: -60px;
+}
+
+.form-inline .control{
+  width: 22%;
+  margin-right: 5px;
+  float: left;
+}
+
+.form-inline .control input[type="checkbox"]{
+    height: 26px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+    margin-top: 0;
+}
+
+.form-inline .control label{
+    line-height: 26px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-inline legend{
+    margin-bottom: 15px;
 }
 
 .form-horizontal .form-actions{

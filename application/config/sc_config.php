@@ -36,26 +36,30 @@ $config['sc_image_sizes'] = array(
 
 // Default values for the columns that can be displayed on the results pages
 $config['class_columns'] = array(
-							'fleet' => false,
 							'age' => false,
+							'age_group' => false,
+							'alt_sail_number' => false,
+							'boat_type' => false,
+							'bow_number' => false,
+							'crew' => false,
+							'fleet' => false,
+							'handicap' => true,
+							'helm' => false,
 							'owner' => true,
 							'sail_number' => true,
-							'boat_type' => false,
-							'handicap' => true,
-							'bow_number' => false,
-							'alt_sail_number' => false,
-							'crew' => false,
 							);
 $config['race_columns'] = array(
-							'fleet' => false,
 							'age' => false,
+							'age_group' => false,
+							'alt_sail_number' => false,
+							'boat_type' => false,
+							'bow_number' => false,
+							'crew' => false,
+							'fleet' => false,
+							'handicap' => true,
+							'helm' => false,
 							'owner' => true,
 							'sail_number' => true,
-							'to_win' => true,
-							'boat_type' => false,
-							'handicap' => true,
-							'bow_number' => false,
-							'alt_sail_number' => false,
-							'crew' => false,
+							'time_to_win' => true,
 							);
 ?>

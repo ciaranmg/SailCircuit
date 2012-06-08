@@ -4,6 +4,11 @@
 	var modalTrigger;
 
 	$(function() {
+
+		$('.show-hide').click(function(){
+			var show_hide = $(this).attr('data-target-id');
+			$('#'+ show_hide).slideToggle();
+		});
 		$('.editable').tooltip({
 			title: '<i class="icon-pencil icon-white"></i> Click to Edit',
 			trigger: 'hover',

@@ -47,6 +47,17 @@
 									'attributes' => 'data-target-id="ctr-class-boats" data-target="'. base_url('classes/ajax_boat_selector/' . $class->id) .'"'
 								)
 				);
+			$standings_buttons = array(
+								array(
+									'title' => 'Column Settings',
+									'type' => 'button',
+									'action' => '#classes/edit',
+									'parameters' => $class->id,
+									'classes' => 'show-hide',
+									'icon' => 'list-alt',
+									'attributes' => 'data-target-id="ctr-column-chooser"'
+									)
+								);
 			$race_buttons = array(
 								array(
 									'title' => 'Add Races',
@@ -115,8 +126,12 @@
 			<section class="portlet">
 				<header>
 					<h2>Standings</h2>
+					<? $this->load->view('common/toolbar', array('buttons' => $standings_buttons));?>
 					<div class="clearfix"></div>
 				</header>
+				<section id="ctr-column-chooser">
+					<? $this->load->view('classes/column_chooser');?>
+				</section>
 				<section>
 					<? $this->load->view('classes/tbl_standings');?>
 				</section>
