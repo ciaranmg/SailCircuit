@@ -9,7 +9,19 @@
 		<div class="span7">
 				<section class="portlet" id="boatDisplay">
 					<header>
-						<h2 class="editable" target="<?=base_url('ajax/edit/boat/name/text') .'/' . $boat->id;?>"><?=$boat->name?></h2>
+						<h2><?=$boat->name?></h2>
+						<?
+							$add_meta = array(array(
+									'type' => 'button',
+									'title' => 'Add Data',
+									'action' => 'boats/edit',
+									'parameters' => $boat->id,
+									'icon' => 'plus',
+									'classes' => 'btn-ajax-activate',
+									'attributes' => 'data-target-id="ctr-ajax-boat-meta" data-target="'. base_url('ajax/meta/boats/' . $boat->id) .'"'
+								));
+							$this->load->view('common/toolbar', array('buttons' => $add_meta));
+						?>
 						<div class="clearfix"></div>
 					</header>
 					<section>
@@ -44,6 +56,7 @@
 									<td id="tb_sub_class" class="editable" target="<?=base_url('ajax/edit/boats/sub_class/text/' .$boat->id);?>"><?=$boat->sub_class;?></td>
 								</tr>
 							</tbody>
+							<div id="ctr-ajax-boat-meta"></div>
 						</table>
 					</section>
 				</section>
@@ -59,7 +72,7 @@
 								'classes' => 'btn-ajax-activate',
 								'parameters' => $boat->id,
 								'icon' => 'time',
-								'attributes' => 'data-target-id="ctr-ajax-handicaps" data-target="'. base_url('boats/add_handicaps') . '/' .$boat->id . '"'
+								'attributes' => 'data-target-id="ctr-ajax-handicaps" data-target="'. base_url('boats/add_handicaps/'.$boat->id) . '"'
 								)
 							);
 							$this->load->view('common/toolbar', array('buttons' => $add_handicap));

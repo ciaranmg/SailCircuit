@@ -20,12 +20,13 @@
 			singleFieldEditForm($(this));
 		});
 
-		/* $('.editable').click(function(){
-			singleFieldEditForm($(this));
-		});*/
-		$('.btn-ajax-activate').click(function(){
+		$(document).on('click', '.btn-ajax-activate', function(){
+			$(this).removeClass('btn-ajax-activate');
 			ajaxEditForm($(this));
 		});
+		/* $('.btn-ajax-activate').click(function(){
+			ajaxEditForm($(this));
+		}); */
 
 		/*			Set up date pickers		*/
 		$( ".datepicker" ).datepicker({dateFormat: datelocale});

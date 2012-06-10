@@ -49,7 +49,7 @@
 				);
 			$standings_buttons = array(
 								array(
-									'title' => 'Column Settings',
+									'title' => 'Display Settings',
 									'type' => 'button',
 									'action' => '#classes/edit',
 									'parameters' => $class->id,
@@ -130,7 +130,7 @@
 					<div class="clearfix"></div>
 				</header>
 				<section id="ctr-column-chooser">
-					<? $this->load->view('classes/column_chooser');?>
+					<? $this->load->view('classes/display_settings');?>
 				</section>
 				<section>
 					<? $this->load->view('classes/tbl_standings');?>

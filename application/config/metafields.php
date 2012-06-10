@@ -1,5 +1,20 @@
 <?
-$config['boat_meta'] = array(
+$config['boats_meta'] = array(
+							array(
+							'field' => 'age',
+							'label' => 'Age',
+							'type' => 'text'
+								),
+							array(
+							'field' => 'age_group',
+							'label' => 'Age Group',
+							'type' => 'text'
+								),
+							array(
+							'field' => 'helm',
+							'label' => 'Helm',
+							'type' => 'text'
+								),
 							array(
 							'field' => 'bow_number',
 							'label' => 'Bow Number',
@@ -33,7 +48,7 @@ $config['boat_meta'] = array(
 							'type' => 'text',
 								));
 
-$config['class_meta'] = array(
+$config['classes_meta'] = array(
 							array(
 							'field' => 'notes',
 							'label' => 'Notes',

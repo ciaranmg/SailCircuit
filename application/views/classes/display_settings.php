@@ -5,7 +5,7 @@
 
 <?=form_open('url', array('class' => 'well form-inline', 'id'=> 'frm-column-picker'), array('class_id' => $class->id));?>
 		<fieldset>
-			<legend>Columns for Overall Class Results</legend>
+			<legend>Display Settings for Overall Class Results</legend>
 			<? foreach($class_columns as $col => $value): ?>
 				<div class="control">
 					<?=form_checkbox(array('name' => 'class_col_'.$col, 'id' => 'class_col_'.$col, 'value'=> $value, 'checked' => false));?>
@@ -14,7 +14,11 @@
 			<? endforeach;?>
 		</fieldset>
 		<fieldset>
-			<legend>Columns for Individual Race Results</legend>
+			<legend>Display Settings for Individual Race Results</legend>
+				<div class="control">
+					<?=form_checkbox(array('name'=> 'hide_dnc', 'value'=>'1', 'checked' => false);?>
+					<?=form_label('Hide DNC results', 'hide_dnc');?>
+				</div>
 			<? foreach($race_columns as $col => $value):?>
 				<div class="control">
 					<?=form_checkbox(array('name' => 'race_col_' . $col, 'id' => 'race_col'.$col, 'value'=> $value, 'checked' => false));?>

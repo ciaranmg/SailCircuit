@@ -57,9 +57,17 @@
 			----------------------------------------------------------------------------*/
 			$('.cancel').click(function(event){
 				var itemContainer = $(this).parents('.editMode').attr('id');
-				$('#' + itemContainer).html(currentVals[itemContainer]).addClass('editable');
+				
+				<? if($type == 'meta'): ?>
+					$('[data-target-id="' + itemContainer + '"]').removeClass('disabled').addClass('btn-ajax-activate');
+					$('#' + itemContainer).html(currentVals[itemContainer]).removeClass('editMode');
+				<? else:?>
+					$('[data-target-id="' + itemContainer + '"]').addClass('btn-ajax-activate');				
+					$('#' + itemContainer +'.editable').bind('click', function(){ singleFieldEditForm($(this)); });
+					$('#' + itemContainer).html(currentVals[itemContainer]).addClass('editable');
+				<? endif;?>
+
 				event.stopPropagation();
-				$('#' + itemContainer +'.editable').bind('click', function(){ singleFieldEditForm($(this)); });
 			});
 			
 			/*----------------------------------------------------------------------------

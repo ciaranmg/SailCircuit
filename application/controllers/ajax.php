@@ -6,6 +6,27 @@ class Ajax extends CI_Controller {
 
 	}
 
+	function meta($controller, $object_id){
+
+		$fields = $this->config->item($controller . '_meta');
+		$meta_options['0'] = 'Choose One...';
+		foreach($fields as $f){
+			// Don't use fields that start with an underscore, they're special
+			if(substr($f['field'], 0) == '_') continue;
+			$meta_options[$f['field'] . '|' . $f['type']] = $f['label'];
+		}
+
+		$data = array(
+						'controller' => $controller, 
+						'object_id' => $object_id, 
+						'meta_options' => $meta_options,
+						'target' => base_url('/ajax/add_meta/' . $controller .'/'. $object_id),
+						'type' => 'meta',
+						'field' => 'meta',
+						'id' => '');
+		$this->load->view('ajax_form/field_form', $data);
+	}
+
 	function edit($controller, $field, $type, $id){
 		$model_name = $controller . '_model';
 		$this->load->model($model_name);

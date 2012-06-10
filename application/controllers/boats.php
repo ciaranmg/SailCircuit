@@ -156,10 +156,6 @@ class Boats extends CI_Controller {
 	
 	
 	function view($id=null){
-		
-		
-		
-
 		// First up force a login
 		$this->userlib->force_login();
 		
@@ -223,9 +219,6 @@ class Boats extends CI_Controller {
 	}
 
 	function ajax_delete_owner($id){
-		
-		
-		
 		if(!is_ajax()) show_404("boats/ajax_delete_owner/$id");
 
 		if($this->userlib->check_permission('boats_edit', array('boat_id'=> $id)) && $this->input->post('submit')){
@@ -237,6 +230,11 @@ class Boats extends CI_Controller {
 			echo '<div class="alert alert-error">You do not have permission to edit this resource</div>';
 			error_log('User' . $this->session->userdata('user_id') .'Tried to delete owner from boat_id' .$id);
 		}
+	}
+
+	function add_meta($boat_id){
+
+		
 	}
 
 	function add_handicaps($id){
