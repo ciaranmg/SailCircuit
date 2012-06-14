@@ -194,6 +194,13 @@ class classes_model extends CI_Model {
 				$class->meta['_class_columns']->label ='Class Columns';
 				$class->meta['_class_columns']->type = 'array';
 			}
+			if(!isset($class->meta['_race_settings'])){
+				$class->meta['_race_settings'] = new stdClass;
+				$class->meta['_race_settings']->field = '_race_settings';
+				$class->meta['_race_settings']->value = $this->config->item('race_settings');
+				$class->meta['_race_settings']->label = 'General Race Settings';
+				$class->meta['_race_settings']->type = 'array';
+			}
 			$this->firephp->log($class);
 			return $class;
 		}else{

@@ -43,6 +43,10 @@ $config['sc_image_sizes'] = array(
 							'small' => array('width' => 170, 'height' => 100)
 							);
 
+// General display options
+$config['race_settings'] = array('hide_dnc' => false);
+$config['class_settings'] = array();
+
 // Default values for the columns that can be displayed on the results pages
 $config['class_columns'] = array(
 							'age' => false,
@@ -57,6 +61,7 @@ $config['class_columns'] = array(
 							'owner' => true,
 							'sail_number' => true,
 							);
+
 $config['race_columns'] = array(
 							'age' => false,
 							'age_group' => false,

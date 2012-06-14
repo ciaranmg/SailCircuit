@@ -16,6 +16,35 @@
 			redirect(base_url('/'));
 		}
 
+		function save_display_settings($class_id){
+			if($this->userlib->check_permission('classes_edit', array('class_id' => $class_id)) AND is_ajax()){
+				$class_columns = array();
+				foreach(array_keys($this->config->item('class_columns')) as $col){
+					$class_columns[$col] = $this->input->post('class_col_'.$col);
+				}
+				// Clear old values
+				$this->classes_model->delete_meta(array('class_id' => $class_id, 'field'=> '_class_columns'));
+				// Save new
+				$this->classes_model->save_meta($class_id, '_class_columns', $class_columns, 'array');
+
+				$race_columns = array();
+				foreach(array_keys($this->config->item('race_columns')) as $col){
+					$race_columns[$col] = $this->input->post('race_col_'.$col);
+				}
+				// Clear old values
+				$this->classes_model->delete_meta(array('class_id' => $class_id, 'field' => '_race_columns'));
+				// Save New
+				$this->classes_model->save_meta($class_id, '_race_columns', $race_columns, 'array');
+
+				$race_settings = array();
+				foreach(array_keys($this->config->item('race_settings')) as $setting){
+					$race_settings[$setting] = $this->input->post($setting);
+				}
+				$this->classes_model->delete_meta(array('class_id' => $class_id, 'field' => '_race_settings'));
+				$this->classes_model->save_meta($class_id, '_race_settings', $race_settings, 'array');
+$this->firephp->log($race_settings);				
+			}
+		}
 
 		function view($id=null){
 			$this->userlib->force_login();

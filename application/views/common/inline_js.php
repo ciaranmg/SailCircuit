@@ -5,6 +5,9 @@
 
 	$(function() {
 
+		// Bind Class settings save
+		$('#frm-column-picker').bind('submit', function(){ ajaxSaveDisplaySettings($(this)); return false;});
+
 		$('.profile-photo').hover(function(){$('.edit-button').show();}, function(){$('.edit-button').hide();});
 		
 		$(document).on('click', '#btn-edit-profile-photo', function(){
@@ -213,6 +216,23 @@
 						$(this).html(currentVals[containerID]);
 					}
 			});
+	}
+
+	function ajaxSaveDisplaySettings(settingsForm){
+		var formData = settingsForm.serialize();
+		$('.btn-primary', settingsForm).addClass('disabled');
+		$.ajax({
+			url: settingsForm.attr('action'),
+			data: formData,
+			type: 'POST',
+			context: settingsForm,
+			success: function(data){
+				settingsForm.effect('highlight', {}, 2000);
+				$('.btn-primary', settingsForm).removeClass('disabled');
+			},
+			error: function(){
+			}
+		});
 	}
 </script>
 
