@@ -6,25 +6,47 @@ class Ajax extends CI_Controller {
 
 	}
 
-	function meta($controller, $object_id){
-
-		$fields = $this->config->item($controller . '_meta');
-		$meta_options['0'] = 'Choose One...';
-		foreach($fields as $f){
-			// Don't use fields that start with an underscore, they're special
-			if(substr($f['field'], 0) == '_') continue;
-			$meta_options[$f['field'] . '|' . $f['type']] = $f['label'];
-		}
-
+	function profile_photo($controller, $object_id){
 		$data = array(
-						'controller' => $controller, 
-						'object_id' => $object_id, 
-						'meta_options' => $meta_options,
-						'target' => base_url('/ajax/add_meta/' . $controller .'/'. $object_id),
-						'type' => 'meta',
-						'field' => 'meta',
-						'id' => '');
-		$this->load->view('ajax_form/field_form', $data);
+				'form_action' => base_url('/'. $controller .'/profile_photo/' .$object_id),
+				'redirect' => base_url('/'.$controller .'/view/' . $object_id)
+				);
+
+		$this->load->view('ajax_form/profile_photo_form', $data);
+	}
+	function meta($controller, $object_id){
+		$fields = $this->config->item($controller . '_meta');
+		$model_name = $controller . '_model';
+
+		if($this->userlib->check_permission($controller . '_edit')){
+			if($this->input->post('submit')){
+				// Form has been submitted, handle the data.
+				$meta_name = explode('|', $this->input->post('meta_name'));
+				$field_name = $meta_name[0];
+				$field_type = $meta_name[1];
+				
+				$field_label = $fields[$field_name]['label'];
+				if($field_type == 'text'){
+					$this->$model_name->save_meta($object_id, $field_name, $this->input->post('text_meta'));
+					echo '<tr><th>' . $field_label .'</th><td id="tb-meta-' .$field_name .'" class="editable" target="'.base_url('ajax/edit/'. $controller .'/' . $field_name . '/' . $field_type . '/' . $object_id).'">' . $this->input->post('text_meta'). '</td></tr>';
+				}
+
+			}else{
+				// Form hasn't been submitted. Show the form.
+				$meta_options = $this->$model_name->get_meta_options($object_id);
+				$data = array(
+							'controller' => $controller, 
+							'object_id' => $object_id, 
+							'meta_options' => $meta_options,
+							'target' => base_url('/ajax/meta/' . $controller .'/'. $object_id),
+							'type' => 'meta',
+							'field' => 'meta',
+							'id' => '');
+				$this->load->view('ajax_form/field_form', $data);
+			}
+		}else{
+			echo "Insufficient Permission";
+		}
 	}
 
 	function edit($controller, $field, $type, $id){
@@ -50,8 +72,6 @@ class Ajax extends CI_Controller {
 					$type = $this->input->post('type');
 
 					// Make sure something has been submitted
-					// Todo: Apply proper validation rules
-
 					if($this->input->post($field) !== ''){
 						// Update the existing value, then fetch the value from the database taking care of the non-standard field types
 						

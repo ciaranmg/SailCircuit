@@ -15,45 +15,15 @@
 		function index(){
 			redirect(base_url('/'));
 		}
-		function test2($class_id){
-			
-			$class = $this->classes_model->get($class_id);
-
-					$this->firephp->log($class);
-					
-		}
-		
-		function test($class_id){
-			
-			
-			
-
-			$data['class'] = $this->classes_model->get($class_id);
-			$data['races'] = $this->race_model->get_races($class_id);
-			$data['points_table'] = $this->classes_model->get_class_table($class_id);
-
-			$scoring = $this->scoring_model->get($data['class']->scoring_id);
-			$slib = $scoring->library;
-			$this->load->library('scoring/'.$slib);
-
-			$data['points_table'] = $this->$slib->process_class($data['points_table'], $data['class']);
-			$this->firephp->log($data['class']);
-			$this->load->view('classes/tbl_standings', $data);
-		}
 
 
 		function view($id=null){
-			
-			
-			
-			
-
 			$this->userlib->force_login();
 			$class = $this->classes_model->get($id);
 			$points_table = false;
-
+			$this->userlib->force_permission('classes_view', array('class_id' => $id));	
 			if($class){
-				$this->userlib->force_permission('classes_view', array('class_id' => $id));	
+
 				$races = $this->race_model->get_races($id);
 				$points_table = $this->race_model->get_points_table($id);
 
@@ -65,18 +35,13 @@
 				}
 				$this->load->view('classes/view_class', $data);
 			}else{
-				show_404('classes/view/noid');
+				show_404('classes/view/'. $id);
 			}
 		}
 		
 		function create($regatta_id){
 			$this->userlib->force_login();
 			$this->userlib->force_permission('classes_create', array('regatta_id'=> $regatta_id));
-
-			
-			
-			
-			
 			// Todo: make use of the classlib function that returns options for the dropdowns
 			
 				// Build the form options
@@ -185,9 +150,7 @@
 
 			// Check if Form Has been submitted
 			if($this->input->post('submit') && $this->input->post('action') == 'classes/create/' . $regatta_id){
-
 				$missing_handicap_flag = false;
-
 				//Check to see if the submitted form passes validation
 				if($this->form_validation->run('classes_create') === false){
 					$form_validation->set_error_delimiters('<p>', '</p>');
@@ -204,9 +167,7 @@
 				}else{
 					//Double Check security first
 					$this->userlib->force_permission('classes_create', array('regatta_id' => $this->input->post('parent')));
-
 					$handicap_system = $this->handicap_model->get($this->input->post('rating_system_id'));
-					// $this->firephp->log('here ' . $handicap_system);
 
 					foreach($form['fields'] as $field){
 						if($field['name'] == 'boat_selector'){
@@ -238,6 +199,10 @@
 					
 					$class_id = $this->classes_model->insert($this->class);
 					
+					// Initialise the Column Settings meta data
+					$this->classes_model->save_meta($class_id, '_class_columns', $this->config->item('class_columns'), 'array');
+					$this->classes_model->save_meta($class_id, '_race_columns', $this->config->item('race_columns'), 'array');
+					
 					$this->race_model->initialise_races('Race ', $class_id, $race_count);
 
 					if(sizeof($this->class_boats) > 0) $this->classes_model->set_class_boats($this->class_boats, $class_id);			
@@ -256,11 +221,7 @@
 		 *		
 		 */
 		function ajax_boat_selector($class_id){
-			// if(!is_ajax()) show_404('classes/ajax_boat/selector/'.$class_id);
-			
-			
-			
-			
+			if(!is_ajax()) show_404('classes/ajax_boat/selector/'.$class_id);
 
 			$data['class_id'] = $class_id;
 			$data['show_handicap'] = true;
@@ -331,9 +292,6 @@
 		 */
 		function delete(){
 			$this->userlib->force_login();
-			
-			
-
 			if($this->input->post('submit') == 'submit' AND $this->input->post('confirm_delete') == 'form_submit') {
 				$this->userlib->force_permission('classes_delete', array('class_id' => $this->input->post('object_id')));
 				

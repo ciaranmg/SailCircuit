@@ -1,108 +1,119 @@
 <?
 $config['boats_meta'] = array(
-							array(
+							'age' => array(
 							'field' => 'age',
 							'label' => 'Age',
 							'type' => 'text'
 								),
-							array(
+							'age_group' => array(
 							'field' => 'age_group',
 							'label' => 'Age Group',
 							'type' => 'text'
 								),
-							array(
+							'helm' => array(
 							'field' => 'helm',
 							'label' => 'Helm',
 							'type' => 'text'
 								),
-							array(
+							'bow_number' => array(
 							'field' => 'bow_number',
 							'label' => 'Bow Number',
 							'type' => 'text',
 								),
-							array(
+							'alt_sail_number' => array(
 							'field' => 'alt_sail_number',
 							'label' => 'Alternative Sail Number',
 							'type' => 'text',
 								),
-							array(
+							'_image' => array(
 							'field' => '_image',
 							'label' => 'Image',
 							'type' => 'file',
 							'single' => true
 								),
-							array(
+							'notes' => array(
 							'field' => 'notes',
 							'label' => 'Notes',
 							'type' => 'text',
 								),
-							array(
+							'fleet' => array(
 							'field' => 'fleet',
 							'label' => 'Fleet',
 							'type' => 'text',
 							'single' => true
 								),
-							array(
+							'crew' => array(
 							'field' => 'crew',
 							'label' => 'Crew',
 							'type' => 'text',
 								));
 
 $config['classes_meta'] = array(
-							array(
-							'field' => 'notes',
-							'label' => 'Notes',
-							'type' => 'text',
+							'notes' => array(
+								'field' => 'notes',
+								'label' => 'Notes',
+								'type' => 'text',
 								),
-							array(
-							'field' => 'sponsor_message',
-							'label' => 'Sponsor Message',
-							'type' => 'text',
-							'single' => true
+							'sponsor_message' => array(
+								'field' => 'sponsor_message',
+								'label' => 'Sponsor Message',
+								'type' => 'text',
+								'single' => true
 								),
-							array(
-							'field' => '_image',
-							'label' => 'Sponsor Image',
-							'type' => 'file',
-							'single' => true
+							'_race_columns' => array(
+								'field' => '_race_columns',
+								'label' => 'Race Columns',
+								'type' => 'array'
+								),
+							'_class_columns' => array(
+								'field' => '_class_columns',
+								'label' => 'Class Columns',
+								'type' => 'array'
+								),
+							'_image' => array(
+								'field' => '_image',
+								'label' => 'Sponsor Image',
+								'type' => 'file',
+								'single' => true
 								));
+							
 $config['regatta_meta'] = array(
-							array(
+							'notes' => array(
 							'field' => 'notes',
 							'label' => 'Notes',
 							'type' => 'text',
 								),
-							array(
+							'sponsor_message' => array(
 							'field' => 'sponsor_message',
 							'label' => 'Sponsor Message',
 							'type' => 'text',
 							'single' => true
 								),
-							array(
+							'_image' => array(
 							'field' => '_image',
 							'label' => 'Sponsor Image',
 							'type' => 'file',
 							'single' => true
 								),
-							array(
+							'file' => array(
 							'field' => 'file',
 							'label' => 'File',
 							'type' => 'file'
 								)
 							);
 $config['club_meta'] = array(
-							array(
+							'notes' => array(
 							'field' => 'notes',
 							'label' => 'Notes',
 							'type' => 'text',
 								),
-							array(
+							'sponsor_message' => array(
 							'field' => 'sponsor_message',
 							'label' => 'Sponsor Message',
 							'type' => 'text',
 							'single' => true
 								),
-							array(
+							'_image' => array(
 							'field' => '_image',
 							'label' => 'Sponsor Image',
 							'type' => 'file',

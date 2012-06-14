@@ -78,15 +78,19 @@
 				var target = $(this).attr('action');
 				var formData = $(this).serialize();
 				$(this).parent().append('<img src="/images/ajax-loader-trans.gif" align="center">');
-				// console.log(target);
-				// console.log(formData);
 				$.ajax({
 					url: target,
 					data: formData,
 					type: 'POST',
 					context: $(this),
 					success: function(data){
-						$(this).parents('.editMode').html(data).removeClass('editMode').addClass('editable').bind('click', function(){singleFieldEditForm($(this));});
+						<? if($type =='meta') :?>
+							$('[data-target-id="ctr-ajax-meta"]').removeClass('disabled').addClass('btn-ajax-activate');
+							$("#object-meta-table").append(data);
+							$('#ctr-ajax-meta').html('');
+						<? else: ?>
+							$(this).parents('.editMode').html(data).removeClass('editMode').addClass('editable').bind('click', function(){singleFieldEditForm($(this));});
+						<? endif;?>
 					},
 					error: function(){
 						$(this).parents('.editMode').html(currentVals[containerID]);

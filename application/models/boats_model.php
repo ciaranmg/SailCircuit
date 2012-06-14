@@ -26,7 +26,21 @@ class boats_model extends CI_Model {
 	function get($id){
 		$result = $this->db->get_where('sc_boats', array('id' => $id));
 		if($result->num_rows() > 0){
-			return $result->row();
+			$boat = $result->row();
+			$field_names = array_keys($this->config->item('boats_meta'));
+			$fields = $this->config->item('boats_meta');
+
+			$meta = $this->db->select('id, field, value')->from('sc_boat_meta')->where('boat_id', $id)->where_in('field', $field_names)->get();
+			if($meta->num_rows() > 0){
+				foreach($meta->result() as $meta_data){
+					$meta_data->label = $fields[$meta_data->field]['label'];
+					$meta_data->type = $fields[$meta_data->field]['type'];
+					if($meta_data->field == '_image')
+						$meta_data->value = json_decode($meta_data->value);
+					$boat->meta[$meta_data->field] = $meta_data;
+				}
+			}
+			return $boat;
 		}else{
 			return false;
 		}
@@ -197,6 +211,7 @@ class boats_model extends CI_Model {
 		return $x;
 	}
 
+
 	/**
 	 * Method to get boat meta information
 	 * Parameters
@@ -230,12 +245,13 @@ class boats_model extends CI_Model {
 	 *					string 		$name 			Field Name
 	 *					mixed 		$value
 	 */
-	function save_boat_meta($boat_id, $name, $value){
-		$this->firephp->log('save_boat_meta');
+	function save_meta($boat_id, $name, $value, $type = 'text'){
 		$this->db->insert('sc_boat_meta', array('boat_id' => $boat_id, 'field' => $name, 'value' => $value));
 		$insert_id = $this->db->insert_id();
 		if($insert_id){
-			return true;
+			return $insert_id;
+		}else{
+			return false;
 		}
 	}
 
@@ -246,7 +262,7 @@ class boats_model extends CI_Model {
 	 * 			field 				Must be paired with boat_id
 	 *			id 					Can be standalone, and used to delete an individual field
 	 */	
-	function delete_boat_meta($args){
+	function delete_meta($args){
 		extract($args);
 		if(isset($id)){
 			$this->db->where('id', $id)->delete('sc_boat_meta');
@@ -285,11 +301,21 @@ class boats_model extends CI_Model {
 	 *					int 			$boat_id
 	 */
 	function get_field($field, $boat_id){
-		$this->db->select($field);
-		$this->db->from('sc_boats')->where('id', $boat_id);
-		$query = $this->db->get();
-		if($query->num_rows() > 0)
-			return $query->first_row();
+		$meta_fields = array_keys($this->config->item('boats_meta'));
+		if(in_array($field, $meta_fields)){
+			$query = $this->db->select('value')->from('boat_meta')->where('field', $field)->where('boat_id', $boat_id)->get();
+			if($query->num_rows() > 0){
+				$x = new stdClass;
+				$x->$field = $query->first_row()->value;
+				return $x;
+			}
+		}else{
+			$this->db->select($field);
+			$this->db->from('sc_boats')->where('id', $boat_id);
+			$query = $this->db->get();
+			if($query->num_rows() > 0)
+				return $query->first_row();
+		}
 	}
 
 	/**
@@ -304,11 +330,18 @@ class boats_model extends CI_Model {
 		if($type == 'date' OR $type == 'datetime'){
 			$data = sc_strtotime($data);
 		}
-		$parameters = array(
+
+		$meta_fields = array_keys($this->config->item('boats_meta'));
+		if(in_array($field, $meta_fields)){
+			$parameters = array('value' => $data);
+			$this->db->where('boat_id', $boat_id)->where('field', $field)->update('boat_meta', $parameters);
+		}else{
+			$parameters = array(
 							$field => $data
 							);
-		$this->db->where('id', $boat_id);
-		$this->db->update('sc_boats', $parameters);
+			$this->db->where('id', $boat_id);
+			$this->db->update('sc_boats', $parameters);
+		}
 	}
 
 	/**
@@ -359,6 +392,25 @@ class boats_model extends CI_Model {
 			return $query->result();
 		}else{
 			return false;
+		}
+	}
+	/**
+	 * Method to get the list of meta fields available to add to a boat for use in a drop-down menu.
+	 */
+	function get_meta_options($boat_id){
+		$all_fields = $this->config->item('boats_meta');
+		$used_fields = $this->db->select('field')->where('boat_id', $boat_id)->get('boat_meta');
+		if($used_fields->num_rows() > 0){
+			foreach($used_fields->result() as $r){
+				unset($all_fields[$r->field]);
+			}
+			$meta_options['0'] = 'Choose One...';
+			foreach($all_fields as $f){
+				// Don't use fields that start with an underscore, they're special
+				if(substr($f['field'], 0, 1) == '_') continue;
+				$meta_options[$f['field'] . '|' . $f['type']] = $f['label'];
+			}
+			return $meta_options;
 		}
 	}
 }

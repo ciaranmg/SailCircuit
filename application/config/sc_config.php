@@ -9,7 +9,16 @@ $config['sc_debug'] = false;
 
 // Maximum number of races a class can have
 $config['sc_class_max_races'] = 50;
-
+$config['sc_image_options'] = array(
+							'large' => array(
+									'width' => 1024, 
+									'height' => 768),
+							'medium' => array(
+									'width'=> 640,
+									'height' => 480),
+							'small' => array(
+									'width' => 320,
+									'height' => 200));
 $config['race_status_options'] = array(
 							'completed' => 'Completed',
 							'dnc' => 'DNC',		// Did not come to the starting area

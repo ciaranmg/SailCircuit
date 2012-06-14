@@ -5,9 +5,16 @@
 
 	$(function() {
 
-		$('.show-hide').click(function(){
+		$('.profile-photo').hover(function(){$('.edit-button').show();}, function(){$('.edit-button').hide();});
+		
+		$(document).on('click', '#btn-edit-profile-photo', function(){
+			profilePhotoForm($(this));
+		});
+
+		$('.show-hide').click(function(event){
 			var show_hide = $(this).attr('data-target-id');
 			$('#'+ show_hide).slideToggle();
+			event.stopPropagation();
 		});
 		$('.editable').tooltip({
 			title: '<i class="icon-pencil icon-white"></i> Click to Edit',
@@ -63,7 +70,24 @@
 		});
 	});
 
+	function profilePhotoForm(button){
+			var target = button.attr('target');			
+			var containerID = 'profile-photo';
+			var container = $('#' + containerID);
+			currentVals[containerID] = container.html().trim();
+			container.html('<img src="/images/ajax-loader-trans.gif" align="center">');
 
+			$.ajax({
+					url: target,
+					context: container,
+					success: function(data){
+						container.html(data);
+					},
+					error: function(){
+						container.html(currentVals[containerID]);
+					}
+			});
+	}
 
 	function ajaxDeleteForm(frmDelete){
 		// Close the Modal, Find the container and put the ajax spinner up.

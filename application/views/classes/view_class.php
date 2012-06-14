@@ -16,6 +16,15 @@
 								'icon' => 'refresh icon-white',
 							),
 						array(
+							'title' => 'Display Settings',
+							'type' => 'button',
+							'action' => '#classes/edit',
+							'parameters' => $class->id,
+							'classes' => 'show-hide',
+							'icon' => 'list-alt',
+							'attributes' => 'data-target-id="ctr-column-chooser"'
+							),
+						array(
 								'title' => 'Public Page',
 								'action' => 'classes/view',
 								'url' => base_url('clubs/view_class/' . $this->session->userdata('club_name') . '/'. $this->session->userdata('club_id') .'/' . $class->id),
@@ -47,17 +56,6 @@
 									'attributes' => 'data-target-id="ctr-class-boats" data-target="'. base_url('classes/ajax_boat_selector/' . $class->id) .'"'
 								)
 				);
-			$standings_buttons = array(
-								array(
-									'title' => 'Display Settings',
-									'type' => 'button',
-									'action' => '#classes/edit',
-									'parameters' => $class->id,
-									'classes' => 'show-hide',
-									'icon' => 'list-alt',
-									'attributes' => 'data-target-id="ctr-column-chooser"'
-									)
-								);
 			$race_buttons = array(
 								array(
 									'title' => 'Add Races',
@@ -73,6 +71,11 @@
 			$this->load->view('common/toolbar', array('buttons'=> $buttons));
 		?>
 	</div>
+</div>
+<div class="row">
+	<section id="ctr-column-chooser" class="span12">
+		<? $this->load->view('classes/display_settings');?>
+	</section>
 </div>
 <div class="row">
 	<div class="span5 leading">
@@ -126,12 +129,8 @@
 			<section class="portlet">
 				<header>
 					<h2>Standings</h2>
-					<? $this->load->view('common/toolbar', array('buttons' => $standings_buttons));?>
 					<div class="clearfix"></div>
 				</header>
-				<section id="ctr-column-chooser">
-					<? $this->load->view('classes/display_settings');?>
-				</section>
 				<section>
 					<? $this->load->view('classes/tbl_standings');?>
 				</section>

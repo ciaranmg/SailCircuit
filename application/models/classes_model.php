@@ -3,9 +3,6 @@ class classes_model extends CI_Model {
 	
 
 	function get_class_table($class_id){
-		
-		
-
 		$class_boats = $this->boats_model->get_class_boats($class_id);
 		if($class_boats){
 			foreach($class_boats as &$b){
@@ -52,31 +49,28 @@ class classes_model extends CI_Model {
 	 *			
 	 */
 	function apply_discards($class_id){
-			
-			
+		// First clear the discards so we can apply them fresh.
+		$this->race_model->clear_discards($class_id);
 
-			// First clear the discards so we can apply them fresh.
-			$this->race_model->clear_discards($class_id);
+		// Get the class. We'll need this to know how many discards we can apply
+		$class = $this->classes_model->get($class_id);
+		
+		$discardable_races = $this->race_model->get_discardable_races($class_id);
 
-			// Get the class. We'll need this to know how many discards we can apply
-			$class = $this->classes_model->get($class_id);
-			
-			$discardable_races = $this->race_model->get_discardable_races($class_id);
+		if(count($discardable_races) >= $class->min_races_discard){
+			$class_boats = $this->boats_model->get_class_boats($class_id);	
+			$non_discardable_status = $this->config->item('sc_non_discardable');
 
-			if(count($discardable_races) >= $class->min_races_discard){
-				$class_boats = $this->boats_model->get_class_boats($class_id);	
-				$non_discardable_status = $this->config->item('sc_non_discardable');
-
-				foreach($class_boats as $boat){
-					$this->db->set('discarded', 1);
-					$this->db->where('boat_id', $boat->id);
-					$this->db->where_in('race_id', $discardable_races);
-					$this->db->where_not_in('status', $non_discardable_status);
-					$this->db->order_by('points', 'DESC');
-					$this->db->limit($class->discards);
-					$this->db->update('race_results');
-				}
+			foreach($class_boats as $boat){
+				$this->db->set('discarded', 1);
+				$this->db->where('boat_id', $boat->id);
+				$this->db->where_in('race_id', $discardable_races);
+				$this->db->where_not_in('status', $non_discardable_status);
+				$this->db->order_by('points', 'DESC');
+				$this->db->limit($class->discards);
+				$this->db->update('race_results');
 			}
+		}
 	}
 
 	/**
@@ -144,8 +138,6 @@ class classes_model extends CI_Model {
 	}
 	
 	function get($class_id){
-		
-
 		$this->db->select('sc_classes.id, 
 				sc_classes.name,
 				coalesce(count(sc_races.id)) as race_count, 
@@ -170,6 +162,39 @@ class classes_model extends CI_Model {
 		if($query->num_rows() > 0) {
 			$class = $query->first_row();
 			$class->scoring_system = $this->scoring_model->get($class->scoring_id);
+
+			$field_names = array_keys($this->config->item('classes_meta'));
+			$fields = $this->config->item('classes_meta');
+
+			$meta = $this->db->select('id, field, value')->from('class_meta')->where('class_id', $class_id)->where_in('field', $field_names)->get();
+			if($meta->num_rows() > 0){
+				foreach($meta->result() as $meta_data){
+					$meta_data->label = $fields[$meta_data->field]['label'];
+					$meta_data->type = $fields[$meta_data->field]['type'];
+					if($meta_data->field == '_image'){
+						$meta_data->value = json_decode($meta_data->value);
+					}elseif($fields[$meta_data->field]['type'] == 'array' ){
+						$meta_data->value = json_decode($meta_data->value, true);
+					}
+					$class->meta[$meta_data->field] = $meta_data;
+				}
+			}
+			if(!isset($class->meta['_race_columns'])){
+				$class->meta['_race_columns'] = new stdClass;
+				$class->meta['_race_columns']->field = '_race_columns';
+				$class->meta['_race_columns']->value = $this->config->item('race_columns');
+				$class->meta['_race_columns']->label ='Race Columns';
+				$class->meta['_race_columns']->type = 'array';
+			}
+
+			if(!isset($class->meta['_class_columns'])){
+				$class->meta['_class_columns'] = new stdClass;
+				$class->meta['_class_columns']->field = '_class_columns';
+				$class->meta['_class_columns']->value = $this->config->item('class_columns');
+				$class->meta['_class_columns']->label ='Class Columns';
+				$class->meta['_class_columns']->type = 'array';
+			}
+			$this->firephp->log($class);
 			return $class;
 		}else{
 			return false;
@@ -308,13 +333,76 @@ class classes_model extends CI_Model {
 	}
 
 	function get_parent($class_id){
-			$this->db->select('sc_regattas.id, sc_regattas.name');
-			$this->db->from('sc_regattas');
-			$this->db->join('sc_classes', 'sc_classes.regatta_id = sc_regattas.id');
-			$this->db->where('sc_classes.id', $class_id);
-			$query = $this->db->get();
-			if($query->num_rows()){
-				return $query->first_row();
-			}
+		$this->db->select('sc_regattas.id, sc_regattas.name');
+		$this->db->from('sc_regattas');
+		$this->db->join('sc_classes', 'sc_classes.regatta_id = sc_regattas.id');
+		$this->db->where('sc_classes.id', $class_id);
+		$query = $this->db->get();
+		if($query->num_rows()){
+			return $query->first_row();
 		}
+	}
+
+	/**
+	 * Method to get class meta information
+	 * Parameters
+	 *				int 		$class_id
+	 *				string 		$field_name
+	 *				boolean		$single
+	 * Returns
+	 *				object 		Object
+	 *							->value
+	 *							->field
+	 *							->id
+	 *				array 		Array of objects above.
+	 */
+	function get_meta($class_id, $field_name, $single = true){
+		$query = $this->db->select('value', 'field', 'id')->from('class_meta')->where('class_id', $class_id)->where('field', $field_name)->get();
+		if($query->num_rows() > 0){
+			if($single === true){
+				return $query->row();
+			}else{
+				$query->results();
+			}
+		}else{
+			return false;
+		}
+	}
+
+	/**
+	 * Method to save class meta
+	 * Parameters
+	 *					int 		$class_id
+	 *					string 		$name 			Field Name
+	 *					mixed 		$value
+	 */
+	function save_meta($class_id, $name, $value, $type = 'text'){
+		if($type == 'array')
+			$value = json_encode($value);
+		$this->db->insert('class_meta', array('class_id' => $class_id, 'field' => $name, 'value' => $value));
+		$insert_id = $this->db->insert_id();
+		if($insert_id){
+			return $insert_id;
+		}else{
+			return false;
+		}
+	}
+
+	/**
+	 *		Function to delete class meta data
+	 * 		$args is an associative array and can be made up of:
+	 * 			class_id  			Must Be paired with field
+	 * 			field 				Must be paired with boat_id
+	 *			id 					Can be standalone, and used to delete an individual field
+	 */	
+	function delete_meta($args){
+		extract($args);
+		if(isset($id)){
+			$this->db->where('id', $id)->delete('class_meta');
+		}elseif(isset($field) && isset($class_id)){
+			$this->db->where('class_id', $class_id)->where('field', $field)->delete('class_meta');
+		}else{
+			return false;
+		}
+	}
 }

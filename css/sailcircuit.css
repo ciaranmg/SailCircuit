@@ -188,7 +188,32 @@ padding: 20px;
     float: left;
 }
 
+.profile-photo{
+  position: relative;
+  padding: 0;
+  width: 320px;
+  margin: 0 auto;
+  text-align: center;
+}
 
+.profile-photo .edit-button{
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(0,0,0, 0.6);
+  float: right;
+  padding: 4px 10px;
+  color: white;
+  z-index: 10;
+  -webkit-border-radius: 0px 0px 0px 5px;
+  border-radius: 0px 0px 0px 5px;
+  display: none;
+  cursor: pointer;
+}
+
+.profile-photo .edit-button:hover{
+  text-decoration: underline;
+}
 .show-help{
     cursor: pointer;
 }

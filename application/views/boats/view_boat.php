@@ -18,14 +18,15 @@
 									'parameters' => $boat->id,
 									'icon' => 'plus',
 									'classes' => 'btn-ajax-activate',
-									'attributes' => 'data-target-id="ctr-ajax-boat-meta" data-target="'. base_url('ajax/meta/boats/' . $boat->id) .'"'
+									'attributes' => 'data-target-id="ctr-ajax-meta" data-target="'. base_url('ajax/meta/boats/' . $boat->id) .'"'
 								));
 							$this->load->view('common/toolbar', array('buttons' => $add_meta));
 						?>
 						<div class="clearfix"></div>
 					</header>
 					<section>
-						<table class="table table-bordered">
+						<div id="ctr-ajax-meta"></div>
+						<table class="table table-bordered" id="object-meta-table">
 							<tbody>
 								<tr>	
 									<th class="" width="30%">Sail Number</th>
@@ -55,8 +56,13 @@
 									<th>Class</th>
 									<td id="tb_sub_class" class="editable" target="<?=base_url('ajax/edit/boats/sub_class/text/' .$boat->id);?>"><?=$boat->sub_class;?></td>
 								</tr>
+								<? if(isset($boat->meta)): foreach($boat->meta as $meta_data): if($meta_data->field != '_image'): ?>
+									<tr>
+										<th><?=$meta_data->label;?></th>
+										<td id="tb_meta_<?=$meta_data->field;?>" class="editable" target="<?=base_url('ajax/edit/boats/' . $meta_data->field . '/' . $meta_data->type . '/' . $boat->id);?>"><?=$meta_data->value;?></td>
+									</tr>
+								<? endif; endforeach; endif;?>
 							</tbody>
-							<div id="ctr-ajax-boat-meta"></div>
 						</table>
 					</section>
 				</section>
@@ -96,7 +102,7 @@
 		</div>
 		<div class="span5">
 			<section class="portlet headerless">
-				<section id="boat-image">
+				<section id="profile-photo">
 					<? $this->load->view('boats/profile_photo'); ?>
 				</section>
 			</section>
