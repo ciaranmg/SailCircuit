@@ -65,7 +65,6 @@ class breadcrumb {
 
 		}elseif($segments[0] == 'classes'){
 			// We're looking at a class, which has a parent which is a regatta
-			$this->CI->load->model('classes_model');
 			$parent = $this->CI->classes_model->get_parent($segments[2]);
 			if($segments[1]=='view'){
 				$this->path[] = array(
@@ -102,7 +101,7 @@ class breadcrumb {
 									);
 
 			}elseif($segments[1] == 'create'){
-				$regatta = $this->CI->classes_model->get_parent($segments[2]);
+				$regatta = $this->CI->regatta_model->get($segments[2]);
 				$this->path[] = array(
 										'title' => $regatta->name,
 										'ci_url' => 'regatta/view/' . $regatta->id,
@@ -125,8 +124,6 @@ class breadcrumb {
 						'current' => true
 					);
 			}elseif($segments[1] == 'view'){
-				$this->CI->load->model('race_model');
-				$this->CI->load->model('classes_model');
 				$class = $this->CI->race_model->get_parent($segments[2]);
 				$regatta = $this->CI->classes_model->get_parent($class->id);
 				

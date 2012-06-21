@@ -12,7 +12,8 @@
 <? endif;?>
 </div>  <!-- Ending the row -->
 <div class="row-fluid">
-	<? if(isset($class)):?>
+	<? $this->firephp->log($class);?>
+	<? if(isset($class) && $class->meta['_class_settings']->value['show_rules'] == 1):?>
 		<section class="portlet span7 leading">
 			<header>
 				<h2>Class Information</h2>
@@ -44,7 +45,7 @@
 			</section>
 		</section>
 	<? endif;?>
-	<? if(isset($races)):?>
+	<? if(isset($races) && $class->meta['_class_settings']->value['show_races'] == 1):?>
 		<section class="portlet span5 leading">
 			<header>
 				<h2>Races</h2>

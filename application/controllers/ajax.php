@@ -14,6 +14,8 @@ class Ajax extends CI_Controller {
 
 		$this->load->view('ajax_form/profile_photo_form', $data);
 	}
+
+	
 	function meta($controller, $object_id){
 		$fields = $this->config->item($controller . '_meta');
 		$model_name = $controller . '_model';

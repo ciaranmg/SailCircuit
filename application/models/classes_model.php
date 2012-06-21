@@ -79,7 +79,8 @@ class classes_model extends CI_Model {
 	function insert($class_data){
 		$this->db->insert('sc_classes', $class_data);
 			$x = $this->db->insert_id();
-			// $this->firephp->log($this->db->last_query());
+			$this->firephp->log($class_data);
+			$this->firephp->log($this->db->last_query());
 			return $x;
 	}
 
@@ -201,7 +202,13 @@ class classes_model extends CI_Model {
 				$class->meta['_race_settings']->label = 'General Race Settings';
 				$class->meta['_race_settings']->type = 'array';
 			}
-			$this->firephp->log($class);
+			if(!isset($class->meta['_class_settings'])){
+				$class->meta['_class_settings'] = new stdClass;
+				$class->meta['_class_settings']->field = '_class_settings';
+				$class->meta['_class_settings']->value = $this->config->item('class_settings');
+				$class->meta['_class_settings']->label = 'General Class Settings';
+				$class->meta['_class_settings']->type = 'array';
+			}
 			return $class;
 		}else{
 			return false;
@@ -217,8 +224,16 @@ class classes_model extends CI_Model {
 
 
 	function get_field($field, $id){
+		$meta_fields = array_keys($this->config->item('classes_meta'));
 		if($field == "handicap"){
 			$query = $this->db->select('handicap')->from('sc_class_boats')->where('id',$id)->get();
+		}elseif(in_array($field, $meta_fields)){
+			$query= $this->db->select('value')->from('class_meta')->where('field', $field)->where('class_id', $id)->get();
+			if($query->num_rows() > 0){
+				$x = new stdClass;
+				$x->$field = $query->first_row()->value;
+				return $x;
+			}
 		}else{
 			$this->db->select($field);		
 			$this->db->from('sc_classes')->where('id', $id);
@@ -234,10 +249,17 @@ class classes_model extends CI_Model {
 		}
 
 		$parameters = array($field => $data);
+		$meta_fields = array_keys($this->config->item('classes_meta'));
 
 		if($field == 'handicap'){
+			// call  handler function for updating class handicap
+			$this->handicap_model->update_class_boat($class_id, $row_id, $data);
+
 			$this->db->where('id' , $id);
 			$this->db->update('sc_class_boats', $parameters);
+		}elseif(in_array($field, $meta_fields)){
+			$parameters = array('value' => $data);
+			$this->db->where('class_id', $id)->where('field', $field)->update('class_meta', $parameters);
 		}else{
 			$this->db->where('id', $id);
 			$this->db->update('sc_classes', $parameters);	
@@ -306,7 +328,9 @@ class classes_model extends CI_Model {
 				$new_class_boats[$boat_id] = array('boat_id' => $boat_id, 'handicap'=> $handicap, 'class_id' => $class_id, 'status' => 'DNC');
 			}
 		}
-		$remove_class_boats = $class_boats;
+		$remove_class_boats =array();
+		if(isset($class_boats))
+			$remove_class_boats = $class_boats;
 		// Remove the existing record of class boats
 		$this->db->delete('class_boats', array('class_id' => $class_id));
 		$this->db->insert_batch('class_boats', $update_class_boats);
@@ -410,6 +434,26 @@ class classes_model extends CI_Model {
 			$this->db->where('class_id', $class_id)->where('field', $field)->delete('class_meta');
 		}else{
 			return false;
+		}
+	}
+
+	/**
+	 * Method to get the list of meta fields available to add to a boat for use in a drop-down menu.
+	 */
+	function get_meta_options($class_id){
+		$all_fields = $this->config->item('classes_meta');
+		$used_fields = $this->db->select('field')->where('class_id', $class_id)->get('class_meta');
+		if($used_fields->num_rows() > 0){
+			foreach($used_fields->result() as $r){
+				unset($all_fields[$r->field]);
+			}
+			$meta_options['0'] = 'Choose One...';
+			foreach($all_fields as $f){
+				// Don't use fields that start with an underscore, they're special
+				if(substr($f['field'], 0, 1) == '_') continue;
+				$meta_options[$f['field'] . '|' . $f['type']] = $f['label'];
+			}
+			return $meta_options;
 		}
 	}
 }

@@ -38,6 +38,7 @@ class lowpoints {
 		}
 		return $class_data;
 	}
+	
 	/**
 	 * Function to detect ties in a class
 	 * Parameters: 

@@ -40,7 +40,6 @@ class Race_model extends CI_Model{
 			foreach($query->result() as $r ){
 				foreach($boats as $b){
 					$this->db->delete('race_results', array('boat_id' => $b->boat_id, 'race_id' => $r->id));
-					$this->firephp->log($this->db->last_query());
 				}
 				$race_data = $this->race_model->get_result_data($r->id);
 				$race_data = $this->$lib->process_race($race_data, $class->scoring_system);
@@ -114,10 +113,8 @@ class Race_model extends CI_Model{
 		$this->db->order_by('start_date', 'asc');
 		$query = $this->db->get();
 		if($query->num_rows() > 0) {
-			// $this->firephp->log($query->result());
 			return $query->result();
 		}else{
-			// $this->firephp->log('or here');
 			return false;
 		}
 	}
@@ -242,7 +239,10 @@ class Race_model extends CI_Model{
 
 		$this->db->select('race_results.points,
 							 race_results.sail_number, 
-							 boats.name as boat_name, 
+							 boats.name as boat_name,
+							 boats.model as boat_type,
+							 boats.length as length,
+							 boats.sub_class as class,
 							 coalesce(group_concat(sc_owners.name SEPARATOR \', \'), \' \') as owner,
 							 race_results.elapsed_time, 
 							 race_results.handicap, 
@@ -263,7 +263,14 @@ class Race_model extends CI_Model{
 		$this->db->group_by('race_results.id');
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
-			return $query->result();
+			$race_results = $query->result();
+			foreach($race_results as &$boat){
+				foreach($this->config->item('boats_meta') as $meta_field){
+					if($meta = $this->boats_model->get_boat_meta($boat->boat_id, $meta_field['field']))
+						$boat->$meta_field['field'] = $meta->value;
+				}
+			}
+			return $race_results;
 		}else{
 			return false;
 		}
@@ -305,7 +312,6 @@ class Race_model extends CI_Model{
 	 *				This method pulls from the post variables
 	 */
 	function process_data($race_id){	
-		
 		$i=0;
 		$race = $this->race_model->get($race_id);
 
@@ -355,14 +361,6 @@ class Race_model extends CI_Model{
 		}
 
 		return $race_data;
-		/* $result = $this->db->insert_batch('sc_race_data', $race_data);
-		if($result){
-			$this->db->where('id' , $race_id);
-			$this->db->update('sc_races', array('status' => 'completed'));
-			return true;
-		}else{
-			return false;
-		} */
 	}
 
 	function get_missing_boats($boat_ids, $race_id){
@@ -393,8 +391,6 @@ class Race_model extends CI_Model{
 	 *											
 	 */
 	function process_raw_data($string, $args){
-		
-		
 		$total = 0;
 		$not_found = 0;
 		$found = 0;
@@ -421,22 +417,26 @@ class Race_model extends CI_Model{
  				$matches++;
  			}
  			$this->race_data[$i]->boat = $boat;			
-
-			if(strpos($line_data[1], ':')){
-				// This is a time value
-				if(strpos($line_data[1], '/') OR strpos($line_data[1], '-')){
-					$date_time = explode(' ', $line_data[1]);
-					$this->race_data[$i]->date = $date_time[0];
-					$this->race_data[$i]->time = $date_time[1];
-					unset($date_time);
+ 			if(isset($line_data[1])){
+				if(strpos($line_data[1], ':') OR is_int($line_data[1])){
+					// This is a time value
+					if(strpos($line_data[1], '/') OR strpos($line_data[1], '-')){
+						$date_time = explode(' ', $line_data[1]);
+						$this->race_data[$i]->date = $date_time[0];
+						$this->race_data[$i]->time = $date_time[1];
+						unset($date_time);
+					}else{
+						$this->race_data[$i]->time = trim($line_data[1]);
+					}
+					$this->race_data[$i]->status = false;
 				}else{
-					$this->race_data[$i]->time = trim($line_data[1]);
+					// This is not a time value. Assign it to the status field
+					$this->race_data[$i]->time = false;
+					$this->race_data[$i]->status = trim($line_data[1]);
 				}
-				$this->race_data[$i]->status = false;
 			}else{
-				// This is not a time value. Assign it to the status field
-				$this->race_data[$i]->time = false;
-				$this->race_data[$i]->status = trim($line_data[1]);
+				$this->race_data[$i]->time = $i+1;
+				$this->race_data[$i]->status = false;
 			}
 
 			$i++;
@@ -461,8 +461,6 @@ class Race_model extends CI_Model{
 	* 			$class_id: integer
 	**/
 	function initialise_races($name, $class_id, $races_to_create){
-		
-
 		$num_races = $this->db->where('class_id', $class_id)->count_all_results('sc_races');
 		$class = $this->classes_model->get($class_id);
 		if($num_races + $races_to_create < $this->config->item('sc_class_max_races')){
@@ -476,6 +474,7 @@ class Race_model extends CI_Model{
 				$races[] = array(
 							'name' => $name ." $i",
 							'start_date' => time(),
+							'status' => 'open',
 							'class_id' => $class_id,
 							'discard' => ($class->discards > 0) ? 1 : 0
 						);

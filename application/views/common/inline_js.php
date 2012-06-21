@@ -24,6 +24,7 @@
 			trigger: 'hover',
 			placement: 'top',
 		});
+
 		
 		$(document).on('click', '.editable', function(){
 			$(this).tooltip('hide');

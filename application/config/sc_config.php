@@ -13,6 +13,9 @@ $config['sc_image_options'] = array(
 							'large' => array(
 									'width' => 1024, 
 									'height' => 768),
+							'banner' => array(
+									'width' => 300,
+									'height' => 150),
 							'medium' => array(
 									'width'=> 640,
 									'height' => 480),
@@ -44,13 +47,14 @@ $config['sc_image_sizes'] = array(
 							);
 
 // General display options
-$config['race_settings'] = array('hide_dnc' => false);
-$config['class_settings'] = array();
+$config['race_settings'] = array('show_dnc' => true);
+$config['class_settings'] = array('show_rules' => true, 'show_races' => true);
 
 // Default values for the columns that can be displayed on the results pages
 $config['class_columns'] = array(
 							'age' => false,
 							'age_group' => false,
+							'boat_name' => true,
 							'alt_sail_number' => false,
 							'boat_type' => false,
 							'bow_number' => false,
@@ -59,12 +63,16 @@ $config['class_columns'] = array(
 							'handicap' => true,
 							'helm' => false,
 							'owner' => true,
-							'sail_number' => true,
+							'club' => false,
+							'category' => false,
+							'length' => false,
+							'class' => false,
 							);
 
 $config['race_columns'] = array(
 							'age' => false,
 							'age_group' => false,
+							'boat_name' => true,
 							'alt_sail_number' => false,
 							'boat_type' => false,
 							'bow_number' => false,
@@ -73,7 +81,12 @@ $config['race_columns'] = array(
 							'handicap' => true,
 							'helm' => false,
 							'owner' => true,
-							'sail_number' => true,
 							'time_to_win' => true,
+							'discarded' => false,
+							'club' => false,
+							'category'=> false,
+							'length' => false,
+							'class' => false,
+							'elapsed' => true,
 							);
 ?>

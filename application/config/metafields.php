@@ -70,6 +70,16 @@ $config['classes_meta'] = array(
 								'label' => 'Class Columns',
 								'type' => 'array'
 								),
+							'_race_settings' => array(
+								'field' => '_race_settings',
+								'label' => 'General Race Settings',
+								'type' => 'array'
+								),
+							'_class_settings' => array(
+								'field' => '_class_settings',
+								'label' => 'Class Settings',
+								'type' => 'array',
+								),
 							'_image' => array(
 								'field' => '_image',
 								'label' => 'Sponsor Image',

@@ -72,7 +72,7 @@ $config = array(
 									array(
 											'field'=> 'length',
 											'label' => 'Boat Length',
-											'rules' => 'trim|numeric|required|xss_clean'
+											'rules' => 'trim|numeric|xss_clean'
 									),
 									array(
 											'field' => 'sub_class',

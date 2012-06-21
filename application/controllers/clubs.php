@@ -82,17 +82,13 @@ $this->path[] = array(
 	// View a race and it's results
 	function view_race($club_name, $club_id, $race_id){
 		if($this->cache) $this->output->cache(60);
-		
-		
 		$this->load->model('club_model');
-		
-
 		$race_results = $this->race_model->get_readable_results($race_id);
 		$race = $this->race_model->get($race_id);
 		$class = $this->classes_model->get($race->class_id);
 		$regatta = $this->regatta_model->get($class->regatta_id);
 		$club = $this->club_model->get($club_id);
-
+$this->firephp->log($race_results);		
 		$breadcrumb = array(array('title' => $club->name, 'url' => 'clubs/view/' . $club_name .'/' .$club_id, 'current' => false),
 							array('title' => $regatta->name, 'url' =>'clubs/view_series/'. $club_name . '/' . $club_id .'/'.$regatta->id, 'current' => false),
 							array('title' => $class->name, 'url'=> 'clubs/view_class/'. $club_name . '/' .$club_id .'/'.$class->id, 'current' => false),

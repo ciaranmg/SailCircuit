@@ -227,9 +227,15 @@ class boats_model extends CI_Model {
 	 */
 	function get_boat_meta($boat_id, $field_name, $single = true){
 		$query = $this->db->select('value', 'field', 'id')->from('sc_boat_meta')->where('boat_id', $boat_id)->where('field', $field_name)->get();
+		$boats_meta = $this->config->item('boats_meta');
 		if($query->num_rows() > 0){
 			if($single === true){
-				return $query->row();
+				$meta = $query->row();
+				if($boats_meta[$field_name]['type'] == 'array' OR $boats_meta[$field_name]['type'] =='file'){
+
+					$meta->value = json_decode($meta->value);
+				}
+				return $meta;
 			}else{
 				$query->results();
 			}
@@ -355,7 +361,8 @@ class boats_model extends CI_Model {
 		$this->db->select('sc_boats.id, 
 							sc_boats.length, 
 							sc_boats.name, 
-							sc_boats.model, 
+							sc_boats.model as boat_type,
+							boats.sub_class as class, 
 							sc_boats.sail_number, 
 							coalesce(group_concat(sc_owners.name SEPARATOR \', \'), \' \') as owner,
 							sc_class_boats.handicap as handicap,
@@ -369,7 +376,14 @@ class boats_model extends CI_Model {
 		$this->db->group_by('sc_boats.id');		
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
-			return $query->result();
+			$class_boats = $query->result();
+			foreach($class_boats as &$boat){
+				foreach($this->config->item('boats_meta') as $meta_field){
+					if($meta = $this->boats_model->get_boat_meta($boat->id, $meta_field['field']))
+						$boat->$meta_field['field'] = $meta->value;
+				}
+			}
+			return $class_boats;
 		}else{
 			return false;
 		}

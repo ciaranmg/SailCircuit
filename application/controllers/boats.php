@@ -12,57 +12,59 @@ class Boats extends CI_Controller {
 		);
 	
 	function profile_photo($boat_id){
-		if($this->input->post('submit')){
-			$club_dir = './uploads/'.$this->session->userdata('club_id') .'/';
-			$upload_path =  $club_dir . 'boats/';
-			$config['upload_path'] = $upload_path;
-			$config['allowed_types'] = 'gif|jpg|png|jpeg';
-			$config['max_size']	= '2048';
-			$config['max_width']  = '2048';
-			$config['max_height']  = '1536';
-			$config['remove_spaces'] = TRUE;
-			$this->load->library('upload', $config);
+		if($this->userlib->check_permission('boats_edit', array('boat_id' => $boat_id))){
+			if($this->input->post('submit')){
+				$club_dir = './uploads/'.$this->session->userdata('club_id') .'/';
+				$upload_path =  $club_dir . 'boats/';
+				$config['upload_path'] = $upload_path;
+				$config['allowed_types'] = 'gif|jpg|png|jpeg';
+				$config['max_size']	= '2048';
+				$config['max_width']  = '2048';
+				$config['max_height']  = '1536';
+				$config['remove_spaces'] = TRUE;
+				$this->load->library('upload', $config);
 
-			if(!file_exists($club_dir))
-				mkdir($club_dir);
-			
-			if(!file_exists($upload_path))
-				mkdir($upload_path);
-			
-			if (!$this->upload->do_upload('profile-photo')){
-				$this->session->set_flashdata('err_message', $this->upload->display_errors());
-			}else{
-				$data = $this->upload->data();
+				if(!file_exists($club_dir))
+					mkdir($club_dir);
 				
-				$config['source_image']	= $data['full_path'];
-				$config['maintain_ratio'] = TRUE;
+				if(!file_exists($upload_path))
+					mkdir($upload_path);
+				
+				if (!$this->upload->do_upload('profile-photo')){
+					$this->session->set_flashdata('err_message', $this->upload->display_errors());
+				}else{
+					$data = $this->upload->data();
+					
+					$config['source_image']	= $data['full_path'];
+					$config['maintain_ratio'] = TRUE;
 
-				foreach($this->config->item('sc_image_options') as $size => $config_vals){
-					$config['width']	 = $config_vals['width'];
-					$config['height']	= $config_vals['height'];
-					$new_filename = $data['raw_name'] . '_' . $size . $data['file_ext'];
-					$new_filepath = $data['file_path'];
-					$config['new_image'] = $new_filepath . $new_filename;
-					$this->image_lib->initialize($config);
-					$this->image_lib->resize();
-					$this->image_lib->clear();
-					$meta_data[$size] = array(
-										'file_name' => $new_filename, 
-										'file_type' => $data['file_type'], 
-										'file_path' => str_replace('./', '/', $upload_path),
-										'full_path' => str_replace('./', '/', $upload_path) . $new_filename,
-										'raw_name' => $data['raw_name'] . '_' .$size,
-										'file_ext' => $data['file_ext'],
-										'image_width' => $config_vals['width'],
-										'image_height' => $config_vals['height'],
-										'image_size_str' => 'width="'. $config_vals['width'] .'" height="'.$config_vals['height'].'"');
+					foreach($this->config->item('sc_image_options') as $size => $config_vals){
+						$config['width']	 = $config_vals['width'];
+						$config['height']	= $config_vals['height'];
+						$new_filename = $data['raw_name'] . '_' . $size . $data['file_ext'];
+						$new_filepath = $data['file_path'];
+						$config['new_image'] = $new_filepath . $new_filename;
+						$this->image_lib->initialize($config);
+						$this->image_lib->resize();
+						$this->image_lib->clear();
+						$meta_data[$size] = array(
+											'file_name' => $new_filename, 
+											'file_type' => $data['file_type'], 
+											'file_path' => str_replace('./', '/', $upload_path),
+											'full_path' => str_replace('./', '/', $upload_path) . $new_filename,
+											'raw_name' => $data['raw_name'] . '_' .$size,
+											'file_ext' => $data['file_ext'],
+											'image_width' => $config_vals['width'],
+											'image_height' => $config_vals['height'],
+											'image_size_str' => 'width="'. $config_vals['width'] .'" height="'.$config_vals['height'].'"');
+					}
+					$this->boats_model->delete_meta(array('boat_id' => $boat_id, 'field'=>'_image'));
+					$this->boats_model->save_meta($boat_id, '_image', json_encode($meta_data), 'file');
+					$this->session->set_flashdata('message', 'File Uploaded Successfully');
 				}
-				$this->boats_model->delete_meta(array('boat_id' => $boat_id, 'field'=>'_image'));
-				$this->boats_model->save_meta($boat_id, '_image', json_encode($meta_data), 'file');
-				$this->session->set_flashdata('message', 'File Uploaded Successfully');
 			}
+			redirect($this->input->post('redirect'));
 		}
-		redirect($this->input->post('redirect'));
 	}
 
 	function index(){
@@ -142,14 +144,14 @@ class Boats extends CI_Controller {
 						'name'=> 'model',
 						'type' => 'text',
 						'label' => 'Model/Type',
-						'value' => ''
+						'value' => '',
+						'required' => true
 						),
 					array(
 						'name' => 'length',
 						'type' => 'text',
 						'label' => 'Length in Meters (LOA)',
-						'value' => '',
-						'required' => true
+						'value' => ''
 						),
 					array(
 						'name' => 'main_class',
@@ -165,7 +167,7 @@ class Boats extends CI_Controller {
 					array(
 						'name' => 'sub_class',
 						'type' => 'text',
-						'label' => 'Class (e.g. Laser, J24 etc.)',
+						'label' => 'Class (e.g. Laser, J24, 1720, Etchells, etc.)',
 						'value' => ''
 						)
 				)

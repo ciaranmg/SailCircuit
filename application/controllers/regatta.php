@@ -20,7 +20,7 @@ class Regatta extends CI_Controller {
 		
 		$config['base_url'] = base_url('regatta/list_all');
 		$config['total_rows'] = $this->regatta_model->num_rows($this->session->userdata('club_id'));
-		$config['per_page'] = 5; 
+		$config['per_page'] = 50; 
 
 
 		$this->pagination->initialize($config);
@@ -84,8 +84,8 @@ class Regatta extends CI_Controller {
 				//Double Check security first
 				$this->userlib->force_permission('regatta_create', array('club_id' => $this->input->post('parent')));
 				$this->regattaData['name'] = $this->input->post('regatta_name');
-				$this->regattaData['start_date'] = strtotime($this->input->post('regatta_start_date'));
-				$this->regattaData['end_date'] = strtotime($this->input->post('regatta_end_date'));
+				$this->regattaData['start_date'] = sc_strtotime($this->input->post('regatta_start_date'));
+				$this->regattaData['end_date'] = sc_strtotime($this->input->post('regatta_end_date'));
 				$this->regattaData['description'] = $this->input->post('regatta_description');
 				$this->regattaData['club_id'] = $this->input->post('parent');
 				$this->regattaData['status'] = "active";
@@ -106,10 +106,6 @@ class Regatta extends CI_Controller {
  	 */
 	function delete(){
 		$this->userlib->force_login();
-		
-		
-		
-
 		if($this->input->post('submit') == 'submit' AND $this->input->post('confirm_delete') == 'form_submit') {
 			$this->userlib->force_permission('regatta_delete', array('regatta_id' => $this->input->post('object_id')));
 			
@@ -216,7 +212,7 @@ class Regatta extends CI_Controller {
 	}
 
 	public function check_end_date($endDate){
-		if(strtotime($endDate) <= time()){
+		if(sc_strtotime($endDate) <= time()){
 			$this->form_validation->set_message('check_end_date', "End Date can't be in the past");
 			return false;
 		}else{

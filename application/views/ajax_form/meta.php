@@ -1,4 +1,4 @@
-<?=form_dropdown('meta_name', $meta_options, '0', 'id="meta_picker"');?>
+<?=form_dropdown('meta_name', $meta_options, '0', 'id="meta_picker" class="input-medium"');?>
 <?=form_hidden('controller', $controller);?>
 <?=form_hidden('object_id', $object_id);?>
 <?=form_input(array('name' => 'text_meta', 'id' => 'text_meta_' .$object_id, 'class' => 'input-medium text-field hidden'));?>

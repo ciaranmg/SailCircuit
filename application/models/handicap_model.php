@@ -1,7 +1,13 @@
 <?
 // CI model for handicap systems
 class Handicap_model extends CI_Model {
-	
+
+	// Function to update the handicap of a boat within a class. 
+	// Also calls special processor functions for specific handicaps
+	function update_class_boat($class_id, $row_id, $data){
+		
+	}
+
 	// Function to get all current handicap systems
 	function get_handicaps(){
 		$this->db->select('*')->from('sc_handicap_systems')->order_by('name', 'asc');

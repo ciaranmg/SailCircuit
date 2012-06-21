@@ -12,10 +12,6 @@
 		 */
 		public function input($race_id = false){			
 			$this->userlib->force_login();
-			
-			
-			
-
 			if($race_id) {
 				$race = $this->race_model->get($race_id);
 				if($race && $race->status == 'open') $data['race'] = $race;
@@ -38,8 +34,6 @@
 		public function ajax_handle_data(){
 			if(!is_ajax()) show_404('ajax_handle_data');
 			
-			
-
 			if($this->input->post('submit') && $this->input->post('confirm')){
 				// Check if the form has been submitted and confirmed
 				$race_id = $this->input->post('race_id');
@@ -47,10 +41,8 @@
 
 				if($this->userlib->check_permission('race_edit', array('race_id' => $race_id))){
 					if($race_data = $this->race_model->process_data($race_id)){
-						
 						// Now calculate the corrected times.
 						$race_data = $this->race_model->calculate_corrected($race_id, $race_data);
-
 						// Load the scoring info
 						$scoring = $this->scoring_model->get($race->scoring_system);
 						$slib = $scoring->library;
@@ -208,8 +200,6 @@
 		 */
 		public function ajax_races_list($class_id){
 			if(!is_ajax()) show_404('ajax_races_list');
-			
-
 			if($class_id == 0 OR $class_id == '') echo json_encode(array('value'=> '0', 'display' => ''));
 
 			if($this->userlib->check_permission('race_edit', array('class_id' => $class_id))){

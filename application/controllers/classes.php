@@ -12,10 +12,73 @@
 			'tiebreak_system' => 0
 		);
 
+		private $class_boats = array();
+
 		function index(){
 			redirect(base_url('/'));
 		}
 
+
+		function profile_photo($class_id){
+			if($this->userlib->check_permission('classes_edit', array('class_id' => $class_id))) {
+				if($this->input->post('submit')){
+					$club_dir = './uploads/'.$this->session->userdata('club_id') .'/';
+					$upload_path =  $club_dir . 'classes/';
+					$config['upload_path'] = $upload_path;
+					$config['allowed_types'] = 'gif|jpg|png|jpeg';
+					$config['max_size']	= '2048';
+					$config['max_width']  = '2048';
+					$config['max_height']  = '1536';
+					$config['remove_spaces'] = TRUE;
+					$this->load->library('upload', $config);
+
+					if(!file_exists($club_dir))
+						mkdir($club_dir);
+					
+					if(!file_exists($upload_path))
+						mkdir($upload_path);
+					
+					if (!$this->upload->do_upload('profile-photo')){
+						$this->session->set_flashdata('err_message', $this->upload->display_errors());
+					}else{
+						$data = $this->upload->data();
+						
+						$config['source_image']	= $data['full_path'];
+						$config['maintain_ratio'] = TRUE;
+
+						$img_config = $this->config->item('sc_image_options');
+						$config['width'] = $img_config['banner']['width'];
+						$config['height'] = $img_config['banner']['height'];
+						$new_filename = $data['raw_name'] . '_banner' . $data['file_ext'];
+						$new_filepath = $data['file_path'];
+						$config['new_image'] = $new_filepath . $new_filename;
+						$this->image_lib->initialize($config);
+						$this->image_lib->resize();
+						$meta_data['banner'] = array(
+											'file_name' => $new_filename, 
+											'file_type' => $data['file_type'], 
+											'file_path' => str_replace('./', '/', $upload_path),
+											'full_path' => str_replace('./', '/', $upload_path) . $new_filename,
+											'raw_name' => $data['raw_name'] . '_banner',
+											'file_ext' => $data['file_ext'],
+											'image_width' => $config['width'],
+											'image_height' => $config['height'],
+											'image_size_str' => 'width="'. $config['width'] .'" height="'.$config['height'].'"');
+					
+						$this->classes_model->delete_meta(array('class_id' => $class_id, 'field'=>'_image'));
+						$this->classes_model->save_meta($class_id, '_image', json_encode($meta_data), 'file');
+						$this->session->set_flashdata('message', 'File Uploaded Successfully');
+					}
+				}
+				redirect($this->input->post('redirect'));
+			}
+		}
+
+
+		/**
+		 * Method to save settings for display of results
+		 *
+		 */
 		function save_display_settings($class_id){
 			if($this->userlib->check_permission('classes_edit', array('class_id' => $class_id)) AND is_ajax()){
 				$class_columns = array();
@@ -40,9 +103,17 @@
 				foreach(array_keys($this->config->item('race_settings')) as $setting){
 					$race_settings[$setting] = $this->input->post($setting);
 				}
+				// Clear old values
 				$this->classes_model->delete_meta(array('class_id' => $class_id, 'field' => '_race_settings'));
+				// Save New
 				$this->classes_model->save_meta($class_id, '_race_settings', $race_settings, 'array');
-$this->firephp->log($race_settings);				
+
+				$class_settings = array();
+				foreach(array_keys($this->config->item('class_settings')) as $setting){
+					$class_settings[$setting] = $this->input->post($setting);
+				}
+				$this->classes_model->delete_meta(array('class_id'=> $class_id, 'field' => '_class_settings'));
+				$this->classes_model->save_meta($class_id, '_class_settings', $class_settings, 'array');
 			}
 		}
 
@@ -55,9 +126,22 @@ $this->firephp->log($race_settings);
 
 				$races = $this->race_model->get_races($id);
 				$points_table = $this->race_model->get_points_table($id);
-
+				$race_columns = $this->config->item('race_columns');
+				$class_columns = $this->config->item('class_columns');
+				$race_settings = $this->config->item('race_settings');
+				$class_settings = $this->config->item('class_settings');
 				$boats = $this->boats_model->get_class_boats($id);
-				$data = array('points_table' => $points_table, 'class'=> $class, 'races' => $races, 'show_handicap' => true, 'boats' => $boats, 'breadcrumb' => $this->breadcrumb->get_path());
+				$data = array(
+								'class_settings' => $class_settings,
+								'race_settings' => $race_settings, 
+								'race_columns' => $race_columns,
+								'class_columns' => $class_columns, 
+								'points_table' => $points_table, 
+								'class'=> $class, 
+								'races' => $races, 
+								'show_handicap' => true, 
+								'boats' => $boats, 
+								'breadcrumb' => $this->breadcrumb->get_path());
 				
 				if($class->status == 'modified'){
 					$data['err_message'] = "Settings for this class have been changed. Click the refresh button to calculate race results based on these new settings";
@@ -78,7 +162,7 @@ $this->firephp->log($race_settings);
 
 				$classRatingSystems = array('0' => 'Choose One');
 				foreach($handicaps as $h){
-					$classRatingSystems[$h->id] = $h->name;
+					$classRatingSystems[$h->id] = $h->description;
 				}
 				$classTiebreakers = array('0' => 'Choose One');
 		
@@ -110,65 +194,15 @@ $this->firephp->log($race_settings);
 				'submit' => 'submit',
 				'button_label' => 'Create Class',
 				'fields' => array(
-					array(
-						'name' => 'name',
-						'type' => 'text',
-						'label' => 'Name',
-						'value' => '',
-						'required' => true
-						),
-					array(
-						'name' => 'description',
-						'type' => 'textarea',
-						'label' => 'Description',
-						'value' => ''
-						),
-					array(
-						'name'=> 'race_count',
-						'type' => 'text',
-						'label' => 'Number of Races',
-						'value' => ''
-						),
-					array(
-						'name' => 'rating_system_id',
-						'type' => 'dropdown',
-						'label' => 'Rating System',
-						'value' => '',
-						'selected' => '0',
-						'options' => $classRatingSystems,
-						'required' => true
-						),
-					array(
-						'name' => 'discards',
-						'type' => 'text',
-						'label' => 'Number of Discards',
-						'value'=> '0'
-						),
-					array(
-						'name' => 'tiebreak_system',
-						'type' => 'dropdown',
-						'label' => 'Tiebreak System',
-						'selected' => '0',
-						'options' => $classTiebreakers,
-						'required' => true
-						),
-					array(
-						'name' => 'scoring_system',
-						'type' => 'dropdown',
-						'label'=> 'Scoring System',
-						'selected' => '0',
-						'options' => $classScoringSystems,
-						'required' => true
-						),
-					array(
-						'name' => 'boat_selector',
-						'type' => 'custom',
-						'custom_field' => 'class_boat_selector',
-						'label' => 'Select Boats for this Class',
-						'boats_out' => $boats_out,
-						'boats_in' => array(
-									)
-						)
+					array('name' => 'name', 'type' => 'text', 'label' => 'Name', 'value' => '', 'required' => true),
+					array('name' => 'description','type' => 'textarea','label' => 'Description', 'value' => ''),
+					array('name'=> 'race_count', 'type' => 'text', 'label' => 'Number of Races', 'value' => ''),
+					array('name' => 'rating_system_id','type' => 'dropdown','label' => 'Rating System','value' => '','selected' => '0', 'options' => $classRatingSystems,'required' => true),
+					array('name' => 'discards','type' => 'text', 'label' => 'Number of Discards','value'=> '0'),
+					array('name' => 'min_races_discard', 'type' => 'text', 'label' => 'Min number of races before discard', 'value' => '0'),
+					array('name' => 'tiebreak_system','type' => 'dropdown','label' => 'Tiebreak System','selected' => '0','options' => $classTiebreakers,'required' => true),
+					array('name' => 'scoring_system','type' => 'dropdown','label'=> 'Scoring System','selected' => '0','options' => $classScoringSystems,'required' => true),
+					array('name' => 'boat_selector','type' => 'custom','custom_field' => 'class_boat_selector','label' => 'Select Boats for this Class','boats_out' => $boats_out,'boats_in' => array())
 				)
 			);
 
@@ -196,12 +230,13 @@ $this->firephp->log($race_settings);
 				}else{
 					//Double Check security first
 					$this->userlib->force_permission('classes_create', array('regatta_id' => $this->input->post('parent')));
+					
 					$handicap_system = $this->handicap_model->get($this->input->post('rating_system_id'));
 
 					foreach($form['fields'] as $field){
 						if($field['name'] == 'boat_selector'){
 							// Custom fields need a bit more love.
-							if(sizeof($this->input->post('boats_in')) > 0 ){
+							if(is_array($this->input->post('boats_in'))){
 								$x = 0;
 								$boats = $this->input->post('boats_in');
 								
@@ -216,7 +251,7 @@ $this->firephp->log($race_settings);
 								}
 								unset($x);
 							}
-						}elseif($field['name'] = 'race_count'){
+						}elseif($field['name'] == 'race_count'){
 							// Race count isn't a field in the classes database. We'll initialise the races below
 							$race_count = $this->input->post($field['name']);
 						}else{

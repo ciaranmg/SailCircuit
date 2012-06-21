@@ -69,7 +69,7 @@
                         </li>
                     </ul>
                 </li>
-                <li <? if($this->uri->segment(1) =='rules') echo 'class="active"';?>><a href="<?=base_url('rules');?>">Rules</a></li>
+               <? /* <li <? if($this->uri->segment(1) =='rules') echo 'class="active"';?>><a href="<?=base_url('rules');?>">Rules</a></li>  */ ?>
             </ul>
             <ul class="nav pull-right">
                 <li>

@@ -13,7 +13,7 @@
 						<?
 							$add_meta = array(array(
 									'type' => 'button',
-									'title' => 'Add Data',
+									'title' => 'Add Info',
 									'action' => 'boats/edit',
 									'parameters' => $boat->id,
 									'icon' => 'plus',

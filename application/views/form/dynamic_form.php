@@ -11,9 +11,9 @@
 	$hidden_fields = array('action' => $form['action'], 'submit' => $form['submit'], 'parent' => $form['parent']);
 	
 	if(isset($form['upload'])){
-		echo form_open($form['action'], array('class'=>'form-horizontal'), $hidden_fields);
+		echo form_open_multipart($form['action'], array('class'=>'form-horizontal well'), $hidden_fields);
 	}else{
-		echo form_open($form['action'], array('class'=>'form-horizontal'), $hidden_fields); 
+		echo form_open($form['action'], array('class'=>'form-horizontal well'), $hidden_fields); 
 	}
 	?>
 	<? foreach($form['fields'] as $field):?>

@@ -78,14 +78,32 @@
 	</section>
 </div>
 <div class="row">
-	<div class="span5 leading">
+	<div class="span6 leading">
 		<section class="portlet">
 			<header>
-				<h2 class="editable" id="h2_name" target="<?=base_url('ajax/edit/classes/name/text') . '/' . $class->id;?>"><?=$class->name;?></h2>
+				<h2><?=$class->name;?></h2>
+				<?
+					$add_meta = array(array(
+							'type' => 'button',
+							'title' => 'Add Info',
+							'action' => 'classes/edit',
+							'parameters' => $class->id,
+							'icon' => 'plus',
+							'classes' => 'btn-ajax-activate',
+							'attributes' => 'data-target-id="ctr-ajax-meta" data-target="'. base_url('ajax/meta/classes/' . $class->id) .'"'
+						));
+					$this->load->view('common/toolbar', array('buttons' => $add_meta));
+				?>
 				<div class="clearfix"></div>
 			</header>
 			<section>
-				<table class="table table-bordered">
+				<div id="ctr-ajax-meta"></div>
+				<table class="table table-bordered" id="object-meta-table">
+					<tr>
+						<td colspan="2" id="profile-photo">
+							<? $this->load->view('classes/profile_photo');?>
+						</td>
+					</tr>
 					<tr>
 						<th>Discards</th>
 						<td class="editable" id="hc_edit_class_discard_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/discards/text/'.$class->id);?>"><?=$class->discards;?></td>
@@ -96,7 +114,7 @@
 					</tr>
 					<tr>
 						<th>Rating System</th>
-						<td class="editable" id="hc_edit_class_rating_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/rating_system_id/dropdown/'.$class->id);?>"><?=$class->handicap_name;?></td>
+						<td title="This cannot be changed" class="tool-tip"><?=$class->handicap_name;?></td>
 					</tr>
 					<tr>
 						<th>Tiebreak System</th>
@@ -106,11 +124,19 @@
 						<th>Scoring System</th>
 						<td class="editable" id="hc_edit_class_scoring_<?=$class->id;?>" target="<?=base_url('ajax/edit/classes/scoring_system/dropdown/'.$class->id);?>"><?=$class->scoring_name;?></td>
 					</tr>
+					<? if(isset($class->meta)): foreach($class->meta as $meta_data): if(substr($meta_data->field, 0, 1) != '_') : ?>
+						<tr>			
+							<th><?=$meta_data->label;?></th>
+							<td id="tc_meta<?=$meta_data->field;?>" class="editable" target="<?=base_url('ajax/edit/classes/' . $meta_data->field .'/' . $meta_data->type . '/' . $class->id);?>">
+								<?=$meta_data->value;?>
+							</td>
+						</tr>
+					<? endif; endforeach; endif; ?>
 				</table>
 			</section>
 		</section>
 	</div>
-	<div class="span7 leading">
+	<div class="span6 leading">
 		<section class="portlet">
 			<header>
 				<h2>Races</h2>
