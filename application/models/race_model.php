@@ -435,7 +435,7 @@ class Race_model extends CI_Model{
 					$this->race_data[$i]->status = trim($line_data[1]);
 				}
 			}else{
-				$this->race_data[$i]->time = $i+1;
+				$this->race_data[$i]->time = sec2time(3600 + $i);
 				$this->race_data[$i]->status = false;
 			}
 

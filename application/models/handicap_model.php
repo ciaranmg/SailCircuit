@@ -58,7 +58,7 @@ class Handicap_model extends CI_Model {
 
 	function get_boat_handicap($boat_id, $handicap_name){
 		
-		if($handicap_name == 'Level Rating'){
+		if($handicap_name == 'Level'){
 			return 1;
 		}else{
 			$handicap = $this->boats_model->get_boat_meta($boat_id, $handicap_name);

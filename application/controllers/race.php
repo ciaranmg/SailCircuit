@@ -34,6 +34,7 @@
 		public function ajax_handle_data(){
 			if(!is_ajax()) show_404('ajax_handle_data');
 			
+						xdebug_break();
 			if($this->input->post('submit') && $this->input->post('confirm')){
 				// Check if the form has been submitted and confirmed
 				$race_id = $this->input->post('race_id');
@@ -97,10 +98,6 @@
 		}
 
 		public function view($race_id){
-			
-			
-			
-
 			$race = $this->race_model->get($race_id);
 			$class = $this->classes_model->get($race->class_id);
 			$regatta = $this->regatta_model->get($class->regatta_id);

@@ -85,9 +85,7 @@ class Boats extends CI_Controller {
 		
 		$this->load->library('pagination');
 
-
 		if($this->session->userdata('main_class')) $boat_args['main_class'] = $this->session->userdata('main_class');
-
 		$config['base_url'] = base_url('boats/list_all/');
 		$config['total_rows'] = $this->boats_model->num_rows($this->session->userdata('club_id'), (isset($boat_args['main_class']))? $boat_args['main_class'] : null);
 		$config['per_page'] = $this->config->item('per_page');

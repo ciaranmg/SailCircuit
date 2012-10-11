@@ -140,7 +140,7 @@ class boats_model extends CI_Model {
 		$this->db->select('boats.id, 
 							boats.length, 
 							boats.name, 
-							boats.model, 
+							boats.model as boat_type, 
 							boats.sail_number, 
 							coalesce(group_concat(sc_owners.name SEPARATOR \', \'), \' \') as owner ', FALSE);
 		$this->db->join('boat_owners', 'boats.id = boat_owners.boat_id', 'left');
