@@ -87,9 +87,9 @@
                             </li>
                             <li>
                                 <a href="<?=base_url()?>club/view"><i class="icon-star"></i> <?=$this->session->userdata('club_name')?></a>
-                            <li>
+                            <!-- <li>
                                 <a href="<?=base_url()?>customer/support"><i class="icon-info-sign"></i> Customer Support</a>
-                            </li>
+                            </li> -->
                             <li class="divider"></li>
                             <li>
                                 <a href="<?=base_url()?>user/logout"><i class="icon-off"></i> Log Out</a>
