@@ -1,3 +1,4 @@
+<? $this->firephp->log($entries); ?>
 <div class="step2">
 	<div class="hidden">
 		<input type="hidden" value="confirm" id="confirm" name="confirm">

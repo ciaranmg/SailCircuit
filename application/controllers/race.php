@@ -10,7 +10,7 @@
 		 * Method to display the race data input form
 		 * Does not handle the data. That's taken care of by AJAX mehod: ajax_handle_data
 		 */
-		public function input($race_id = false){			
+		public function input($race_id = false){
 			$this->userlib->force_login();
 			if($race_id) {
 				$race = $this->race_model->get($race_id);
@@ -33,9 +33,8 @@
 		 */
 		public function ajax_handle_data(){
 			if(!is_ajax()) show_404('ajax_handle_data');
-			
-						xdebug_break();
-			if($this->input->post('submit') && $this->input->post('confirm')){
+				if($this->input->post('submit') && $this->input->post('confirm')){
+				
 				// Check if the form has been submitted and confirmed
 				$race_id = $this->input->post('race_id');
 				$race = $this->race_model->get($race_id);
@@ -246,36 +245,33 @@
 			}
 		}
 
-	}
-
-	/**
-	 * Ajax Function to delete a race. Also delete race meta, and race result data
-	 *
-	 */
-	function ajax_delete_race($class_id = null){
-		if(!is_ajax()) show_404("classes/ajax_delete_race/$class_id");
-		
-		
-
-		if($this->userlib->check_permission('classes_delete', array('class_id' => $class_id)) && $this->input->post('submit')){
+		/**
+		 * Ajax Function to delete a race. Also delete race meta, and race result data
+		 *
+		 */
+		function ajax_delete_race($class_id = null){
+			if(!is_ajax()) show_404("classes/ajax_delete_race/$class_id");
 			
-			$this->race_model->clear_race_data($this->input->post('object_id'));
-			$this->race_model->delete_races($this->input->post('object_id'));
-			
-			if($data['races'] = $this->race_model->get_races($class_id)){
-				// Update the race_count field in the classes table
-				$this->classes_model->update_field('race_count', sizeof($data['races']), $class_id );
-				// Change the status field on the class to modified which signifies that the race results need to be recalculated.
-				$this->classes_model->update_field('status', 'modified', $class_id);
-				$this->load->view('races/tbl_list_races', $data);
-			}else{
-				echo "There are no races in this class";
+			if($this->userlib->check_permission('classes_delete', array('class_id' => $class_id)) && $this->input->post('submit')){
+				
+				$this->race_model->clear_race_data($this->input->post('object_id'));
+				$this->race_model->delete_races($this->input->post('object_id'));
+				
+				if($data['races'] = $this->race_model->get_races($class_id)){
+					// Update the race_count field in the classes table
+					$this->classes_model->update_field('race_count', sizeof($data['races']), $class_id );
+					// Change the status field on the class to modified which signifies that the race results need to be recalculated.
+					$this->classes_model->update_field('status', 'modified', $class_id);
+					$this->load->view('races/tbl_list_races', $data);
+				}else{
+					echo "There are no races in this class";
+				}
+			} else{
+				echo '<div class="alert alert-error">You do not have permission to edit this resource</div>';
+				error_log('User' . $this->session->userdata('user_id') .'Tried to delete race' . $this->input->post('object_id'));
 			}
-		} else{
-			echo '<div class="alert alert-error">You do not have permission to edit this resource</div>';
-			error_log('User' . $this->session->userdata('user_id') .'Tried to delete race' . $this->input->post('object_id'));
 		}
+
 	}
-	
 	/* End of file races.php */
 ?>
