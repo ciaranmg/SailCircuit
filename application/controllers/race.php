@@ -16,7 +16,6 @@
 				$race = $this->race_model->get($race_id);
 				if($race && $race->status == 'open') $data['race'] = $race;
 			}
-			
 			$data['breadcrumb'] = $this->breadcrumb->get_path();
 			$data['help'] = 'race_input';
 
@@ -31,70 +30,71 @@
 		 *			3. The page takes the data and presents it for the user to confirm
 		 *			4. The method then handles the confirmed data and calls the models to commit to the database
 		 */
-		public function ajax_handle_data(){
-			if(!is_ajax()) show_404('ajax_handle_data');
-				if($this->input->post('submit') && $this->input->post('confirm')){
-				
-				// Check if the form has been submitted and confirmed
-				$race_id = $this->input->post('race_id');
-				$race = $this->race_model->get($race_id);
+        public function ajax_handle_data()
+        {
+            if (!is_ajax()) show_404('ajax_handle_data');
+            if ($this->input->post('submit') && $this->input->post('confirm')) {
 
-				if($this->userlib->check_permission('race_edit', array('race_id' => $race_id))){
-					if($race_data = $this->race_model->process_data($race_id)){
-						// Now calculate the corrected times.
-						$race_data = $this->race_model->calculate_corrected($race_id, $race_data);
-						// Load the scoring info
-						$scoring = $this->scoring_model->get($race->scoring_system);
-						$slib = $scoring->library;
-						$this->load->library('scoring/'.$slib);
+                // Check if the form has been submitted and confirmed
+                $race_id = $this->input->post('race_id');
+                $race = $this->race_model->get($race_id);
 
-						// Get the processed Results
-						$processed = $this->$slib->process_race($race_data, $scoring);
+                if ($this->userlib->check_permission('race_edit', array('race_id' => $race_id))) {
+                    if ($race_data = $this->race_model->process_data($race_id)) {
+                        // Now calculate the corrected times.
+                        $race_data = $this->race_model->calculate_corrected($race_id, $race_data);
+                        // Load the scoring info
+                        $scoring = $this->scoring_model->get($race->scoring_system);
+                        $slib = $scoring->library;
+                        $this->load->library('scoring/' . $slib);
 
-						// Insert the processed results
-						$this->race_model->insert_results($processed);
-						// Set the race as completed
-						$this->race_model->update_field('status', 'completed', $race_id);
-						// Get the race results in a human readable format 
-						$readable = $this->race_model->get_readable_results($race_id);
-						$data['race'] = $race;
-						$data['results'] = $readable;
-						
-						$this->load->view('races/ajax_race_results', $data);
+                        // Get the processed Results
+                        $processed = $this->$slib->process_race($race_data, $scoring);
 
-					}else{
-						echo '<div class="alert alert-error">There was a problem inserting the race results into the database. Please try again</div>';
-					}
-				}else{
-					$this->load->view('common/forbidden');
-				}
-			}elseif($this->input->post('submit')){
-				// Just the first round has been submitted. Parse the data and return for the user to confirm.
-				$race = $this->race_model->get($this->input->post('race_picker'));
-				if($race->status == 'completed'){
-					// The race results are already in. Don't let the user overwrite
-					echo '<div class="alert alert-error">This race already has results.</div>';
-				}else{
-					$data['race'] = $race;
-					$data['timer'] = $this->input->post('timer');
-				
-					$t = $this->input->post('race_datetime');
-					$data['race_date'] = $t[0];
-					$data['race_time'] = $t[1];
+                        // Insert the processed results
+                        $this->race_model->insert_results($processed);
+                        // Set the race as completed
+                        $this->race_model->update_field('status', 'completed', $race_id);
+                        // Get the race results in a human readable format
+                        $readable = $this->race_model->get_readable_results($race_id);
+                        $data['race'] = $race;
+                        $data['results'] = $readable;
 
-					// Update the race start time record
-					$this->race_model->update_field('start_date', sc_strtotime($data['race_date'] .' ' . $data['race_time']), $race->id, 'datetime');
+                        $this->load->view('races/ajax_race_results', $data);
 
-					$p = $this->race_model->process_raw_data($this->input->post('race_data'), array('club_id' => $this->session->userdata('club_id')));
-					$data['entries'] = $p['entries'];
-					$data['count'] = $p['count'];
-					$this->load->view('form/tbl_race_input', $data);
-				}
-			}else{
-				// If none of the conditions are met, do nothing.
-				$this->firephp->log('ajax_handle_data: Criteria not met');
-			}
-		}
+                    } else {
+                        echo '<div class="alert alert-error">There was a problem inserting the race results into the database. Please try again</div>';
+                    }
+                } else {
+                    $this->load->view('common/forbidden');
+                }
+            } elseif ($this->input->post('submit')) {
+                // Just the first round has been submitted. Parse the data and return for the user to confirm.
+                $race = $this->race_model->get($this->input->post('race_picker'));
+                if ($race->status == 'completed') {
+                    // The race results are already in. Don't let the user overwrite
+                    echo '<div class="alert alert-error">This race already has results.</div>';
+                } else {
+                    $data['race'] = $race;
+                    $data['timer'] = $this->input->post('timer');
+
+                    $t = $this->input->post('race_datetime');
+                    $data['race_date'] = $t[0];
+                    $data['race_time'] = $t[1];
+
+                    // Update the race start time record
+                    $this->race_model->update_field('start_date', sc_strtotime($data['race_date'] . ' ' . $data['race_time']), $race->id, 'datetime');
+
+                    $p = $this->race_model->process_raw_data($this->input->post('race_data'), array('club_id' => $this->session->userdata('club_id')));
+                    $data['entries'] = $p['entries'];
+                    $data['count'] = $p['count'];
+                    $this->load->view('form/tbl_race_input', $data);
+                }
+            } else {
+                // If none of the conditions are met, do nothing.
+                $this->firephp->log('ajax_handle_data: Criteria not met');
+            }
+        }
 
 		public function view($race_id){
 			$race = $this->race_model->get($race_id);
