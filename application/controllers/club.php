@@ -10,8 +10,9 @@ class Club extends CI_Controller {
 						); 
 						
 	function index() {
-		
-		$this->load->model('club_model');
+        $this->output->cache(30);
+
+        $this->load->model('club_model');
 		$user_clubs = $this->userlib->user_clubs();
 		// $this->firephp->log($user_clubs);
 		$this->load->view('common/header');

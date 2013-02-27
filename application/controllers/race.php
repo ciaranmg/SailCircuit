@@ -1,5 +1,8 @@
 <?
-	class Race extends CI_Controller {
+/**
+ * @property mixed userlib
+     */
+class Race extends CI_Controller {
 		
 
 		public function index(){

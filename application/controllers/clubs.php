@@ -1,6 +1,6 @@
 <?
 class Clubs extends CI_Controller{
-	var $cache = false;
+	var $cache = true;
 	function index(){
 		redirect(base_url('/'));
 	}
