@@ -70,7 +70,6 @@ class User extends CI_Controller {
 		}else{
 			$data['redirect'] = '/'; // Set a default redirect for the login action
 		}
-		$this->firephp->log('here');
 		// Check if the login form has been submitted
 		if($this->input->post('action') == 'user/login'){
 			if($this->form_validation->run('login')===false){
@@ -85,6 +84,9 @@ class User extends CI_Controller {
 				$result = $this->user_model->authenticate($user);
 				
 				if($result !== false){
+                    $club_data = $this->user_model->get_user_clubs($result->id);
+                    $result->club_id = $club_data[0]->club_id;
+                    $result->club_name = $club_data[0]->name;
 					$this->session->set_userdata($result);
 					$this->session->set_flashdata('message', 'Login Successful');
 					if($this->input->post('remember') == '1'){

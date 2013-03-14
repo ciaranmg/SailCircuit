@@ -10,7 +10,7 @@ class Club extends CI_Controller {
 						); 
 						
 	function index() {
-        $this->output->cache(30);
+
 
         $this->load->model('club_model');
 		$user_clubs = $this->userlib->user_clubs();
@@ -39,7 +39,6 @@ class Club extends CI_Controller {
 	
 	// Method to create a new club and by default add the creating user as an admin
 	function create() {
-		$this->firephp->log('create');
 		$this->load->view('common/header');
 		$this->load->library('Form_validation');
 		$this->load->model('club_model');

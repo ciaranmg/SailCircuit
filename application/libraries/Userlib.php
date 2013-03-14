@@ -39,10 +39,6 @@ class userlib {
 			$this->language = $this->clubs[0]->language;
 			$this->set_club($this->club_id, $this->club_name);	
 		}
-	//	$this->CI->firephp->log("Name: ". $this->name);	
-	//	$this->CI->firephp->log("User ID: ". $this->userid);
-	//	$this->CI->firephp->log($this->clubs);
-	//	$this->CI->firephp->log("Club ID: ". $this->club_id);
 	}
 	
 	function user_clubs(){
