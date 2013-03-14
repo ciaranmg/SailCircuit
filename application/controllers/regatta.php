@@ -203,7 +203,10 @@ class Regatta extends CI_Controller {
 
 
 	public function date_compare($fromDate){
-		if($fromDate <= $this->input->post('regatta_end_date')) {	
+		$fromDate = sc_strtotime($fromDate);
+		$endDate = sc_strtotime($this->input->post('regatta_end_date'));
+
+		if($fromDate < $endDate) {	
 			return true;
 		}else{
 			$this->form_validation->set_message('date_compare', 'Start Date must be before End Date');
