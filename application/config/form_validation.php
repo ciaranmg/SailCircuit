@@ -99,7 +99,7 @@ $config = array(
 									array(
 											'field'=> 'regatta_description',
 											'label' => 'Description',
-											'rules' => 'trim|xss_clean|addslashes'
+											'rules' => 'trim|xss_clean'
 									)
 								),
 				'classes_create' =>	array(
@@ -111,7 +111,7 @@ $config = array(
 									array(
 											'field'=> 'description',
 											'label' => 'Class Description',
-											'rules' => 'trim|xss_clean|addslashes'
+											'rules' => 'trim|xss_clean'
 									),
 									array(
 											'field'=> 'race_count',
