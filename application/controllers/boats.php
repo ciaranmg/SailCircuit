@@ -80,7 +80,7 @@ class Boats extends CI_Controller {
 			redirect(base_url('/boats/list_all'));
 	}
 
-	function list_all($page = null){
+	function list_all($page = null, $rest = false){
 		$this->userlib->force_login();
 		
 		$this->load->library('pagination');
@@ -103,10 +103,14 @@ class Boats extends CI_Controller {
 						'intro' => 'All Boats in ' . $this->session->userdata('club_name'),
 						'filter' => $this->session->userdata('main_class')
 						);
-		
-		$this->load->view('boats/list_boats', $data);	
+		if($rest == false){
+			$this->load->view('boats/list_boats', $data);	
+		}else{
+			$this->load->view('boats/list_boats_rest', $data);
+		}
 	}
-	
+
+
 	function create() {	
 		$this->userlib->force_login();
 		$this->userlib->force_permission('boats_create', array('club_id' => $this->session->userdata('club_id')));
@@ -209,7 +213,7 @@ class Boats extends CI_Controller {
 	}
 	
 	
-	function view($id=null){
+	function view($id=null, $rest = false){
 		// First up force a login
 		$this->userlib->force_login();
 		
@@ -235,7 +239,11 @@ class Boats extends CI_Controller {
 			$data['title'] = $boat->name;
 			$data['boat'] = $boat;
 			// $this->firephp->log($data);
-			$this->load->view('boats/view_boat', $data);
+			if($rest == false){
+				$this->load->view('boats/view_boat', $data);
+			}else{
+				$this->load->view('boats/view_boat_rest', $data);
+			}
 		}else{
 			show_404('boats/view/$id');
 		}	
