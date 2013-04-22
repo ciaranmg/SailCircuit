@@ -48,8 +48,8 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'root';
+$db['default']['username'] = 'results';
+$db['default']['password'] = 'zpxnKzLDv9esP6c';
 $db['default']['database'] = 'results';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = 'sc_';
