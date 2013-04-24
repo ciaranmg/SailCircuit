@@ -347,19 +347,21 @@ class Race_model extends CI_Model{
 		}
 		
 		$missing_boats = $this->race_model->get_missing_boats($boat_ids, $race_id);
+		$this->firephp->log($missing_boats);
 		$total_boats = count($race_data) + count($missing_boats);
-		$j = 0;
-		for($i = count($race_data); $i < $total_boats ; $i++){
-			$race_data[$i] = new stdClass;
-			$race_data[$i]->boat_id = $missing_boats[$j]->id;
-			$race_data[$i]->race_id = $race_id;
-			$race_data[$i]->sail_number = $missing_boats[$j]->sail_number;
-			$race_data[$i]->finish_time = 0;
-			$race_data[$i]->elapsed_time = 0;
-			$race_data[$i]->status = 'DNC';
-			$j++;
+		if($missing_boats){
+			$j = 0;
+			for($i = count($race_data); $i < $total_boats ; $i++){
+				$race_data[$i] = new stdClass;
+				$race_data[$i]->boat_id = $missing_boats[$j]->id;
+				$race_data[$i]->race_id = $race_id;
+				$race_data[$i]->sail_number = $missing_boats[$j]->sail_number;
+				$race_data[$i]->finish_time = 0;
+				$race_data[$i]->elapsed_time = 0;
+				$race_data[$i]->status = 'DNC';
+				$j++;
+			}
 		}
-
 		return $race_data;
 	}
 

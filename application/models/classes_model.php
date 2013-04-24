@@ -79,8 +79,6 @@ class classes_model extends CI_Model {
 	function insert($class_data){
 		$this->db->insert('sc_classes', $class_data);
 			$x = $this->db->insert_id();
-			$this->firephp->log($class_data);
-			$this->firephp->log($this->db->last_query());
 			return $x;
 	}
 
@@ -118,7 +116,6 @@ class classes_model extends CI_Model {
 		$this->db->order_by('sc_classes.name', 'asc');
 		$this->db->group_by('sc_classes.id');
 		$query = $this->db->get();
-		$this->firephp->log($this->db->last_query());
 		if($query->num_rows() > 0){
 			return $query->result();
 		}

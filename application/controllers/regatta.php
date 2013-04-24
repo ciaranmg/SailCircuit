@@ -149,8 +149,6 @@ class Regatta extends CI_Controller {
 		if(!$regatta) show_404('regatta/view/invalidid');
 		if(!$id) show_404('regatta/view/noid');
 		
-		// $this->firephp->log($this->session->userdata('club_id'));
-		
 		$this->userlib->force_permission('regatta_view', array('regatta_id' => $id));
 		
 		

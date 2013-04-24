@@ -101,7 +101,6 @@ class Regatta_model extends CI_Model{
 			$this->db->where('race_results.status !=', 'DNC');
 			$this->db->group_by('races.id');
 			$query = $this->db->get('races', $limit);
-			$this->firephp->log($this->db->last_query());
 			if($query->num_rows()>0){
 				return $query->result();
 			}else{

@@ -143,9 +143,9 @@
 								'boats' => $boats, 
 								'breadcrumb' => $this->breadcrumb->get_path());
 				
-				if($class->status == 'modified'){
-					$data['err_message'] = "Settings for this class have been changed. Click the refresh button to calculate race results based on these new settings";
-				}
+				// if($class->status == 'modified'){
+					// $data['err_message'] = "Settings for this class have been changed. Click the refresh button to calculate race results based on these new settings";
+				// }
 				$this->load->view('classes/view_class', $data);
 			}else{
 				show_404('classes/view/'. $id);
@@ -196,7 +196,7 @@
 				'fields' => array(
 					array('name' => 'name', 'type' => 'text', 'label' => 'Name', 'value' => '', 'required' => true),
 					array('name' => 'description','type' => 'textarea','label' => 'Description', 'value' => ''),
-					array('name'=> 'race_count', 'type' => 'text', 'label' => 'Number of Races', 'value' => ''),
+					array('name'=> 'race_count', 'type' => 'text', 'label' => 'Number of Races', 'value' => '', 'required' => true),
 					array('name' => 'rating_system_id','type' => 'dropdown','label' => 'Rating System','value' => '','selected' => '0', 'options' => $classRatingSystems,'required' => true),
 					array('name' => 'discards','type' => 'text', 'label' => 'Number of Discards','value'=> '0'),
 					array('name' => 'min_races_discard', 'type' => 'text', 'label' => 'Min number of races before discard', 'value' => '0'),
@@ -235,7 +235,6 @@
 
 					foreach($form['fields'] as $field){
 						if($field['name'] == 'boat_selector'){
-							// Custom fields need a bit more love.
 							if(is_array($this->input->post('boats_in'))){
 								$x = 0;
 								$boats = $this->input->post('boats_in');

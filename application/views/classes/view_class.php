@@ -7,14 +7,6 @@
 	<div class="span6 leading">
 		<?
 			$buttons = array(
-						
-						array(
-								'title'=>'Refresh',
-								'action'=>'race/edit',
-								'parameters' => $class->id, //Todo: Insert class ID
-								'classes' => ($class->status == 'modified') ? 'btn-danger' : ' hidden',
-								'icon' => 'refresh icon-white',
-							),
 						array(
 							'title' => 'Display Settings',
 							'type' => 'button',

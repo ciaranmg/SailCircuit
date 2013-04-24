@@ -85,7 +85,7 @@ function sc_strtotime($date){
 	if($CI->session->userdata('locale') == 'uk')
 		return strtotime(str_replace('/', '-', $date));
 
-	return strtotime(date);
+	return strtotime($date);
 }
 
 // Accepts a unix timestamp and outputs the time in 24hour format

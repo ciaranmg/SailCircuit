@@ -61,10 +61,11 @@ class Handicap_model extends CI_Model {
 		if($handicap_name == 'Level'){
 			return 1;
 		}else{
-			$handicap = $this->boats_model->get_boat_meta($boat_id, $handicap_name);
-			if($handicap === false){
+			$query = $this->db->select('value', 'field', 'id')->from('sc_boat_meta')->where('boat_id', $boat_id)->where('field', $handicap_name)->get();
+			if($query->num_rows() == 0){
 				return 0.00;
 			}else{
+				$handicap = $query->row();
 				return $handicap->value;
 			}
 		}
