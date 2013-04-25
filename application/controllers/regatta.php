@@ -118,7 +118,7 @@ class Regatta extends CI_Controller {
 
 					if($races = $this->race_model->get_races($class->id)){
 						foreach($races as $race){
-							$this->race_model->delete($race->id);
+							$this->race_model->delete_races($race->id);
 						}
 					}
 				}
